@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SystemTools\MessagingAbstractions\MessagingAbstractions.csproj" />
+    <ProjectReference Include="..\..\ToolsManagement\Installer\Installer.csproj" />
+    <ProjectReference Include="..\..\WebAgentContracts\WebAgentContracts\WebAgentContracts.csproj" />
+    <ProjectReference Include="..\..\WebSystemTools\ApiToolsShared\ApiToolsShared.csproj" />
+    <ProjectReference Include="..\..\WebSystemTools\WebInstallers\WebInstallers.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -34,8 +34,8 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
         var parametersFileExtension =
             request.ParametersFileExtension ?? installerSettings.ParametersFileExtension;
 
-        if (request.ProjectName is null || request.ServiceName is null || request.AppSettingsFileName is null ||
-            parametersFileDateMask is null || parametersFileExtension is null)
+        if (request.ProjectName is null || request.EnvironmentName is null || request.ServiceName is null ||
+            request.AppSettingsFileName is null || parametersFileDateMask is null || parametersFileExtension is null)
             return await Task.FromResult(new[] { ProjectsErrors.SameParametersAreEmpty });
 
         if (string.IsNullOrWhiteSpace(installerSettings.ProgramExchangeFileStorageName))
@@ -58,7 +58,7 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
 
 
-        if (agentClient.UpdateAppParametersFile(request.ProjectName, request.ServiceName,
+        if (agentClient.UpdateAppParametersFile(request.ProjectName, request.EnvironmentName, request.ServiceName,
                 request.AppSettingsFileName, parametersFileDateMask, parametersFileExtension))
             return new Unit();
 

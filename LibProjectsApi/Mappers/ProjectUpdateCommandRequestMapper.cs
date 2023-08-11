@@ -10,6 +10,7 @@ public static class ProjectUpdateCommandRequestMapper
         return new ProjectUpdateCommandRequest
         {
             ProjectName = projectUpdateRequest.ProjectName,
+            EnvironmentName = projectUpdateRequest.EnvironmentName,
             ProgramArchiveDateMask = projectUpdateRequest.ProgramArchiveDateMask,
             ProgramArchiveExtension = projectUpdateRequest.ProgramArchiveExtension,
             ParametersFileDateMask = projectUpdateRequest.ParametersFileDateMask,

@@ -40,8 +40,8 @@ public sealed class ProjectUpdateCommandHandler : ICommandHandler<ProjectUpdateC
         var parametersFileExtension =
             request.ParametersFileExtension ?? installerSettings.ParametersFileExtension;
 
-        if (request.ProjectName is null || programArchiveDateMask is null || programArchiveExtension is null ||
-            parametersFileDateMask is null || parametersFileExtension is null)
+        if (request.ProjectName is null || request.EnvironmentName is null || programArchiveDateMask is null ||
+            programArchiveExtension is null || parametersFileDateMask is null || parametersFileExtension is null)
             return new[] { ApiErrors.SomeRequestParametersAreNotValid };
 
         if (string.IsNullOrWhiteSpace(installerSettings.ProgramExchangeFileStorageName))
@@ -62,8 +62,8 @@ public sealed class ProjectUpdateCommandHandler : ICommandHandler<ProjectUpdateC
             return new[] { ProjectsErrors.AgentClientDoesNotCreated };
 
         var assemblyVersion = await Task.FromResult(agentClient.InstallProgram(request.ProjectName,
-            programArchiveDateMask,
-            programArchiveExtension, parametersFileDateMask, parametersFileExtension));
+            request.EnvironmentName, programArchiveDateMask, programArchiveExtension, parametersFileDateMask,
+            parametersFileExtension));
 
         if (assemblyVersion != null)
             return assemblyVersion;

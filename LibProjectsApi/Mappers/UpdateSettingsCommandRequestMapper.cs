@@ -10,6 +10,7 @@ public static class UpdateSettingsCommandRequestMapper
         return new UpdateSettingsCommandRequest
         {
             ProjectName = updateSettingsRequest.ProjectName,
+            EnvironmentName = updateSettingsRequest.EnvironmentName,
             ServiceName = updateSettingsRequest.ServiceName,
             AppSettingsFileName = updateSettingsRequest.AppSettingsFileName,
             ParametersFileDateMask = updateSettingsRequest.ParametersFileDateMask,

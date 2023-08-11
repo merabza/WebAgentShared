@@ -5,6 +5,7 @@ namespace LibProjectsApi.CommandRequests;
 public sealed class UpdateServiceCommandRequest : ICommand<string>
 {
     public string? ProjectName { get; set; }
+    public string? EnvironmentName { get; set; }
     public string? ServiceName { get; set; }
     public string? ServiceUserName { get; set; }
     public string? AppSettingsFileName { get; set; }

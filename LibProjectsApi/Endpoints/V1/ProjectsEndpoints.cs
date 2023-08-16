@@ -1,5 +1,7 @@
-﻿using ApiToolsShared;
+﻿using System.Diagnostics;
+using ApiToolsShared;
 using LibProjectsApi.CommandRequests;
+using LibProjectsApi.Handlers;
 using LibProjectsApi.Mappers;
 using LibProjectsApi.QueryRequests;
 using MediatR;
@@ -44,6 +46,7 @@ public sealed class ProjectsEndpoints : IInstaller
         [FromBody] UpdateSettingsRequest? request,
         HttpRequest httpRequest, IConfiguration config, IMediator mediator)
     {
+        Debug.WriteLine($"Call {nameof(UpdateSettingsCommandHandler)} from {nameof(UpdateSettings)}");
         if (request is null)
             return Results.BadRequest(ApiErrors.RequestIsEmpty);
         var command = request.AdaptTo();
@@ -57,6 +60,7 @@ public sealed class ProjectsEndpoints : IInstaller
         [FromBody] ProjectUpdateRequest? request,
         HttpRequest httpRequest, IConfiguration config, IMediator mediator)
     {
+        Debug.WriteLine($"Call {nameof(ProjectUpdateCommandHandler)} from {nameof(Update)}");
         if (request is null)
             return Results.BadRequest(ApiErrors.RequestIsEmpty);
         var command = request.AdaptTo();
@@ -70,6 +74,7 @@ public sealed class ProjectsEndpoints : IInstaller
         [FromBody] UpdateServiceRequest? request,
         HttpRequest httpRequest, IConfiguration config, IMediator mediator)
     {
+        Debug.WriteLine($"Call {nameof(UpdateServiceCommandHandler)} from {nameof(UpdateService)}");
         if (request is null)
             return Results.BadRequest(ApiErrors.RequestIsEmpty);
         var command = request.AdaptTo();
@@ -82,8 +87,7 @@ public sealed class ProjectsEndpoints : IInstaller
     private static async Task<IResult> StopService(ILogger<ProjectsEndpoints> logger, string? serviceName,
         [FromQuery] string? apiKey, HttpRequest httpRequest, IConfiguration config, IMediator mediator)
     {
-        //StopServiceCommandRequest
-
+        Debug.WriteLine($"Call {nameof(StopServiceCommandHandler)} from {nameof(StopService)}");
         if (serviceName is null)
             return Results.BadRequest(ProjectsErrors.ServiceNameIsEmpty);
         var command = StopServiceCommandRequest.Create(serviceName);
@@ -96,8 +100,7 @@ public sealed class ProjectsEndpoints : IInstaller
     private static async Task<IResult> StartService(ILogger<ProjectsEndpoints> logger, string? serviceName,
         [FromQuery] string? apiKey, HttpRequest httpRequest, IConfiguration config, IMediator mediator)
     {
-        //StartServiceCommandRequest
-
+        Debug.WriteLine($"Call {nameof(StartServiceCommandHandler)} from {nameof(StartService)}");
         if (serviceName is null)
             return Results.BadRequest(ProjectsErrors.ServiceNameIsEmpty);
         var command = StartServiceCommandRequest.Create(serviceName);
@@ -131,8 +134,7 @@ public sealed class ProjectsEndpoints : IInstaller
         string apiVersionId, [FromQuery] string? apiKey, HttpRequest httpRequest, IConfiguration config,
         IMediator mediator)
     {
-        //GetAppSettingsVersionQuery
-
+        Debug.WriteLine($"Call {nameof(GetAppSettingsVersionQueryHandler)} from {nameof(GetAppSettingsVersion)}");
         if (string.IsNullOrWhiteSpace(apiVersionId) || serverSidePort == 0)
             return Results.BadRequest(ProjectsErrors.SameParametersAreEmpty);
         var command = GetAppSettingsVersionQueryRequest.Create(serverSidePort, apiVersionId);
@@ -146,8 +148,7 @@ public sealed class ProjectsEndpoints : IInstaller
         string apiVersionId, [FromQuery] string? apiKey, HttpRequest httpRequest, IConfiguration config,
         IMediator mediator)
     {
-        //GetVersionQuery
-
+        Debug.WriteLine($"Call {nameof(GetVersionQueryHandler)} from {nameof(GetVersion)}");
         if (string.IsNullOrWhiteSpace(apiVersionId) || serverSidePort == 0)
             return Results.BadRequest(ProjectsErrors.SameParametersAreEmpty);
         var command = GetVersionQueryRequest.Create(serverSidePort, apiVersionId);
@@ -158,8 +159,7 @@ public sealed class ProjectsEndpoints : IInstaller
     private static async Task<IResult> RemoveProjectService(string projectName,
         string? serviceName, IMediator mediator)
     {
-        //RemoveProjectServiceCommand
-
+        Debug.WriteLine($"Call {nameof(RemoveProjectServiceCommandHandler)} from {nameof(RemoveProjectService)}");
         var command = RemoveProjectServiceCommandRequest.Create(projectName, serviceName);
         var result = await mediator.Send(command);
         return result.Match(_ => Results.Ok(), Results.BadRequest);

@@ -2,11 +2,12 @@
 using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using WebAgentMessagesContracts;
 
 namespace LibWebAgentMessages;
 
 [Authorize(Policy = "CustomHubAuthorizatioPolicy")]
-public class MessagesHub : Hub
+public class MessagesHub : Hub<IMessenger>
 {
     private readonly IMessagesDataManager _progressDataManager;
 

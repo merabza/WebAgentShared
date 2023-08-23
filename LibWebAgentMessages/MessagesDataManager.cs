@@ -3,16 +3,17 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WebAgentMessagesContracts;
 
 namespace LibWebAgentMessages;
 
 public class MessagesDataManager : IMessagesDataManager, IDisposable
 {
-    private readonly IHubContext<MessagesHub> _hub;
+    private readonly IHubContext<MessagesHub, IMessenger> _hub;
     private readonly ILogger<MessagesDataManager> _logger;
     private readonly Dictionary<string, string> _connectedUsers = new();
 
-    public MessagesDataManager(IHubContext<MessagesHub> hub, ILogger<MessagesDataManager> logger)
+    public MessagesDataManager(IHubContext<MessagesHub, IMessenger> hub, ILogger<MessagesDataManager> logger)
     {
         _hub = hub;
         _logger = logger;
@@ -23,7 +24,7 @@ public class MessagesDataManager : IMessagesDataManager, IDisposable
         if (!_connectedUsers.TryGetValue(userName, out var connectionId))
             return null;
         _logger.LogInformation("Try to send message: {message}", message);
-        return _hub.Clients.Client(connectionId).SendAsync("sendMessage", message);
+        return _hub.Clients.Client(connectionId).SendMessage(message);
     }
 
     public void UserConnected(string connectionId, string userName)

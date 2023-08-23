@@ -1,0 +1,10 @@
+﻿using System.Threading.Tasks;
+
+namespace LibWebAgentMessages;
+
+public interface IMessagesDataManager
+{
+    Task? SendMessage(string userName, string message);
+    void UserConnected(string connectionId, string userName);
+    void UserDisconnected(string userName);
+}

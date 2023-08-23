@@ -1,5 +1,5 @@
 ﻿using LibProjectsApi.CommandRequests;
-using WebAgentContracts.V1.Requests;
+using WebAgentProjectsApiContracts.V1.Requests;
 
 namespace LibProjectsApi.Mappers;
 

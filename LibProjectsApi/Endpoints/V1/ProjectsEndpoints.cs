@@ -11,12 +11,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using WebAgentContracts.V1.Requests;
-using WebAgentContracts.V1.Routes;
+using WebAgentProjectsApiContracts.V1.Requests;
+using WebAgentProjectsApiContracts.V1.Routes;
 using WebInstallers;
 
 namespace LibProjectsApi.Endpoints.V1;
 
+// ReSharper disable once UnusedType.Global
 public sealed class ProjectsEndpoints : IInstaller
 {
     public int InstallPriority => 50;

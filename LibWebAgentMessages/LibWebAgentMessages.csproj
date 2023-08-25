@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\WebAgentContracts\WebAgentMessagesContracts\WebAgentMessagesContracts.csproj" />
+    <ProjectReference Include="..\..\WebSystemTools\ApiToolsShared\ApiToolsShared.csproj" />
     <ProjectReference Include="..\..\WebSystemTools\WebInstallers\WebInstallers.csproj" />
   </ItemGroup>
 

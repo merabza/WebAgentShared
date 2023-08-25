@@ -19,6 +19,10 @@ public sealed class WebAgentMessagesInstaller : IInstaller
 
         //builder.Services.AddSingleton<IProgressDataManager, ProgressDataManager>();
         builder.Services.AddSingleton<IAuthorizationHandler, CustomAuthorizationHandler>();
+        builder.Services.AddHttpContextAccessor(); //.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        builder.Services.AddAuthentication(x =>
+                x.DefaultAuthenticateScheme = AuthenticationSchemaNames.ApiKeyAuthentication)
+            .AddApiKeyAuthenticationSchema();
         builder.Services.AddAuthorization(options =>
         {
             options.AddPolicy("CustomHubAuthorizatioPolicy",
@@ -29,7 +33,6 @@ public sealed class WebAgentMessagesInstaller : IInstaller
         {
             options.PayloadSerializerOptions.PropertyNamingPolicy = null;
         }).AddHubOptions<MessagesHub>(options => { options.EnableDetailedErrors = true; });
-
         //Console.WriteLine("WebAgentMessagesInstaller.InstallServices Finished");
     }
 

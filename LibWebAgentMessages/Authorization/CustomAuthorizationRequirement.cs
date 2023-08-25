@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿//using Microsoft.AspNetCore.Authorization;
 
-namespace LibWebAgentMessages.Authorization;
+//namespace LibWebAgentMessages.Authorization;
 
-public class CustomAuthorizationRequirement : IAuthorizationRequirement
-{
-}
+//public class CustomAuthorizationRequirement : IAuthorizationRequirement
+//{
+//}
+

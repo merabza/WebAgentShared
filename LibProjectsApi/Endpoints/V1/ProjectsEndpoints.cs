@@ -5,6 +5,7 @@ using LibProjectsApi.CommandRequests;
 using LibProjectsApi.Handlers;
 using LibProjectsApi.Mappers;
 using LibProjectsApi.QueryRequests;
+using LibWebAgentMessages;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -34,7 +35,8 @@ public sealed class ProjectsEndpoints : IInstaller
         app.MapPost(ProjectsApiRoutes.Projects.UpdateService, UpdateService).AddEndpointFilter<ApiKeysChecker>();
         app.MapPost(ProjectsApiRoutes.Projects.StopService, StopService).AddEndpointFilter<ApiKeysChecker>();
         app.MapPost(ProjectsApiRoutes.Projects.StartService, StartService).AddEndpointFilter<ApiKeysChecker>();
-        app.MapDelete(ProjectsApiRoutes.Projects.RemoveProject, RemoveProject).AddEndpointFilter<ApiKeysChecker>();
+        app.MapDelete(ProjectsApiRoutes.Projects.RemoveProject, RemoveProject)
+            .RequireAuthorization(); //.AddEndpointFilter<ApiKeysChecker>();
         app.MapDelete(ProjectsApiRoutes.Projects.RemoveService, RemoveService).AddEndpointFilter<ApiKeysChecker>();
         app.MapGet(ProjectsApiRoutes.Projects.GetAppSettingsVersion, GetAppSettingsVersion)
             .AddEndpointFilter<ApiKeysChecker>();
@@ -113,20 +115,21 @@ public sealed class ProjectsEndpoints : IInstaller
     // POST api/project/remove
     //[HttpDelete(InsApiRoutes.Projects.RemoveProject)]
     private static async Task<IResult> RemoveProject(ILogger<ProjectsEndpoints> logger, string projectName,
-        [FromQuery] string? apiKey, HttpRequest httpRequest, IConfiguration config, IMediator mediator)
+        [FromQuery] string? apiKey, HttpRequest httpRequest, IConfiguration config, IMediator mediator,
+        IMessagesDataManager messagesDataManager)
     {
         //ეს არის პროგრამის წაშლის ის ვარიანტი, როცა პროგრამა სერვისი არ არის
-        return await RemoveProjectService(projectName, null, mediator);
+        return await RemoveProjectService(projectName, null, mediator, messagesDataManager, httpRequest);
     }
 
     // POST api/project/removeservice
     //[HttpDelete(InsApiRoutes.Projects.RemoveService)]
     private static async Task<IResult> RemoveService(ILogger<ProjectsEndpoints> logger, string projectName,
         string serviceName, [FromQuery] string? apiKey, HttpRequest httpRequest, IConfiguration config,
-        IMediator mediator)
+        IMediator mediator, IMessagesDataManager messagesDataManager)
     {
         //ეს არის პროგრამის წაშლის ის ვარიანტი, როცა პროგრამა სერვისია
-        return await RemoveProjectService(projectName, serviceName, mediator);
+        return await RemoveProjectService(projectName, serviceName, mediator, messagesDataManager, httpRequest);
     }
 
     // GET api/project/getappsettingsversion
@@ -158,12 +161,16 @@ public sealed class ProjectsEndpoints : IInstaller
         return result.Match(Results.Ok, Results.BadRequest);
     }
 
-    private static async Task<IResult> RemoveProjectService(string projectName,
-        string? serviceName, IMediator mediator)
+    private static async Task<IResult> RemoveProjectService(string projectName, string? serviceName, ISender mediator,
+        IMessagesDataManager messagesDataManager, HttpRequest httpRequest)
     {
+        var userName = httpRequest.HttpContext.User.Identity?.Name;
+
+        await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} started");
         Debug.WriteLine($"Call {nameof(RemoveProjectServiceCommandHandler)} from {nameof(RemoveProjectService)}");
         var command = RemoveProjectServiceCommandRequest.Create(projectName, serviceName);
         var result = await mediator.Send(command);
+        await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} finished");
         return result.Match(_ => Results.Ok(), Results.BadRequest);
     }
 }

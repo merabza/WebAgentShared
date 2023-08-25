@@ -18,16 +18,19 @@ public sealed class WebAgentMessagesInstaller : IInstaller
         //Console.WriteLine("WebAgentMessagesInstaller.InstallServices Started");
 
         //builder.Services.AddSingleton<IProgressDataManager, ProgressDataManager>();
-        builder.Services.AddSingleton<IAuthorizationHandler, CustomAuthorizationHandler>();
-        builder.Services.AddHttpContextAccessor(); //.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        builder.Services.AddSingleton<IMessagesDataManager, MessagesDataManager>();
+
+        //builder.Services.AddSingleton<IAuthorizationHandler, CustomAuthorizationHandler>();
+        //builder.Services.AddHttpContextAccessor(); //.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         builder.Services.AddAuthentication(x =>
                 x.DefaultAuthenticateScheme = AuthenticationSchemaNames.ApiKeyAuthentication)
             .AddApiKeyAuthenticationSchema();
-        builder.Services.AddAuthorization(options =>
-        {
-            options.AddPolicy("CustomHubAuthorizatioPolicy",
-                policy => { policy.Requirements.Add(new CustomAuthorizationRequirement()); });
-        });
+        //builder.Services.AddAuthorization(options =>
+        //{
+        //    options.AddPolicy("CustomHubAuthorizatioPolicy",
+        //        policy => { policy.Requirements.Add(new CustomAuthorizationRequirement()); });
+        //});
+        builder.Services.AddAuthorization();
         builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
         builder.Services.AddSignalR().AddJsonProtocol(options =>
         {

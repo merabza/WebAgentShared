@@ -41,12 +41,12 @@ public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveP
 
         if (request.ServiceName is null)
         {
-            if (agentClient.RemoveProject(request.ProjectName))
+            if (await agentClient.RemoveProject(request.ProjectName))
                 return new Unit();
         }
         else
         {
-            if (agentClient.RemoveProjectAndService(request.ProjectName, request.ServiceName))
+            if (await agentClient.RemoveProjectAndService(request.ProjectName, request.ServiceName))
                 return new Unit();
         }
 

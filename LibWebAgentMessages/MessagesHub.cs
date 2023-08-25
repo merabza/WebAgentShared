@@ -1,32 +1,32 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 using System;
-using Microsoft.AspNetCore.Authorization;
 using WebAgentMessagesContracts;
 
 namespace LibWebAgentMessages;
 
-[Authorize(Policy = "CustomHubAuthorizatioPolicy")]
 public class MessagesHub : Hub<IMessenger>
 {
-    private readonly IMessagesDataManager _progressDataManager;
+    private readonly IMessagesDataManager _messagesDataManager;
 
-    public MessagesHub(IMessagesDataManager progressDataManager)
+    public MessagesHub(IMessagesDataManager messagesDataManager)
     {
-        _progressDataManager = progressDataManager;
+        _messagesDataManager = messagesDataManager;
     }
 
     public override Task OnConnectedAsync()
     {
         //_userCount ++;
-        _progressDataManager.UserConnected(Context.ConnectionId, Context.UserIdentifier);
+        if (Context.UserIdentifier is not null)
+            _messagesDataManager.UserConnected(Context.ConnectionId, Context.UserIdentifier);
         return base.OnConnectedAsync();
     }
 
     public override Task OnDisconnectedAsync(Exception? exception)
     {
         //_userCount --;
-        _progressDataManager.UserDisconnected(Context.ConnectionId);
+        if (Context.UserIdentifier is not null)
+            _messagesDataManager.UserDisconnected(Context.ConnectionId, Context.UserIdentifier);
         return base.OnDisconnectedAsync(exception);
     }
 }

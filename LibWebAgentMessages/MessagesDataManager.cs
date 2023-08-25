@@ -20,17 +20,15 @@ public class MessagesDataManager : IMessagesDataManager, IDisposable
         _logger = logger;
     }
 
-    public async Task SendMessage(string? userName, string message, params string[] parameters)
+    public async Task SendMessage(string? userName, string message)
     {
         if (userName is null)
             return;
         if (!_connectedUsers.TryGetValue(userName, out var conList))
             return;
-        var mes = string.Format(message, parameters.Cast<object?>());
-        _logger.LogInformation("Try to send message: {mes}", mes);
-        var webAgentMessage = new WebAgentMessage(message, parameters);
+        _logger.LogInformation("Try to send message: {message}", message);
         foreach (var connectionId in conList)
-            await _hub.Clients.Client(connectionId).SendMessage(webAgentMessage);
+            await _hub.Clients.Client(connectionId).SendMessage(message);
         //await _hub.Clients.All.SendMessage(message);
     }
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
+using WebAgentMessagesContracts;
 using WebInstallers;
 
 namespace LibWebAgentMessages.Installers;

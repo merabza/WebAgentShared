@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using WebAgentMessagesContracts;
 using WebAgentProjectsApiContracts.V1.Requests;
 using WebAgentProjectsApiContracts.V1.Routes;
 using WebInstallers;

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using WebAgentMessagesContracts;
 
@@ -19,15 +20,17 @@ public class MessagesDataManager : IMessagesDataManager, IDisposable
         _logger = logger;
     }
 
-    public async Task SendMessage(string? userName, string message)
+    public async Task SendMessage(string? userName, string message, params string[] parameters)
     {
         if (userName is null)
             return;
         if (!_connectedUsers.TryGetValue(userName, out var conList))
             return;
-        _logger.LogInformation("Try to send message: {message}", message);
+        var mes = string.Format(message, parameters.Cast<object?>());
+        _logger.LogInformation("Try to send message: {mes}", mes);
+        var webAgentMessage = new WebAgentMessage(message, parameters);
         foreach (var connectionId in conList)
-            await _hub.Clients.Client(connectionId).SendMessage(message);
+            await _hub.Clients.Client(connectionId).SendMessage(webAgentMessage);
         //await _hub.Clients.All.SendMessage(message);
     }
 

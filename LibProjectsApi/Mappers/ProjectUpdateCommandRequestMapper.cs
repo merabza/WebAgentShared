@@ -5,7 +5,7 @@ namespace LibProjectsApi.Mappers;
 
 public static class ProjectUpdateCommandRequestMapper
 {
-    public static ProjectUpdateCommandRequest AdaptTo(this ProjectUpdateRequest projectUpdateRequest)
+    public static ProjectUpdateCommandRequest AdaptTo(this ProjectUpdateRequest projectUpdateRequest, string? userName)
     {
         return new ProjectUpdateCommandRequest
         {
@@ -14,7 +14,8 @@ public static class ProjectUpdateCommandRequestMapper
             ProgramArchiveDateMask = projectUpdateRequest.ProgramArchiveDateMask,
             ProgramArchiveExtension = projectUpdateRequest.ProgramArchiveExtension,
             ParametersFileDateMask = projectUpdateRequest.ParametersFileDateMask,
-            ParametersFileExtension = projectUpdateRequest.ParametersFileExtension
+            ParametersFileExtension = projectUpdateRequest.ParametersFileExtension,
+            UserName = userName
         };
     }
 }

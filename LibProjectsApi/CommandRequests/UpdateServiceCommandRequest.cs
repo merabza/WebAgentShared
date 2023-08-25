@@ -13,4 +13,5 @@ public sealed class UpdateServiceCommandRequest : ICommand<string>
     public string? ProgramArchiveExtension { get; set; }
     public string? ParametersFileDateMask { get; set; }
     public string? ParametersFileExtension { get; set; }
+    public string? UserName { get; set; }
 }

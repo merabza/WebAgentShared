@@ -61,53 +61,66 @@ public sealed class ProjectsEndpoints : IInstaller
     // POST api/project/update
     //[HttpPost(InsApiRoutes.Projects.Update)]
     private static async Task<IResult> Update(ILogger<ProjectsEndpoints> logger,
-        [FromBody] ProjectUpdateRequest? request,
-        HttpRequest httpRequest, IConfiguration config, IMediator mediator)
+        [FromBody] ProjectUpdateRequest? request, HttpRequest httpRequest, IConfiguration config, IMediator mediator,
+        IMessagesDataManager messagesDataManager)
     {
+        var userName = httpRequest.HttpContext.User.Identity?.Name;
+        await messagesDataManager.SendMessage(userName, $"{nameof(Update)} started");
         Debug.WriteLine($"Call {nameof(ProjectUpdateCommandHandler)} from {nameof(Update)}");
         if (request is null)
             return Results.BadRequest(ApiErrors.RequestIsEmpty);
-        var command = request.AdaptTo();
+        var command = request.AdaptTo(userName);
         var result = await mediator.Send(command);
+        await messagesDataManager.SendMessage(userName, $"{nameof(Update)} finished");
         return result.Match(Results.Ok, Results.BadRequest);
     }
 
     // POST api/project/update
     //[HttpPost(InsApiRoutes.Projects.UpdateService)]
     private static async Task<IResult> UpdateService(ILogger<ProjectsEndpoints> logger,
-        [FromBody] UpdateServiceRequest? request,
-        HttpRequest httpRequest, IConfiguration config, IMediator mediator)
+        [FromBody] UpdateServiceRequest? request, HttpRequest httpRequest, IConfiguration config, IMediator mediator,
+        IMessagesDataManager messagesDataManager)
     {
+        var userName = httpRequest.HttpContext.User.Identity?.Name;
+        await messagesDataManager.SendMessage(userName, $"{nameof(Update)} started");
         Debug.WriteLine($"Call {nameof(UpdateServiceCommandHandler)} from {nameof(UpdateService)}");
         if (request is null)
             return Results.BadRequest(ApiErrors.RequestIsEmpty);
-        var command = request.AdaptTo();
+        var command = request.AdaptTo(userName);
         var result = await mediator.Send(command);
+        await messagesDataManager.SendMessage(userName, $"{nameof(Update)} finished");
         return result.Match(Results.Ok, Results.BadRequest);
     }
 
     // POST api/project/stop
     //[HttpPost(InsApiRoutes.Projects.StopService)]
     private static async Task<IResult> StopService(ILogger<ProjectsEndpoints> logger, string? serviceName,
-        [FromQuery] string? apiKey, HttpRequest httpRequest, IConfiguration config, IMediator mediator)
+        [FromQuery] string? apiKey, HttpRequest httpRequest, IConfiguration config, IMediator mediator,
+        IMessagesDataManager messagesDataManager)
     {
+        var userName = httpRequest.HttpContext.User.Identity?.Name;
+        await messagesDataManager.SendMessage(userName, $"{nameof(StopService)} started");
         Debug.WriteLine($"Call {nameof(StopServiceCommandHandler)} from {nameof(StopService)}");
         if (serviceName is null)
             return Results.BadRequest(ProjectsErrors.ServiceNameIsEmpty);
-        var command = StopServiceCommandRequest.Create(serviceName);
+        var command = StopServiceCommandRequest.Create(serviceName, userName);
         var result = await mediator.Send(command);
+        await messagesDataManager.SendMessage(userName, $"{nameof(StopService)} started");
         return result.Match(_ => Results.Ok(), Results.BadRequest);
     }
 
     // POST api/project/start
     //[HttpPost(InsApiRoutes.Projects.StartService)]
     private static async Task<IResult> StartService(ILogger<ProjectsEndpoints> logger, string? serviceName,
-        [FromQuery] string? apiKey, HttpRequest httpRequest, IConfiguration config, IMediator mediator)
+        [FromQuery] string? apiKey, HttpRequest httpRequest, IConfiguration config, IMediator mediator,
+        IMessagesDataManager messagesDataManager)
     {
+        var userName = httpRequest.HttpContext.User.Identity?.Name;
+        await messagesDataManager.SendMessage(userName, $"{nameof(StopService)} started");
         Debug.WriteLine($"Call {nameof(StartServiceCommandHandler)} from {nameof(StartService)}");
         if (serviceName is null)
             return Results.BadRequest(ProjectsErrors.ServiceNameIsEmpty);
-        var command = StartServiceCommandRequest.Create(serviceName);
+        var command = StartServiceCommandRequest.Create(serviceName, userName);
         var result = await mediator.Send(command);
         return result.Match(_ => Results.Ok(), Results.BadRequest);
     }
@@ -165,10 +178,9 @@ public sealed class ProjectsEndpoints : IInstaller
         IMessagesDataManager messagesDataManager, HttpRequest httpRequest)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
-
         await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} started");
         Debug.WriteLine($"Call {nameof(RemoveProjectServiceCommandHandler)} from {nameof(RemoveProjectService)}");
-        var command = RemoveProjectServiceCommandRequest.Create(projectName, serviceName);
+        var command = RemoveProjectServiceCommandRequest.Create(projectName, serviceName, userName);
         var result = await mediator.Send(command);
         await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} finished");
         return result.Match(_ => Results.Ok(), Results.BadRequest);

@@ -5,6 +5,7 @@ using Installer.AgentClients;
 using Installer.Models;
 using LibFileParameters.Models;
 using LibProjectsApi.CommandRequests;
+using LibWebAgentMessages;
 using MessagingAbstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -13,16 +14,19 @@ using SystemToolsShared;
 
 namespace LibProjectsApi.Handlers;
 
-// ReSharper disable once UnusedType.Global
+// ReSharper disable once ClassNeverInstantiated.Global
 public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceCommandRequest, string>
 {
     private readonly IConfiguration _config;
     private readonly ILogger<UpdateServiceCommandHandler> _logger;
+    private readonly IMessagesDataManager _messagesDataManager;
 
-    public UpdateServiceCommandHandler(IConfiguration config, ILogger<UpdateServiceCommandHandler> logger)
+    public UpdateServiceCommandHandler(IConfiguration config, ILogger<UpdateServiceCommandHandler> logger,
+        IMessagesDataManager messagesDataManager)
     {
         _config = config;
         _logger = logger;
+        _messagesDataManager = messagesDataManager;
     }
 
     public async Task<OneOf<string, IEnumerable<Err>>> Handle(UpdateServiceCommandRequest request,
@@ -60,9 +64,8 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceC
             return await Task.FromResult(new[]
                 { ProjectsErrors.FileStorageDoesNotExists(installerSettings.ProgramExchangeFileStorageName) });
 
-        var agentClient =
-            AgentClientsFabric.CreateAgentClientWithFileStorage(_logger, installerSettings,
-                fileStorageForUpload, false);
+        var agentClient = AgentClientsFabric.CreateAgentClientWithFileStorage(_logger, installerSettings,
+            fileStorageForUpload, false, _messagesDataManager, request.UserName);
 
         if (agentClient is null)
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });

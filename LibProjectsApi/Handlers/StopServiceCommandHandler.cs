@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Installer.AgentClients;
 using Installer.Models;
 using LibProjectsApi.CommandRequests;
+using LibWebAgentMessages;
 using MediatR;
 using MessagingAbstractions;
 using Microsoft.Extensions.Configuration;
@@ -18,11 +19,14 @@ public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceComma
 {
     private readonly IConfiguration _config;
     private readonly ILogger<StopServiceCommandHandler> _logger;
+    private readonly IMessagesDataManager _messagesDataManager;
 
-    public StopServiceCommandHandler(IConfiguration config, ILogger<StopServiceCommandHandler> logger)
+    public StopServiceCommandHandler(IConfiguration config, ILogger<StopServiceCommandHandler> logger,
+        IMessagesDataManager messagesDataManager)
     {
         _config = config;
         _logger = logger;
+        _messagesDataManager = messagesDataManager;
     }
 
     public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(StopServiceCommandRequest request,
@@ -33,8 +37,8 @@ public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceComma
 
         var installerSettings = InstallerSettings.Create(_config);
 
-        var agentClient =
-            AgentClientsFabric.CreateAgentClient(_logger, false, installerSettings.InstallFolder);
+        var agentClient = AgentClientsFabric.CreateAgentClient(_logger, false, installerSettings.InstallFolder,
+            _messagesDataManager, request.UserName);
 
         if (agentClient is null)
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });

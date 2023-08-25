@@ -10,4 +10,5 @@ public sealed class UpdateSettingsCommandRequest : ICommand
     public string? AppSettingsFileName { get; set; }
     public string? ParametersFileDateMask { get; set; }
     public string? ParametersFileExtension { get; set; }
+    public string? UserName { get; }
 }

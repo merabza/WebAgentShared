@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Installer.AgentClients;
 using Installer.Models;
 using LibProjectsApi.CommandRequests;
+using LibWebAgentMessages;
 using MediatR;
 using MessagingAbstractions;
 using Microsoft.Extensions.Configuration;
@@ -13,16 +14,19 @@ using SystemToolsShared;
 
 namespace LibProjectsApi.Handlers;
 
-// ReSharper disable once UnusedType.Global
+// ReSharper disable once ClassNeverInstantiated.Global
 public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveProjectServiceCommandRequest>
 {
     private readonly IConfiguration _config;
     private readonly ILogger<RemoveProjectServiceCommandHandler> _logger;
+    private readonly IMessagesDataManager _messagesDataManager;
 
-    public RemoveProjectServiceCommandHandler(IConfiguration config, ILogger<RemoveProjectServiceCommandHandler> logger)
+    public RemoveProjectServiceCommandHandler(IConfiguration config, ILogger<RemoveProjectServiceCommandHandler> logger,
+        IMessagesDataManager messagesDataManager)
     {
         _config = config;
         _logger = logger;
+        _messagesDataManager = messagesDataManager;
     }
 
     public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(RemoveProjectServiceCommandRequest request,
@@ -33,8 +37,8 @@ public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveP
 
         var installerSettings = InstallerSettings.Create(_config);
 
-        var agentClient =
-            AgentClientsFabric.CreateAgentClient(_logger, false, installerSettings.InstallFolder);
+        var agentClient = AgentClientsFabric.CreateAgentClient(_logger, false, installerSettings.InstallFolder,
+            _messagesDataManager, request.UserName);
 
         if (agentClient is null)
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });

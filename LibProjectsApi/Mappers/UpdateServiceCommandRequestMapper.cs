@@ -5,7 +5,7 @@ namespace LibProjectsApi.Mappers;
 
 public static class UpdateServiceCommandRequestMapper
 {
-    public static UpdateServiceCommandRequest AdaptTo(this UpdateServiceRequest updateServiceRequest)
+    public static UpdateServiceCommandRequest AdaptTo(this UpdateServiceRequest updateServiceRequest, string? userName)
     {
         return new UpdateServiceCommandRequest
         {
@@ -17,7 +17,8 @@ public static class UpdateServiceCommandRequestMapper
             ProgramArchiveDateMask = updateServiceRequest.ProgramArchiveDateMask,
             ProgramArchiveExtension = updateServiceRequest.ProgramArchiveExtension,
             ParametersFileDateMask = updateServiceRequest.ParametersFileDateMask,
-            ParametersFileExtension = updateServiceRequest.ParametersFileExtension
+            ParametersFileExtension = updateServiceRequest.ParametersFileExtension,
+            UserName = userName
         };
     }
 }

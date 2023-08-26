@@ -5,7 +5,6 @@ using Installer.AgentClients;
 using Installer.Models;
 using LibFileParameters.Models;
 using LibProjectsApi.CommandRequests;
-using LibWebAgentMessages;
 using MessagingAbstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -80,6 +79,8 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceC
             return assemblyVersion;
 
         var err = ProjectsErrors.CannotBeUpdatedProject(request.ProjectName);
+
+        await _messagesDataManager.SendMessage(request.UserName, err.ErrorMessage);
         _logger.LogError(err.ErrorMessage);
         return await Task.FromResult(new[] { err });
     }

@@ -10,7 +10,7 @@ using SystemToolsShared;
 
 namespace LibProjectsApi.Handlers;
 
-// ReSharper disable once UnusedType.Global
+// ReSharper disable once ClassNeverInstantiated.Global
 public sealed class GetAppSettingsVersionQueryHandler : IQueryHandler<GetAppSettingsVersionQueryRequest, string?>
 {
     private readonly ILogger<GetAppSettingsVersionQueryHandler> _logger;

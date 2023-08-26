@@ -25,6 +25,7 @@ public class MessagesDataManager : IMessagesDataManager, IDisposable
             return;
         if (!_connectedUsers.TryGetValue(userName, out var conList))
             return;
+
         _logger.LogInformation("Try to send message: {message}", message);
         foreach (var connectionId in conList)
             await _hub.Clients.Client(connectionId).SendMessage(message);

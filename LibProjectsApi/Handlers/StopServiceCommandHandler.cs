@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Installer.AgentClients;
 using Installer.Models;
 using LibProjectsApi.CommandRequests;
-using LibWebAgentMessages;
 using MediatR;
 using MessagingAbstractions;
 using Microsoft.Extensions.Configuration;
@@ -16,6 +15,7 @@ using WebAgentMessagesContracts;
 namespace LibProjectsApi.Handlers;
 
 // ReSharper disable once UnusedType.Global
+// ReSharper disable once ClassNeverInstantiated.Global
 public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceCommandRequest>
 {
     private readonly IConfiguration _config;
@@ -48,6 +48,8 @@ public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceComma
             return new Unit();
 
         var err = ProjectsErrors.CannotBeStoppedService(request.ServiceName);
+
+        await _messagesDataManager.SendMessage(request.UserName, err.ErrorMessage);
         _logger.LogError(err.ErrorMessage);
         return await Task.FromResult(new[] { err });
     }

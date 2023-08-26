@@ -5,7 +5,6 @@ using Installer.AgentClients;
 using Installer.Models;
 using LibFileParameters.Models;
 using LibProjectsApi.CommandRequests;
-using LibWebAgentMessages;
 using MediatR;
 using MessagingAbstractions;
 using Microsoft.Extensions.Configuration;
@@ -34,6 +33,8 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
     public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(UpdateSettingsCommandRequest request,
         CancellationToken cancellationToken)
     {
+        await _messagesDataManager.SendMessage(request.UserName, "Creating installer settings");
+
         var installerSettings = InstallerSettings.Create(_config);
 
         var parametersFileDateMask =
@@ -48,6 +49,8 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
 
         if (string.IsNullOrWhiteSpace(installerSettings.ProgramExchangeFileStorageName))
             return await Task.FromResult(new[] { ProjectsErrors.ProgramExchangeFileStorageNameDoesNotSpecified });
+
+        await _messagesDataManager.SendMessage(request.UserName, "Creating File Storages");
 
         var fileStorages = FileStorages.Create(_config);
 
@@ -69,7 +72,10 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
                 request.AppSettingsFileName, parametersFileDateMask, parametersFileExtension))
             return new Unit();
 
-        return await Task.FromResult(new[]
-            { ProjectsErrors.SettingsCannotBeUpdated(request.ProjectName, request.ServiceName) });
+        var err = ProjectsErrors.SettingsCannotBeUpdated(request.ProjectName, request.ServiceName);
+
+        await _messagesDataManager.SendMessage(request.UserName, err.ErrorMessage);
+        _logger.LogError(err.ErrorMessage);
+        return await Task.FromResult(new[] { err });
     }
 }

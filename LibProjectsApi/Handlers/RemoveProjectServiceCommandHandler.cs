@@ -56,7 +56,6 @@ public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveP
 
         var err = ProjectsErrors.ProjectServiceCannotBeRemoved(request.ProjectName, request.ServiceName);
 
-        await _messagesDataManager.SendMessage(request.UserName, err.ErrorMessage);
         _logger.LogError(err.ErrorMessage);
         return await Task.FromResult(new[] { err });
     }

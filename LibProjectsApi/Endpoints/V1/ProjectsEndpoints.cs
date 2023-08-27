@@ -162,7 +162,7 @@ public sealed class ProjectsEndpoints : IInstaller
         Debug.WriteLine($"Call {nameof(GetAppSettingsVersionQueryHandler)} from {nameof(GetAppSettingsVersion)}");
         if (string.IsNullOrWhiteSpace(apiVersionId) || serverSidePort == 0)
             return Results.BadRequest(ProjectsErrors.SameParametersAreEmpty);
-        var command = GetAppSettingsVersionQueryRequest.Create(serverSidePort, apiVersionId);
+        var command = GetAppSettingsVersionQueryRequest.Create(serverSidePort, apiVersionId, userName);
         var result = await mediator.Send(command);
         await messagesDataManager.SendMessage(userName, $"{nameof(GetAppSettingsVersion)} finished");
         return result.Match(Results.Ok, Results.BadRequest);
@@ -179,7 +179,7 @@ public sealed class ProjectsEndpoints : IInstaller
         Debug.WriteLine($"Call {nameof(GetVersionQueryHandler)} from {nameof(GetVersion)}");
         if (string.IsNullOrWhiteSpace(apiVersionId) || serverSidePort == 0)
             return Results.BadRequest(ProjectsErrors.SameParametersAreEmpty);
-        var command = GetVersionQueryRequest.Create(serverSidePort, apiVersionId);
+        var command = GetVersionQueryRequest.Create(serverSidePort, apiVersionId, userName);
         var result = await mediator.Send(command);
         await messagesDataManager.SendMessage(userName, $"{nameof(GetVersion)} finished");
         return result.Match(Results.Ok, Results.BadRequest);

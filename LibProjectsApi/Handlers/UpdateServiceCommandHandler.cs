@@ -71,16 +71,14 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceC
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
 
         var assemblyVersion = agentClient.InstallService(request.ProjectName, request.EnvironmentName,
-            request.ServiceName,
-            request.ServiceUserName, request.AppSettingsFileName, programArchiveDateMask, programArchiveExtension,
-            parametersFileDateMask, parametersFileExtension);
+            request.ServiceName, request.ServiceUserName, request.AppSettingsFileName, programArchiveDateMask,
+            programArchiveExtension, parametersFileDateMask, parametersFileExtension);
 
         if (assemblyVersion != null)
             return assemblyVersion;
 
         var err = ProjectsErrors.CannotBeUpdatedProject(request.ProjectName);
 
-        await _messagesDataManager.SendMessage(request.UserName, err.ErrorMessage);
         _logger.LogError(err.ErrorMessage);
         return await Task.FromResult(new[] { err });
     }

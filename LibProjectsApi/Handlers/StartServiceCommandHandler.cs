@@ -49,7 +49,6 @@ public sealed class StartServiceCommandHandler : ICommandHandler<StartServiceCom
 
         var err = ProjectsErrors.CannotBeStartedService(request.ServiceName);
 
-        await _messagesDataManager.SendMessage(request.UserName, err.ErrorMessage);
         _logger.LogError(err.ErrorMessage);
         return await Task.FromResult(new[] { err });
     }

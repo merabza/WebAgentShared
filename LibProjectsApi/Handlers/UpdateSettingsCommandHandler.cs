@@ -74,7 +74,6 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
 
         var err = ProjectsErrors.SettingsCannotBeUpdated(request.ProjectName, request.ServiceName);
 
-        await _messagesDataManager.SendMessage(request.UserName, err.ErrorMessage);
         _logger.LogError(err.ErrorMessage);
         return await Task.FromResult(new[] { err });
     }

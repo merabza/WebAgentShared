@@ -76,8 +76,6 @@ public sealed class ProjectUpdateCommandHandler : ICommandHandler<ProjectUpdateC
 
         var err = ProjectsErrors.CannotBeUpdatedProject(request.ProjectName);
 
-        await _messagesDataManager.SendMessage(request.UserName, err.ErrorMessage);
-
         _logger.LogError(err.ErrorMessage);
         return new[] { err };
     }

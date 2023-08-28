@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 using System;
+using SystemToolsShared;
 using WebAgentMessagesContracts;
 
 namespace LibWebAgentMessages;

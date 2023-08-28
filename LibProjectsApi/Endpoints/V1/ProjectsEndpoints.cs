@@ -9,8 +9,6 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using WebAgentMessagesContracts;
 using WebAgentProjectsApiContracts.V1.Requests;
 using WebAgentProjectsApiContracts.V1.Routes;
@@ -31,6 +29,7 @@ public sealed class ProjectsEndpoints : IInstaller
     public void UseServices(WebApplication app)
     {
         //.RequireAuthorization(); იყო //.AddEndpointFilter<ApiKeysChecker>();
+
         //Console.WriteLine("InstallServices.UseServices Started");
         var group = app.MapGroup(ProjectsApiRoutes.Projects.ProjectBase).RequireAuthorization();
 
@@ -46,141 +45,138 @@ public sealed class ProjectsEndpoints : IInstaller
         //Console.WriteLine("InstallServices.UseServices Finished");
     }
 
-
     //// POST api/project/updatesettings
-    //[HttpPost(InsApiRoutes.Projects.UpdateSettings)]
-    private static async Task<IResult> UpdateSettings(ILogger<ProjectsEndpoints> logger,
-        [FromBody] UpdateSettingsRequest? request, HttpRequest httpRequest, IConfiguration config, IMediator mediator,
-        IMessagesDataManager messagesDataManager)
+    private static async Task<IResult> UpdateSettings([FromBody] UpdateSettingsRequest? request,
+        HttpRequest httpRequest, IMediator mediator, IMessagesDataManager messagesDataManager)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(UpdateSettings)} started");
         Debug.WriteLine($"Call {nameof(UpdateSettingsCommandHandler)} from {nameof(UpdateSettings)}");
+
         if (request is null)
             return Results.BadRequest(ApiErrors.RequestIsEmpty);
         var command = request.AdaptTo();
         var result = await mediator.Send(command);
+
         await messagesDataManager.SendMessage(userName, $"{nameof(UpdateSettings)} finished");
         return result.Match(_ => Results.Ok(), Results.BadRequest);
     }
 
     // POST api/project/update
-    //[HttpPost(InsApiRoutes.Projects.Update)]
-    private static async Task<IResult> Update(ILogger<ProjectsEndpoints> logger,
-        [FromBody] ProjectUpdateRequest? request, HttpRequest httpRequest, IConfiguration config, IMediator mediator,
-        IMessagesDataManager messagesDataManager)
+    private static async Task<IResult> Update([FromBody] ProjectUpdateRequest? request, HttpRequest httpRequest,
+        IMediator mediator, IMessagesDataManager messagesDataManager)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(Update)} started");
         Debug.WriteLine($"Call {nameof(ProjectUpdateCommandHandler)} from {nameof(Update)}");
+
         if (request is null)
             return Results.BadRequest(ApiErrors.RequestIsEmpty);
         var command = request.AdaptTo(userName);
         var result = await mediator.Send(command);
+
         await messagesDataManager.SendMessage(userName, $"{nameof(Update)} finished");
         return result.Match(Results.Ok, Results.BadRequest);
     }
 
     // POST api/project/update
-    //[HttpPost(InsApiRoutes.Projects.UpdateService)]
-    private static async Task<IResult> UpdateService(ILogger<ProjectsEndpoints> logger,
-        [FromBody] UpdateServiceRequest? request, HttpRequest httpRequest, IConfiguration config, IMediator mediator,
-        IMessagesDataManager messagesDataManager)
+    private static async Task<IResult> UpdateService([FromBody] UpdateServiceRequest? request, HttpRequest httpRequest,
+        IMediator mediator, IMessagesDataManager messagesDataManager)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(UpdateService)} started");
         Debug.WriteLine($"Call {nameof(UpdateServiceCommandHandler)} from {nameof(UpdateService)}");
+
         if (request is null)
             return Results.BadRequest(ApiErrors.RequestIsEmpty);
         var command = request.AdaptTo(userName);
         var result = await mediator.Send(command);
+
         await messagesDataManager.SendMessage(userName, $"{nameof(UpdateService)} finished");
         return result.Match(Results.Ok, Results.BadRequest);
     }
 
     // POST api/project/stop
-    //[HttpPost(InsApiRoutes.Projects.StopService)]
-    private static async Task<IResult> StopService(ILogger<ProjectsEndpoints> logger, string? serviceName,
-        HttpRequest httpRequest, IConfiguration config, IMediator mediator, IMessagesDataManager messagesDataManager)
+    private static async Task<IResult> StopService([FromRoute] string? serviceName, HttpRequest httpRequest,
+        IMediator mediator, IMessagesDataManager messagesDataManager)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(StopService)} started");
         Debug.WriteLine($"Call {nameof(StopServiceCommandHandler)} from {nameof(StopService)}");
+
         if (serviceName is null)
             return Results.BadRequest(ProjectsErrors.ServiceNameIsEmpty);
         var command = StopServiceCommandRequest.Create(serviceName, userName);
         var result = await mediator.Send(command);
+
         await messagesDataManager.SendMessage(userName, $"{nameof(StopService)} started");
         return result.Match(_ => Results.Ok(), Results.BadRequest);
     }
 
     // POST api/project/start
-    //[HttpPost(InsApiRoutes.Projects.StartService)]
-    private static async Task<IResult> StartService(ILogger<ProjectsEndpoints> logger, string? serviceName,
-        HttpRequest httpRequest, IConfiguration config, IMediator mediator, IMessagesDataManager messagesDataManager)
+    private static async Task<IResult> StartService([FromRoute] string? serviceName, HttpRequest httpRequest,
+        IMediator mediator, IMessagesDataManager messagesDataManager)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(StartService)} started");
         Debug.WriteLine($"Call {nameof(StartServiceCommandHandler)} from {nameof(StartService)}");
+
         if (serviceName is null)
             return Results.BadRequest(ProjectsErrors.ServiceNameIsEmpty);
         var command = StartServiceCommandRequest.Create(serviceName, userName);
         var result = await mediator.Send(command);
+
         await messagesDataManager.SendMessage(userName, $"{nameof(StartService)} started");
         return result.Match(_ => Results.Ok(), Results.BadRequest);
     }
 
     // POST api/project/remove
-    //[HttpDelete(InsApiRoutes.Projects.RemoveProject)]
-    private static async Task<IResult> RemoveProject(ILogger<ProjectsEndpoints> logger, string projectName,
-        [FromQuery] string? apiKey, HttpRequest httpRequest, IConfiguration config, IMediator mediator,
-        IMessagesDataManager messagesDataManager)
+    private static async Task<IResult> RemoveProject([FromRoute] string projectName, HttpRequest httpRequest,
+        IMediator mediator, IMessagesDataManager messagesDataManager)
     {
         //ეს არის პროგრამის წაშლის ის ვარიანტი, როცა პროგრამა სერვისი არ არის
         return await RemoveProjectService(projectName, null, mediator, messagesDataManager, httpRequest);
     }
 
     // POST api/project/removeservice
-    //[HttpDelete(InsApiRoutes.Projects.RemoveService)]
-    private static async Task<IResult> RemoveService(ILogger<ProjectsEndpoints> logger, string projectName,
-        string serviceName, [FromQuery] string? apiKey, HttpRequest httpRequest, IConfiguration config,
-        IMediator mediator, IMessagesDataManager messagesDataManager)
+    private static async Task<IResult> RemoveService([FromRoute] string projectName, [FromRoute] string serviceName,
+        HttpRequest httpRequest, IMediator mediator, IMessagesDataManager messagesDataManager)
     {
         //ეს არის პროგრამის წაშლის ის ვარიანტი, როცა პროგრამა სერვისია
         return await RemoveProjectService(projectName, serviceName, mediator, messagesDataManager, httpRequest);
     }
 
     // GET api/project/getappsettingsversion
-    //[HttpGet(InsApiRoutes.Projects.GetAppSettingsVersion)]
-    //[ApiKeyAuth]
-    private static async Task<IResult> GetAppSettingsVersion(ILogger<ProjectsEndpoints> logger, int serverSidePort,
-        string apiVersionId, [FromQuery] string? apiKey, HttpRequest httpRequest, IConfiguration config,
-        IMediator mediator, IMessagesDataManager messagesDataManager)
+    private static async Task<IResult> GetAppSettingsVersion([FromRoute] int serverSidePort,
+        [FromRoute] string apiVersionId, HttpRequest httpRequest, IMediator mediator,
+        IMessagesDataManager messagesDataManager)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(GetAppSettingsVersion)} started");
         Debug.WriteLine($"Call {nameof(GetAppSettingsVersionQueryHandler)} from {nameof(GetAppSettingsVersion)}");
+
         if (string.IsNullOrWhiteSpace(apiVersionId) || serverSidePort == 0)
             return Results.BadRequest(ProjectsErrors.SameParametersAreEmpty);
         var command = GetAppSettingsVersionQueryRequest.Create(serverSidePort, apiVersionId, userName);
         var result = await mediator.Send(command);
+
         await messagesDataManager.SendMessage(userName, $"{nameof(GetAppSettingsVersion)} finished");
         return result.Match(Results.Ok, Results.BadRequest);
     }
 
     // POST api/project/getversion
-    //[HttpGet(InsApiRoutes.Projects.GetVersion)]
-    private static async Task<IResult> GetVersion(ILogger<ProjectsEndpoints> logger, int serverSidePort,
-        string apiVersionId, [FromQuery] string? apiKey, HttpRequest httpRequest, IConfiguration config,
-        IMediator mediator, IMessagesDataManager messagesDataManager)
+    private static async Task<IResult> GetVersion([FromRoute] int serverSidePort, [FromRoute] string apiVersionId,
+        HttpRequest httpRequest, IMediator mediator, IMessagesDataManager messagesDataManager)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(GetVersion)} started");
         Debug.WriteLine($"Call {nameof(GetVersionQueryHandler)} from {nameof(GetVersion)}");
+
         if (string.IsNullOrWhiteSpace(apiVersionId) || serverSidePort == 0)
             return Results.BadRequest(ProjectsErrors.SameParametersAreEmpty);
         var command = GetVersionQueryRequest.Create(serverSidePort, apiVersionId, userName);
         var result = await mediator.Send(command);
+
         await messagesDataManager.SendMessage(userName, $"{nameof(GetVersion)} finished");
         return result.Match(Results.Ok, Results.BadRequest);
     }
@@ -191,8 +187,10 @@ public sealed class ProjectsEndpoints : IInstaller
         var userName = httpRequest.HttpContext.User.Identity?.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} started");
         Debug.WriteLine($"Call {nameof(RemoveProjectServiceCommandHandler)} from {nameof(RemoveProjectService)}");
+
         var command = RemoveProjectServiceCommandRequest.Create(projectName, serviceName, userName);
         var result = await mediator.Send(command);
+
         await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} finished");
         return result.Match(_ => Results.Ok(), Results.BadRequest);
     }

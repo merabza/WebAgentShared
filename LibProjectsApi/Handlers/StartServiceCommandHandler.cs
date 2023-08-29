@@ -10,11 +10,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using SystemToolsShared;
-using WebAgentMessagesContracts;
 
 namespace LibProjectsApi.Handlers;
 
-// ReSharper disable once UnusedType.Global
+// ReSharper disable once ClassNeverInstantiated.Global
 public sealed class StartServiceCommandHandler : ICommandHandler<StartServiceCommandRequest>
 {
     private readonly IConfiguration _config;
@@ -44,7 +43,7 @@ public sealed class StartServiceCommandHandler : ICommandHandler<StartServiceCom
         if (agentClient is null)
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
 
-        if (agentClient.StartService(request.ServiceName))
+        if (await agentClient.StartService(request.ServiceName))
             return new Unit();
 
         var err = ProjectsErrors.CannotBeStartedService(request.ServiceName);

@@ -11,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using SystemToolsShared;
-using WebAgentMessagesContracts;
 
 namespace LibProjectsApi.Handlers;
 
@@ -68,7 +67,7 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
 
 
-        if (agentClient.UpdateAppParametersFile(request.ProjectName, request.EnvironmentName, request.ServiceName,
+        if (await agentClient.UpdateAppParametersFile(request.ProjectName, request.EnvironmentName, request.ServiceName,
                 request.AppSettingsFileName, parametersFileDateMask, parametersFileExtension))
             return new Unit();
 

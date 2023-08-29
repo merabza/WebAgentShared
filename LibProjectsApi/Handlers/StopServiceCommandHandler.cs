@@ -10,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using SystemToolsShared;
-using WebAgentMessagesContracts;
 
 namespace LibProjectsApi.Handlers;
 
@@ -44,7 +43,7 @@ public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceComma
         if (agentClient is null)
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
 
-        if (agentClient.StopService(request.ServiceName))
+        if (await agentClient.StopService(request.ServiceName))
             return new Unit();
 
         var err = ProjectsErrors.CannotBeStoppedService(request.ServiceName);

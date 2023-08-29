@@ -10,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using SystemToolsShared;
-using WebAgentMessagesContracts;
 
 namespace LibProjectsApi.Handlers;
 
@@ -70,7 +69,7 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceC
         if (agentClient is null)
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
 
-        var assemblyVersion = agentClient.InstallService(request.ProjectName, request.EnvironmentName,
+        var assemblyVersion = await agentClient.InstallService(request.ProjectName, request.EnvironmentName,
             request.ServiceName, request.ServiceUserName, request.AppSettingsFileName, programArchiveDateMask,
             programArchiveExtension, parametersFileDateMask, parametersFileExtension);
 

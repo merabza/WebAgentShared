@@ -7,28 +7,24 @@ using MessagingAbstractions;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using SystemToolsShared;
-using WebAgentMessagesContracts;
 
 namespace LibProjectsApi.Handlers;
 
-// ReSharper disable once UnusedType.Global
+// ReSharper disable once ClassNeverInstantiated.Global
 public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionQueryRequest, string?>
 {
     private readonly ILogger<GetVersionQueryHandler> _logger;
-    private readonly IMessagesDataManager? _messagesDataManager;
 
-    public GetVersionQueryHandler(ILogger<GetVersionQueryHandler> logger, IMessagesDataManager? messagesDataManager)
+    public GetVersionQueryHandler(ILogger<GetVersionQueryHandler> logger)
     {
         _logger = logger;
-        _messagesDataManager = messagesDataManager;
     }
 
     public async Task<OneOf<string?, IEnumerable<Err>>> Handle(GetVersionQueryRequest request,
         CancellationToken cancellationToken)
     {
         var webAgentClient =
-            new WebAgentClient(_logger, $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/", null,
-                _messagesDataManager, request.UserName);
+            new TestApiClient(_logger, $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/");
         return await webAgentClient.GetVersion();
     }
 }

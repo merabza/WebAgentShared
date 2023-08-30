@@ -10,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using SystemToolsShared;
-using WebAgentMessagesContracts;
 
 namespace LibProjectsApi.Handlers;
 
@@ -43,16 +42,8 @@ public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveP
         if (agentClient is null)
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
 
-        if (request.ServiceName is null)
-        {
-            if (await agentClient.RemoveProject(request.ProjectName))
-                return new Unit();
-        }
-        else
-        {
-            if (await agentClient.RemoveProjectAndService(request.ProjectName, request.ServiceName))
-                return new Unit();
-        }
+        if (await agentClient.RemoveProjectAndService(request.ProjectName, request.ServiceName))
+            return new Unit();
 
         var err = ProjectsErrors.ProjectServiceCannotBeRemoved(request.ProjectName, request.ServiceName);
 

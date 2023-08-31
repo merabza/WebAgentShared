@@ -43,7 +43,7 @@ public sealed class StartServiceCommandHandler : ICommandHandler<StartServiceCom
         if (agentClient is null)
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
 
-        if (await agentClient.StartService(request.ServiceName))
+        if (await agentClient.StartService(request.ServiceName, request.EnvironmentName))
             return new Unit();
 
         var err = ProjectsErrors.CannotBeStartedService(request.ServiceName);

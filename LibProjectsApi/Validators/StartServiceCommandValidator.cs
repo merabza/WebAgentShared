@@ -9,5 +9,6 @@ public sealed class StartServiceCommandValidator : AbstractValidator<StartServic
     public StartServiceCommandValidator()
     {
         RuleFor(x => x.ServiceName).FileName();
+        RuleFor(x => x.EnvironmentName).Name();
     }
 }

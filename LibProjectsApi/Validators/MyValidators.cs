@@ -20,6 +20,11 @@ public static class MyValidators
         ruleBuilder.NotEmpty().Matches(@"^[\w\-.]+$").MaximumLength(256);
     }
 
+    public static void Name<T>(this IRuleBuilder<T, string?> ruleBuilder)
+    {
+        ruleBuilder.NotEmpty().Matches(@"^\w+$").MaximumLength(32);
+    }
+
     public static void DateMask<T>(this IRuleBuilder<T, string?> ruleBuilder)
     {
         ruleBuilder.NotEmpty().Matches(@"^[yMdHms]+$").MaximumLength(20);

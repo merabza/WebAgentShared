@@ -9,7 +9,7 @@ public sealed class ProjectUpdateCommandValidator : AbstractValidator<ProjectUpd
     public ProjectUpdateCommandValidator()
     {
         RuleFor(x => x.ProjectName).FileName();
-        RuleFor(x => x.EnvironmentName).FileName();
+        RuleFor(x => x.EnvironmentName).Name();
         RuleFor(x => x.ProgramArchiveDateMask).DateMask();
         RuleFor(x => x.ProgramArchiveExtension).FileExtension();
         RuleFor(x => x.ParametersFileDateMask).DateMask();

@@ -97,7 +97,7 @@ public sealed class ProjectsEndpoints : IInstaller
     }
 
     // POST api/projects/stop/{serviceName}/{environmentName}
-    private static async Task<IResult> StopService([FromRoute] string? serviceName, [FromRoute] string? environmentName,
+    private static async Task<IResult> StopService([FromRoute] string? serviceName, [FromRoute] string environmentName,
         HttpRequest httpRequest, IMediator mediator, IMessagesDataManager messagesDataManager)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
@@ -115,7 +115,7 @@ public sealed class ProjectsEndpoints : IInstaller
 
     // POST api/projects/start/{serviceName}/{environmentName}
     private static async Task<IResult> StartService([FromRoute] string? serviceName,
-        [FromRoute] string? environmentName, HttpRequest httpRequest, IMediator mediator,
+        [FromRoute] string environmentName, HttpRequest httpRequest, IMediator mediator,
         IMessagesDataManager messagesDataManager)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
@@ -186,7 +186,7 @@ public sealed class ProjectsEndpoints : IInstaller
     }
 
     private static async Task<IResult> RemoveProjectService(string projectName, string? serviceName,
-        string? environmentName, ISender mediator, IMessagesDataManager messagesDataManager, HttpRequest httpRequest)
+        string environmentName, ISender mediator, IMessagesDataManager messagesDataManager, HttpRequest httpRequest)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} started");

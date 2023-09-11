@@ -43,7 +43,7 @@ public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceComma
         if (agentClient is null)
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
 
-        if (await agentClient.StopService(request.ServiceName, request.EnvironmentName))
+        if (await agentClient.StopService(request.ServiceName, request.EnvironmentName, cancellationToken))
             return new Unit();
 
         var err = ProjectsErrors.CannotBeStoppedService(request.ServiceName);

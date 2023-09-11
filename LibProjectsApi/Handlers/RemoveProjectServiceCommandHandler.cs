@@ -43,7 +43,7 @@ public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveP
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
 
         if (await agentClient.RemoveProjectAndService(request.ProjectName, request.ServiceName,
-                request.EnvironmentName))
+                request.EnvironmentName, cancellationToken))
             return new Unit();
 
         var err = ProjectsErrors.ProjectServiceCannotBeRemoved(request.ProjectName, request.ServiceName);

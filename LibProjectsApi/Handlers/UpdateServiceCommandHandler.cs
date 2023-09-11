@@ -71,7 +71,7 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceC
 
         var assemblyVersion = await agentClient.InstallService(request.ProjectName, request.EnvironmentName,
             request.ServiceName, request.ServiceUserName, request.AppSettingsFileName, programArchiveDateMask,
-            programArchiveExtension, parametersFileDateMask, parametersFileExtension);
+            programArchiveExtension, parametersFileDateMask, parametersFileExtension, cancellationToken);
 
         if (assemblyVersion != null)
             return assemblyVersion;

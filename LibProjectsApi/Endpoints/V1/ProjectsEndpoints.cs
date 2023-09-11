@@ -52,7 +52,7 @@ public sealed class ProjectsEndpoints : IInstaller
         CancellationToken cancellationToken)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
-        await messagesDataManager.SendMessage(userName, $"{nameof(UpdateSettings)} started");
+        await messagesDataManager.SendMessage(userName, $"{nameof(UpdateSettings)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(UpdateSettingsCommandHandler)} from {nameof(UpdateSettings)}");
 
         if (request is null)
@@ -60,7 +60,7 @@ public sealed class ProjectsEndpoints : IInstaller
         var command = request.AdaptTo();
         var result = await mediator.Send(command, cancellationToken);
 
-        await messagesDataManager.SendMessage(userName, $"{nameof(UpdateSettings)} finished");
+        await messagesDataManager.SendMessage(userName, $"{nameof(UpdateSettings)} finished", cancellationToken);
         return result.Match(_ => Results.Ok(), Results.BadRequest);
     }
 
@@ -69,7 +69,7 @@ public sealed class ProjectsEndpoints : IInstaller
         IMediator mediator, IMessagesDataManager messagesDataManager, CancellationToken cancellationToken)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
-        await messagesDataManager.SendMessage(userName, $"{nameof(Update)} started");
+        await messagesDataManager.SendMessage(userName, $"{nameof(Update)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(ProjectUpdateCommandHandler)} from {nameof(Update)}");
 
         if (request is null)
@@ -77,7 +77,7 @@ public sealed class ProjectsEndpoints : IInstaller
         var command = request.AdaptTo(userName);
         var result = await mediator.Send(command, cancellationToken);
 
-        await messagesDataManager.SendMessage(userName, $"{nameof(Update)} finished");
+        await messagesDataManager.SendMessage(userName, $"{nameof(Update)} finished", cancellationToken);
         return result.Match(Results.Ok, Results.BadRequest);
     }
 
@@ -86,7 +86,7 @@ public sealed class ProjectsEndpoints : IInstaller
         IMediator mediator, IMessagesDataManager messagesDataManager, CancellationToken cancellationToken)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
-        await messagesDataManager.SendMessage(userName, $"{nameof(UpdateService)} started");
+        await messagesDataManager.SendMessage(userName, $"{nameof(UpdateService)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(UpdateServiceCommandHandler)} from {nameof(UpdateService)}");
 
         if (request is null)
@@ -94,7 +94,7 @@ public sealed class ProjectsEndpoints : IInstaller
         var command = request.AdaptTo(userName);
         var result = await mediator.Send(command, cancellationToken);
 
-        await messagesDataManager.SendMessage(userName, $"{nameof(UpdateService)} finished");
+        await messagesDataManager.SendMessage(userName, $"{nameof(UpdateService)} finished", cancellationToken);
         return result.Match(Results.Ok, Results.BadRequest);
     }
 
@@ -104,7 +104,7 @@ public sealed class ProjectsEndpoints : IInstaller
         CancellationToken cancellationToken)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
-        await messagesDataManager.SendMessage(userName, $"{nameof(StopService)} started");
+        await messagesDataManager.SendMessage(userName, $"{nameof(StopService)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(StopServiceCommandHandler)} from {nameof(StopService)}");
 
         if (serviceName is null)
@@ -112,7 +112,7 @@ public sealed class ProjectsEndpoints : IInstaller
         var command = StopServiceCommandRequest.Create(serviceName, environmentName, userName);
         var result = await mediator.Send(command, cancellationToken);
 
-        await messagesDataManager.SendMessage(userName, $"{nameof(StopService)} started");
+        await messagesDataManager.SendMessage(userName, $"{nameof(StopService)} started", cancellationToken);
         return result.Match(_ => Results.Ok(), Results.BadRequest);
     }
 
@@ -122,7 +122,7 @@ public sealed class ProjectsEndpoints : IInstaller
         CancellationToken cancellationToken)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
-        await messagesDataManager.SendMessage(userName, $"{nameof(StartService)} started");
+        await messagesDataManager.SendMessage(userName, $"{nameof(StartService)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(StartServiceCommandHandler)} from {nameof(StartService)}");
 
         if (serviceName is null)
@@ -130,7 +130,7 @@ public sealed class ProjectsEndpoints : IInstaller
         var command = StartServiceCommandRequest.Create(serviceName, environmentName, userName);
         var result = await mediator.Send(command, cancellationToken);
 
-        await messagesDataManager.SendMessage(userName, $"{nameof(StartService)} started");
+        await messagesDataManager.SendMessage(userName, $"{nameof(StartService)} started", cancellationToken);
         return result.Match(_ => Results.Ok(), Results.BadRequest);
     }
 
@@ -160,7 +160,7 @@ public sealed class ProjectsEndpoints : IInstaller
         IMessagesDataManager messagesDataManager, CancellationToken cancellationToken)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
-        await messagesDataManager.SendMessage(userName, $"{nameof(GetAppSettingsVersion)} started");
+        await messagesDataManager.SendMessage(userName, $"{nameof(GetAppSettingsVersion)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(GetAppSettingsVersionQueryHandler)} from {nameof(GetAppSettingsVersion)}");
 
         if (string.IsNullOrWhiteSpace(apiVersionId) || serverSidePort == 0)
@@ -168,7 +168,7 @@ public sealed class ProjectsEndpoints : IInstaller
         var command = GetAppSettingsVersionQueryRequest.Create(serverSidePort, apiVersionId, userName);
         var result = await mediator.Send(command, cancellationToken);
 
-        await messagesDataManager.SendMessage(userName, $"{nameof(GetAppSettingsVersion)} finished");
+        await messagesDataManager.SendMessage(userName, $"{nameof(GetAppSettingsVersion)} finished", cancellationToken);
         return result.Match(Results.Ok, Results.BadRequest);
     }
 
@@ -178,7 +178,7 @@ public sealed class ProjectsEndpoints : IInstaller
         CancellationToken cancellationToken)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
-        await messagesDataManager.SendMessage(userName, $"{nameof(GetVersion)} started");
+        await messagesDataManager.SendMessage(userName, $"{nameof(GetVersion)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(GetVersionQueryHandler)} from {nameof(GetVersion)}");
 
         if (string.IsNullOrWhiteSpace(apiVersionId) || serverSidePort == 0)
@@ -186,7 +186,7 @@ public sealed class ProjectsEndpoints : IInstaller
         var command = GetVersionQueryRequest.Create(serverSidePort, apiVersionId, userName);
         var result = await mediator.Send(command, cancellationToken);
 
-        await messagesDataManager.SendMessage(userName, $"{nameof(GetVersion)} finished");
+        await messagesDataManager.SendMessage(userName, $"{nameof(GetVersion)} finished", cancellationToken);
         return result.Match(Results.Ok, Results.BadRequest);
     }
 
@@ -195,13 +195,13 @@ public sealed class ProjectsEndpoints : IInstaller
         CancellationToken cancellationToken)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
-        await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} started");
+        await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(RemoveProjectServiceCommandHandler)} from {nameof(RemoveProjectService)}");
 
         var command = RemoveProjectServiceCommandRequest.Create(projectName, serviceName, environmentName, userName);
         var result = await mediator.Send(command, cancellationToken);
 
-        await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} finished");
+        await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} finished", cancellationToken);
         return result.Match(_ => Results.Ok(), Results.BadRequest);
     }
 }

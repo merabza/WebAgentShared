@@ -32,7 +32,7 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
     public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(UpdateSettingsCommandRequest request,
         CancellationToken cancellationToken)
     {
-        await _messagesDataManager.SendMessage(request.UserName, "Creating installer settings");
+        await _messagesDataManager.SendMessage(request.UserName, "Creating installer settings", cancellationToken);
 
         var installerSettings = InstallerSettings.Create(_config);
 
@@ -49,7 +49,7 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
         if (string.IsNullOrWhiteSpace(installerSettings.ProgramExchangeFileStorageName))
             return await Task.FromResult(new[] { ProjectsErrors.ProgramExchangeFileStorageNameDoesNotSpecified });
 
-        await _messagesDataManager.SendMessage(request.UserName, "Creating File Storages");
+        await _messagesDataManager.SendMessage(request.UserName, "Creating File Storages", cancellationToken);
 
         var fileStorages = FileStorages.Create(_config);
 
@@ -68,7 +68,7 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
 
 
         if (await agentClient.UpdateAppParametersFile(request.ProjectName, request.EnvironmentName, request.ServiceName,
-                request.AppSettingsFileName, parametersFileDateMask, parametersFileExtension))
+                request.AppSettingsFileName, parametersFileDateMask, parametersFileExtension, cancellationToken))
             return new Unit();
 
         var err = ProjectsErrors.SettingsCannotBeUpdated(request.ProjectName, request.ServiceName);

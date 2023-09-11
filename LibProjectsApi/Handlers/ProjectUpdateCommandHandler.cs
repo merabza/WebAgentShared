@@ -67,7 +67,8 @@ public sealed class ProjectUpdateCommandHandler : ICommandHandler<ProjectUpdateC
             return new[] { ProjectsErrors.AgentClientDoesNotCreated };
 
         var assemblyVersion = await agentClient.InstallProgram(request.ProjectName, request.EnvironmentName,
-            programArchiveDateMask, programArchiveExtension, parametersFileDateMask, parametersFileExtension);
+            programArchiveDateMask, programArchiveExtension, parametersFileDateMask, parametersFileExtension,
+            cancellationToken);
 
         if (assemblyVersion != null)
             return assemblyVersion;

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using SignalRClient;
 using SystemToolsShared;
@@ -20,7 +21,7 @@ public class MessagesDataManager : IMessagesDataManager, IDisposable
         _logger = logger;
     }
 
-    public async Task SendMessage(string? userName, string message)
+    public async Task SendMessage(string? userName, string message, CancellationToken cancellationToken)
     {
         if (userName is null)
             return;
@@ -29,7 +30,7 @@ public class MessagesDataManager : IMessagesDataManager, IDisposable
 
         _logger.LogInformation("Try to send message: {message}", message);
         foreach (var connectionId in conList)
-            await _hub.Clients.Client(connectionId).SendMessage(message);
+            await _hub.Clients.Client(connectionId).SendMessage(message, cancellationToken);
         //await _hub.Clients.All.SendMessage(message);
     }
 

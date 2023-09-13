@@ -14,4 +14,6 @@ public sealed class UpdateServiceCommandRequest : ICommand<string>
     public string? ParametersFileDateMask { get; set; }
     public string? ParametersFileExtension { get; set; }
     public string? UserName { get; set; }
+    public string? ServiceDescriptionSignature { get; set; }
+    public string? ProjectDescription { get; set; }
 }

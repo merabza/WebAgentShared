@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ApiToolsShared;
@@ -169,7 +170,7 @@ public sealed class ProjectsEndpoints : IInstaller
         var result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(GetAppSettingsVersion)} finished", cancellationToken);
-        return result.Match(Results.Ok, Results.BadRequest);
+        return result.Match(ret => Results.Text(ret, "text/plain", Encoding.UTF8), Results.BadRequest);
     }
 
     // POST api/projects/getversion/{serverSidePort}/{apiVersionId}
@@ -187,7 +188,7 @@ public sealed class ProjectsEndpoints : IInstaller
         var result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(GetVersion)} finished", cancellationToken);
-        return result.Match(Results.Ok, Results.BadRequest);
+        return result.Match(ret => Results.Text(ret, "text/plain", Encoding.UTF8), Results.BadRequest);
     }
 
     private static async Task<IResult> RemoveProjectService(string projectName, string? serviceName,

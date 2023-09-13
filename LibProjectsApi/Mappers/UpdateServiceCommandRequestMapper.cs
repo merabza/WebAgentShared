@@ -18,6 +18,8 @@ public static class UpdateServiceCommandRequestMapper
             ProgramArchiveExtension = updateServiceRequest.ProgramArchiveExtension,
             ParametersFileDateMask = updateServiceRequest.ParametersFileDateMask,
             ParametersFileExtension = updateServiceRequest.ParametersFileExtension,
+            ServiceDescriptionSignature = updateServiceRequest.ServiceDescriptionSignature,
+            ProjectDescription = updateServiceRequest.ProjectDescription,
             UserName = userName
         };
     }

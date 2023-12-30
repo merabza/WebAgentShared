@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using SignalRClient;
 using SystemToolsShared;
+// ReSharper disable ConvertToPrimaryConstructor
 
 namespace LibWebAgentMessages;
 

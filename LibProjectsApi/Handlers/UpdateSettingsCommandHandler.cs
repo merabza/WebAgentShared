@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using SystemToolsShared;
+// ReSharper disable ConvertToPrimaryConstructor
 
 namespace LibProjectsApi.Handlers;
 
@@ -60,8 +61,8 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
             return await Task.FromResult(new[]
                 { ProjectsErrors.FileStorageDoesNotExists(installerSettings.ProgramExchangeFileStorageName) });
 
-        var agentClient = AgentClientsFabric.CreateAgentClientWithFileStorage(_logger, installerSettings,
-            fileStorageForUpload, false, _messagesDataManager, request.UserName);
+        var agentClient = await AgentClientsFabric.CreateAgentClientWithFileStorage(_logger, installerSettings,
+            fileStorageForUpload, false, _messagesDataManager, request.UserName, cancellationToken);
 
         if (agentClient is null)
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using SystemToolsShared;
+// ReSharper disable ConvertToPrimaryConstructor
 
 namespace LibProjectsApi.Handlers;
 
@@ -61,16 +62,20 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceC
             return await Task.FromResult(new[]
                 { ProjectsErrors.FileStorageDoesNotExists(installerSettings.ProgramExchangeFileStorageName) });
 
-        var agentClient = AgentClientsFabric.CreateAgentClientWithFileStorage(_logger, installerSettings,
-            fileStorageForUpload, false, _messagesDataManager, request.UserName);
+        var agentClient = await AgentClientsFabric.CreateAgentClientWithFileStorage(_logger, installerSettings,
+            fileStorageForUpload, false, _messagesDataManager, request.UserName, cancellationToken);
 
         if (agentClient is null)
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
 
-        var assemblyVersion = await agentClient.InstallService(request.ProjectName, request.EnvironmentName,
+        var installServiceResult = await agentClient.InstallService(request.ProjectName, request.EnvironmentName,
             request.ServiceName, request.ServiceUserName, request.AppSettingsFileName, programArchiveDateMask,
             programArchiveExtension, parametersFileDateMask, parametersFileExtension,
             request.ServiceDescriptionSignature, request.ProjectDescription, cancellationToken);
+
+        if (installServiceResult.IsT1)
+            return installServiceResult.AsT1;
+        var assemblyVersion = installServiceResult.AsT0;
 
         if (assemblyVersion != null)
             return assemblyVersion;

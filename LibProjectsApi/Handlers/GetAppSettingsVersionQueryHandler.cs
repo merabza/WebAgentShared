@@ -7,6 +7,7 @@ using MessagingAbstractions;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using SystemToolsShared;
+// ReSharper disable ConvertToPrimaryConstructor
 
 namespace LibProjectsApi.Handlers;
 
@@ -25,6 +26,9 @@ public sealed class GetAppSettingsVersionQueryHandler : IQueryHandler<GetAppSett
     {
         var webAgentClient = new TestApiClient(_logger,
             $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/");
-        return await webAgentClient.GetAppSettingsVersion(cancellationToken);
+        var getAppSettingsVersionResult = await webAgentClient.GetAppSettingsVersion(cancellationToken);
+        if (getAppSettingsVersionResult.IsT1)
+            return getAppSettingsVersionResult.AsT1;
+        return getAppSettingsVersionResult.AsT0;
     }
 }

@@ -25,6 +25,11 @@ public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionQueryReques
     {
         var webAgentClient =
             new TestApiClient(_logger, $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/");
-        return await webAgentClient.GetVersion(cancellationToken);
+        var getVersionResult = await webAgentClient.GetVersion(cancellationToken);
+        if (getVersionResult.IsT1)
+            return getVersionResult.AsT1;
+        return getVersionResult.AsT0;
+
+
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+// ReSharper disable ConvertToPrimaryConstructor
 
 namespace LibWebAgentMessages;
 
@@ -19,8 +20,8 @@ public class TokenAuthenticationHandler : AuthenticationHandler<AuthenticationSc
     private readonly ILogger _logger;
 
     public TokenAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
-        ILoggerFactory loggerFactory, UrlEncoder encoder, ISystemClock clock, IConfiguration configuration) : base(
-        options, loggerFactory, encoder, clock)
+        ILoggerFactory loggerFactory, UrlEncoder encoder, IConfiguration configuration) : base(
+        options, loggerFactory, encoder)
     {
         _logger = loggerFactory.CreateLogger<ApiKeysChecker>();
         _configuration = configuration;

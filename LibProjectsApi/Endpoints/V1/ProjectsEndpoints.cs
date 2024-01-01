@@ -57,7 +57,8 @@ public sealed class ProjectsEndpoints : IInstaller
         Debug.WriteLine($"Call {nameof(UpdateSettingsCommandHandler)} from {nameof(UpdateSettings)}");
 
         if (request is null)
-            return Results.BadRequest(ApiErrors.RequestIsEmpty);
+            return Results.BadRequest(new[] { ApiErrors.RequestIsEmpty });
+
         var command = request.AdaptTo();
         var result = await mediator.Send(command, cancellationToken);
 
@@ -74,7 +75,7 @@ public sealed class ProjectsEndpoints : IInstaller
         Debug.WriteLine($"Call {nameof(ProjectUpdateCommandHandler)} from {nameof(Update)}");
 
         if (request is null)
-            return Results.BadRequest(ApiErrors.RequestIsEmpty);
+            return Results.BadRequest(new[] { ApiErrors.RequestIsEmpty });
         var command = request.AdaptTo(userName);
         var result = await mediator.Send(command, cancellationToken);
 
@@ -91,7 +92,7 @@ public sealed class ProjectsEndpoints : IInstaller
         Debug.WriteLine($"Call {nameof(UpdateServiceCommandHandler)} from {nameof(UpdateService)}");
 
         if (request is null)
-            return Results.BadRequest(ApiErrors.RequestIsEmpty);
+            return Results.BadRequest(new[] { ApiErrors.RequestIsEmpty });
         var command = request.AdaptTo(userName);
         var result = await mediator.Send(command, cancellationToken);
 
@@ -109,7 +110,8 @@ public sealed class ProjectsEndpoints : IInstaller
         Debug.WriteLine($"Call {nameof(StopServiceCommandHandler)} from {nameof(StopService)}");
 
         if (serviceName is null)
-            return Results.BadRequest(ProjectsErrors.ServiceNameIsEmpty);
+            return Results.BadRequest(new[] { ProjectsErrors.ServiceNameIsEmpty });
+
         var command = StopServiceCommandRequest.Create(serviceName, environmentName, userName);
         var result = await mediator.Send(command, cancellationToken);
 
@@ -127,7 +129,7 @@ public sealed class ProjectsEndpoints : IInstaller
         Debug.WriteLine($"Call {nameof(StartServiceCommandHandler)} from {nameof(StartService)}");
 
         if (serviceName is null)
-            return Results.BadRequest(ProjectsErrors.ServiceNameIsEmpty);
+            return Results.BadRequest(new[] { ProjectsErrors.ServiceNameIsEmpty });
         var command = StartServiceCommandRequest.Create(serviceName, environmentName, userName);
         var result = await mediator.Send(command, cancellationToken);
 
@@ -175,7 +177,8 @@ public sealed class ProjectsEndpoints : IInstaller
         Debug.WriteLine($"Call {nameof(GetAppSettingsVersionQueryHandler)} from {nameof(GetAppSettingsVersion)}");
 
         if (string.IsNullOrWhiteSpace(apiVersionId) || serverSidePort == 0)
-            return Results.BadRequest(ProjectsErrors.SameParametersAreEmpty);
+            return Results.BadRequest(new[] { ProjectsErrors.SameParametersAreEmpty });
+
         var command = GetAppSettingsVersionQueryRequest.Create(serverSidePort, apiVersionId, userName);
         var result = await mediator.Send(command, cancellationToken);
 
@@ -193,7 +196,8 @@ public sealed class ProjectsEndpoints : IInstaller
         Debug.WriteLine($"Call {nameof(GetVersionQueryHandler)} from {nameof(GetVersion)}");
 
         if (string.IsNullOrWhiteSpace(apiVersionId) || serverSidePort == 0)
-            return Results.BadRequest(ProjectsErrors.SameParametersAreEmpty);
+            return Results.BadRequest(new[] { ProjectsErrors.SameParametersAreEmpty });
+
         var command = GetVersionQueryRequest.Create(serverSidePort, apiVersionId, userName);
         var result = await mediator.Send(command, cancellationToken);
 

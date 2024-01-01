@@ -140,9 +140,14 @@ public sealed class ProjectsEndpoints : IInstaller
         HttpRequest httpRequest, IMediator mediator, IMessagesDataManager messagesDataManager,
         CancellationToken cancellationToken)
     {
+        var userName = httpRequest.HttpContext.User.Identity?.Name;
+        await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProject)} started", cancellationToken);
+
         //ეს არის პროგრამის წაშლის ის ვარიანტი, როცა პროგრამა სერვისი არ არის
-        return await RemoveProjectService(projectName, null, environmentName, mediator, messagesDataManager,
+        var result = await RemoveProjectService(projectName, null, environmentName, mediator, messagesDataManager,
             httpRequest, cancellationToken);
+        await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProject)} finished", cancellationToken);
+        return result;
     }
 
     // POST api/projects/removeservice/{projectName}/{serviceName}/{environmentName}
@@ -150,9 +155,14 @@ public sealed class ProjectsEndpoints : IInstaller
         [FromRoute] string environmentName, HttpRequest httpRequest, IMediator mediator,
         IMessagesDataManager messagesDataManager, CancellationToken cancellationToken)
     {
+        var userName = httpRequest.HttpContext.User.Identity?.Name;
+        await messagesDataManager.SendMessage(userName, $"{nameof(RemoveService)} started", cancellationToken);
+
         //ეს არის პროგრამის წაშლის ის ვარიანტი, როცა პროგრამა სერვისია
-        return await RemoveProjectService(projectName, serviceName, environmentName, mediator, messagesDataManager,
+        var result = await RemoveProjectService(projectName, serviceName, environmentName, mediator, messagesDataManager,
             httpRequest, cancellationToken);
+        await messagesDataManager.SendMessage(userName, $"{nameof(RemoveService)} finished", cancellationToken);
+        return result;
     }
 
     // GET api/projects/getappsettingsversion/{serverSidePort}/{apiVersionId}

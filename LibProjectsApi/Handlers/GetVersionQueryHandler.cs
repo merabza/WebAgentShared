@@ -8,6 +8,7 @@ using MessagingAbstractions;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using SystemToolsShared;
+
 // ReSharper disable ConvertToPrimaryConstructor
 
 namespace LibProjectsApi.Handlers;
@@ -53,12 +54,13 @@ public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionQueryReques
             tryCount++;
             try
             {
-
-                await _messagesDataManager.SendMessage(request.UserName, $"Try to get Version {tryCount}...", cancellationToken);
+                await _messagesDataManager.SendMessage(request.UserName, $"Try to get Version {tryCount}...",
+                    cancellationToken);
                 _logger.LogInformation("Try to get Version {tryCount}...", tryCount);
 
                 var webAgentClient =
-                    new TestApiClient(_logger, $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/");
+                    new TestApiClient(_logger,
+                        $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/");
                 var getVersionResult = await webAgentClient.GetVersion(cancellationToken);
                 if (getVersionResult.IsT0)
                     //აქ თუ მოვედით, ყველაფერი კარგად არის
@@ -66,14 +68,14 @@ public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionQueryReques
 
                 errors.AddRange(getVersionResult.AsT1);
 
-                await _messagesDataManager.SendMessage(request.UserName, $"could not get version on try {tryCount}", cancellationToken);
+                await _messagesDataManager.SendMessage(request.UserName, $"could not get version on try {tryCount}",
+                    cancellationToken);
                 _logger.LogInformation("could not get version on try {tryCount}", tryCount);
-
-
             }
             catch (Exception)
             {
-                await _messagesDataManager.SendMessage(request.UserName, $"Error when get version on try {tryCount}", cancellationToken);
+                await _messagesDataManager.SendMessage(request.UserName, $"Error when get version on try {tryCount}",
+                    cancellationToken);
                 _logger.LogInformation("Error when get version on try {tryCount}", tryCount);
             }
         }

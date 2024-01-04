@@ -1,25 +1,30 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using SignalRClient;
 using SystemToolsShared;
+
 // ReSharper disable ConvertToPrimaryConstructor
 
 namespace LibWebAgentMessages;
 
 public class MessagesDataManager : IMessagesDataManager, IDisposable
 {
+    private readonly Dictionary<string, List<string>> _connectedUsers = new();
     private readonly IHubContext<MessagesHub, IMessenger> _hub;
     private readonly ILogger<MessagesDataManager> _logger;
-    private readonly Dictionary<string, List<string>> _connectedUsers = new();
 
     public MessagesDataManager(IHubContext<MessagesHub, IMessenger> hub, ILogger<MessagesDataManager> logger)
     {
         _hub = hub;
         _logger = logger;
+    }
+
+    public void Dispose()
+    {
     }
 
     public async Task SendMessage(string? userName, string message, CancellationToken cancellationToken)
@@ -54,9 +59,5 @@ public class MessagesDataManager : IMessagesDataManager, IDisposable
         conList.Remove(connectionId);
         if (conList.Count == 0)
             _connectedUsers.Remove(userName);
-    }
-
-    public void Dispose()
-    {
     }
 }

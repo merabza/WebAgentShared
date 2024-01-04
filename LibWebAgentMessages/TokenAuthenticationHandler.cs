@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+
 // ReSharper disable ConvertToPrimaryConstructor
 
 namespace LibWebAgentMessages;

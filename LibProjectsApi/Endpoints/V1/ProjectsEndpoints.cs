@@ -161,7 +161,8 @@ public sealed class ProjectsEndpoints : IInstaller
         await messagesDataManager.SendMessage(userName, $"{nameof(RemoveService)} started", cancellationToken);
 
         //ეს არის პროგრამის წაშლის ის ვარიანტი, როცა პროგრამა სერვისია
-        var result = await RemoveProjectService(projectName, serviceName, environmentName, mediator, messagesDataManager,
+        var result = await RemoveProjectService(projectName, serviceName, environmentName, mediator,
+            messagesDataManager,
             httpRequest, cancellationToken);
         await messagesDataManager.SendMessage(userName, $"{nameof(RemoveService)} finished", cancellationToken);
         return result;

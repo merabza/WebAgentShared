@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using System;
 using System.Threading.Tasks;
-using System;
+using Microsoft.AspNetCore.SignalR;
 using SignalRClient;
 using SystemToolsShared;
 

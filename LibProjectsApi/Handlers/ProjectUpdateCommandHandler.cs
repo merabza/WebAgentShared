@@ -61,7 +61,8 @@ public sealed class ProjectUpdateCommandHandler : ICommandHandler<ProjectUpdateC
         if (fileStorageForUpload is null)
             return new[] { ProjectsErrors.FileStorageDoesNotExists(installerSettings.ProgramExchangeFileStorageName) };
 
-        var agentClient = await AgentClientsFabric.CreateAgentClientWithFileStorage(_logger, installerSettings, fileStorageForUpload, false, _messagesDataManager, request.UserName,cancellationToken);
+        var agentClient = await AgentClientsFabric.CreateAgentClientWithFileStorage(_logger, installerSettings,
+            fileStorageForUpload, false, _messagesDataManager, request.UserName, cancellationToken);
 
         if (agentClient is null)
             return new[] { ProjectsErrors.AgentClientDoesNotCreated };

@@ -10,6 +10,7 @@ public class MessagesHub : Hub<IMessenger>
 {
     private readonly IMessagesDataManager _messagesDataManager;
 
+    // ReSharper disable once ConvertToPrimaryConstructor
     public MessagesHub(IMessagesDataManager messagesDataManager)
     {
         _messagesDataManager = messagesDataManager;

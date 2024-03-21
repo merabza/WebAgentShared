@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Installer.AgentClients;
+using ApiClientsManagement;
 using LibProjectsApi.QueryRequests;
 using MessagingAbstractions;
 using Microsoft.Extensions.Logging;

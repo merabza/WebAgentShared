@@ -7,16 +7,15 @@ using Microsoft.Extensions.Logging;
 using SignalRClient;
 using SystemToolsShared;
 
-// ReSharper disable ConvertToPrimaryConstructor
-
 namespace LibWebAgentMessages;
 
 public class MessagesDataManager : IMessagesDataManager, IDisposable
 {
-    private readonly Dictionary<string, List<string>> _connectedUsers = new();
+    private readonly Dictionary<string, List<string>> _connectedUsers = [];
     private readonly IHubContext<MessagesHub, IMessenger> _hub;
     private readonly ILogger<MessagesDataManager> _logger;
 
+    // ReSharper disable once ConvertToPrimaryConstructor
     public MessagesDataManager(IHubContext<MessagesHub, IMessenger> hub, ILogger<MessagesDataManager> logger)
     {
         _hub = hub;
@@ -43,7 +42,7 @@ public class MessagesDataManager : IMessagesDataManager, IDisposable
     public void UserConnected(string connectionId, string userName)
     {
         if (!_connectedUsers.ContainsKey(userName))
-            _connectedUsers.Add(userName, new List<string>());
+            _connectedUsers.Add(userName, []);
         var conList = _connectedUsers[userName];
         if (!conList.Contains(connectionId))
             conList.Add(connectionId);
@@ -51,9 +50,8 @@ public class MessagesDataManager : IMessagesDataManager, IDisposable
 
     public void UserDisconnected(string connectionId, string userName)
     {
-        if (!_connectedUsers.ContainsKey(userName))
+        if (!_connectedUsers.TryGetValue(userName, out var conList))
             return;
-        var conList = _connectedUsers[userName];
         if (!conList.Contains(connectionId))
             return;
         conList.Remove(connectionId);

@@ -58,7 +58,9 @@ public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionQueryReques
                     cancellationToken);
                 _logger.LogInformation("Try to get Version {tryCount}...", tryCount);
 
-                var webAgentClient =
+                // ReSharper disable once using
+                await using var webAgentClient =
+                    // ReSharper disable once DisposableConstructor
                     new TestApiClient(_logger,
                         $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/");
                 var getVersionResult = await webAgentClient.GetVersion(cancellationToken);

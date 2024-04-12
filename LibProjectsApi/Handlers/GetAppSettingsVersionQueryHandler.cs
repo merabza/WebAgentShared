@@ -25,7 +25,9 @@ public sealed class GetAppSettingsVersionQueryHandler : IQueryHandler<GetAppSett
     public async Task<OneOf<string?, IEnumerable<Err>>> Handle(GetAppSettingsVersionQueryRequest request,
         CancellationToken cancellationToken)
     {
-        var webAgentClient = new TestApiClient(_logger,
+        // ReSharper disable once using
+        // ReSharper disable once DisposableConstructor
+        await using var webAgentClient = new TestApiClient(_logger,
             $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/");
         var getAppSettingsVersionResult = await webAgentClient.GetAppSettingsVersion(cancellationToken);
         if (getAppSettingsVersionResult.IsT1)

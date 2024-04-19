@@ -34,7 +34,7 @@ public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceComma
     public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(StopServiceCommandRequest request,
         CancellationToken cancellationToken)
     {
-        if (request.ServiceName is null)
+        if (request.ProjectName is null)
             return await Task.FromResult(new[] { ProjectsErrors.SameParametersAreEmpty });
 
         var installerSettings = InstallerSettings.Create(_config);
@@ -45,10 +45,10 @@ public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceComma
         if (agentClient is null)
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
 
-        if (await agentClient.StopService(request.ServiceName, request.EnvironmentName, cancellationToken))
+        if (await agentClient.StopService(request.ProjectName, request.EnvironmentName, cancellationToken))
             return new Unit();
 
-        var err = ProjectsErrors.CannotBeStoppedService(request.ServiceName);
+        var err = ProjectsErrors.CannotBeStoppedService(request.ProjectName);
 
         _logger.LogError(err.ErrorMessage);
         return await Task.FromResult(new[] { err });

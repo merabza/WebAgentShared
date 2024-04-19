@@ -10,7 +10,6 @@ public sealed class UpdateSettingsCommandValidator : AbstractValidator<UpdateSet
     {
         RuleFor(x => x.ProjectName).FileName();
         RuleFor(x => x.EnvironmentName).Name();
-        RuleFor(x => x.ServiceName).FileName();
         RuleFor(x => x.AppSettingsFileName).FileName();
         RuleFor(x => x.ParametersFileDateMask).DateMask();
         RuleFor(x => x.ParametersFileExtension).FileExtension();

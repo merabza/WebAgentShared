@@ -47,9 +47,10 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceC
         var parametersFileExtension =
             request.ParametersFileExtension ?? installerSettings.ParametersFileExtension;
 
-        if (request.ProjectName is null || request.EnvironmentName is null || request.ServiceName is null ||
-            request.AppSettingsFileName is null || request.ServiceUserName is null || programArchiveDateMask is null ||
-            programArchiveExtension is null || parametersFileDateMask is null || parametersFileExtension is null)
+        if (request.ProjectName is null || request.EnvironmentName is null || request.AppSettingsFileName is null ||
+            request.ServiceUserName is null || programArchiveDateMask is null || programArchiveExtension is null ||
+            parametersFileDateMask is null ||
+            parametersFileExtension is null)
             return await Task.FromResult(new[] { ProjectsErrors.SameParametersAreEmpty });
 
         if (string.IsNullOrWhiteSpace(installerSettings.ProgramExchangeFileStorageName))
@@ -70,10 +71,9 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceC
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
 
         var installServiceResult = await agentClient.InstallService(request.ProjectName, request.EnvironmentName,
-            request.ServiceName, request.ServiceUserName, request.AppSettingsFileName, programArchiveDateMask,
-            programArchiveExtension, parametersFileDateMask, parametersFileExtension,
-            request.ServiceDescriptionSignature, request.ProjectDescription, cancellationToken);
-
+            request.ServiceUserName, request.AppSettingsFileName, programArchiveDateMask, programArchiveExtension,
+            parametersFileDateMask, parametersFileExtension, request.ServiceDescriptionSignature,
+            request.ProjectDescription, cancellationToken);
         if (installServiceResult.IsT1)
             return installServiceResult.AsT1;
         var assemblyVersion = installServiceResult.AsT0;

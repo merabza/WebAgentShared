@@ -8,7 +8,7 @@ public sealed class StopServiceCommandValidator : AbstractValidator<StopServiceC
 {
     public StopServiceCommandValidator()
     {
-        RuleFor(x => x.ServiceName).FileName();
+        RuleFor(x => x.ProjectName).FileName();
         RuleFor(x => x.EnvironmentName).Name();
     }
 }

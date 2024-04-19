@@ -33,7 +33,7 @@ public sealed class StartServiceCommandHandler : ICommandHandler<StartServiceCom
     public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(StartServiceCommandRequest request,
         CancellationToken cancellationToken)
     {
-        if (request.ServiceName is null)
+        if (request.ProjectName is null)
             return await Task.FromResult(new[] { ProjectsErrors.SameParametersAreEmpty });
 
         var installerSettings = InstallerSettings.Create(_config);
@@ -44,10 +44,10 @@ public sealed class StartServiceCommandHandler : ICommandHandler<StartServiceCom
         if (agentClient is null)
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
 
-        if (await agentClient.StartService(request.ServiceName, request.EnvironmentName, cancellationToken))
+        if (await agentClient.StartService(request.ProjectName, request.EnvironmentName, cancellationToken))
             return new Unit();
 
-        var err = ProjectsErrors.CannotBeStartedService(request.ServiceName);
+        var err = ProjectsErrors.CannotBeStartedService(request.ProjectName);
 
         _logger.LogError(err.ErrorMessage);
         return await Task.FromResult(new[] { err });

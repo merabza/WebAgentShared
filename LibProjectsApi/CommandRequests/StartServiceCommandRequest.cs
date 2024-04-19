@@ -4,19 +4,19 @@ namespace LibProjectsApi.CommandRequests;
 
 public sealed class StartServiceCommandRequest : ICommand
 {
-    private StartServiceCommandRequest(string? serviceName, string environmentName, string? userName)
+    private StartServiceCommandRequest(string? projectName, string environmentName, string? userName)
     {
-        ServiceName = serviceName;
+        ProjectName = projectName;
         EnvironmentName = environmentName;
         UserName = userName;
     }
 
-    public string? ServiceName { get; set; }
+    public string? ProjectName { get; set; }
     public string EnvironmentName { get; set; }
     public string? UserName { get; set; }
 
-    public static StartServiceCommandRequest Create(string? serviceName, string environmentName, string? userName)
+    public static StartServiceCommandRequest Create(string? projectName, string environmentName, string? userName)
     {
-        return new StartServiceCommandRequest(serviceName, environmentName, userName);
+        return new StartServiceCommandRequest(projectName, environmentName, userName);
     }
 }

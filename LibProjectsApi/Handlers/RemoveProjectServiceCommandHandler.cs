@@ -33,8 +33,6 @@ public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveP
     public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(RemoveProjectServiceCommandRequest request,
         CancellationToken cancellationToken)
     {
-        if (request.ServiceName is null)
-            return await Task.FromResult(new[] { ProjectsErrors.SameParametersAreEmpty });
 
         var installerSettings = InstallerSettings.Create(_config);
 
@@ -44,11 +42,11 @@ public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveP
         if (agentClient is null)
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
 
-        if (await agentClient.RemoveProjectAndService(request.ProjectName, request.ServiceName,
-                request.EnvironmentName, cancellationToken))
+        if (await agentClient.RemoveProjectAndService(request.ProjectName,
+                request.EnvironmentName, request.IsService, cancellationToken))
             return new Unit();
 
-        var err = ProjectsErrors.ProjectServiceCannotBeRemoved(request.ProjectName, request.ServiceName);
+        var err = ProjectsErrors.ProjectServiceCannotBeRemoved(request.ProjectName);
 
         _logger.LogError(err.ErrorMessage);
         return await Task.FromResult(new[] { err });

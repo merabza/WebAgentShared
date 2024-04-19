@@ -11,7 +11,6 @@ public static class UpdateServiceCommandRequestMapper
         {
             ProjectName = updateServiceRequest.ProjectName,
             EnvironmentName = updateServiceRequest.EnvironmentName,
-            ServiceName = updateServiceRequest.ServiceName,
             ServiceUserName = updateServiceRequest.ServiceUserName,
             AppSettingsFileName = updateServiceRequest.AppSettingsFileName,
             ProgramArchiveDateMask = updateServiceRequest.ProgramArchiveDateMask,

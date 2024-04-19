@@ -10,7 +10,6 @@ public sealed class UpdateServiceCommandValidator : AbstractValidator<UpdateServ
     {
         RuleFor(x => x.ProjectName).FileName();
         RuleFor(x => x.EnvironmentName).Name();
-        RuleFor(x => x.ServiceName).FileName();
         RuleFor(x => x.ServiceUserName).FileName();
         RuleFor(x => x.AppSettingsFileName).FileName();
         RuleFor(x => x.ProgramArchiveDateMask).DateMask();

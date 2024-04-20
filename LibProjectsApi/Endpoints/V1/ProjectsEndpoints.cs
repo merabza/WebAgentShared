@@ -59,7 +59,7 @@ public sealed class ProjectsEndpoints : IInstaller
         if (request is null)
             return Results.BadRequest(new[] { ApiErrors.RequestIsEmpty });
 
-        var command = request.AdaptTo();
+        var command = request.AdaptTo(userName);
         var result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(UpdateSettings)} finished", cancellationToken);

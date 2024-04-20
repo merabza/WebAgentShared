@@ -5,7 +5,7 @@ namespace LibProjectsApi.Mappers;
 
 public static class UpdateSettingsCommandRequestMapper
 {
-    public static UpdateSettingsCommandRequest AdaptTo(this UpdateSettingsRequest updateSettingsRequest)
+    public static UpdateSettingsCommandRequest AdaptTo(this UpdateSettingsRequest updateSettingsRequest, string? userName)
     {
         return new UpdateSettingsCommandRequest
         {
@@ -14,7 +14,8 @@ public static class UpdateSettingsCommandRequestMapper
             ServiceName = updateSettingsRequest.ServiceName,
             AppSettingsFileName = updateSettingsRequest.AppSettingsFileName,
             ParametersFileDateMask = updateSettingsRequest.ParametersFileDateMask,
-            ParametersFileExtension = updateSettingsRequest.ParametersFileExtension
+            ParametersFileExtension = updateSettingsRequest.ParametersFileExtension,
+            UserName = userName
         };
     }
 }

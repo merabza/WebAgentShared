@@ -16,8 +16,8 @@ public static class ProjectsErrors
     public static readonly Err AgentClientDoesNotCreated = new()
         { ErrorCode = nameof(AgentClientDoesNotCreated), ErrorMessage = "AgentClient does not created" };
 
-    public static readonly Err ServiceNameIsEmpty = new()
-        { ErrorCode = nameof(ServiceNameIsEmpty), ErrorMessage = "Service Name is Empty" };
+    //public static readonly Err ServiceNameIsEmpty = new()
+    //    { ErrorCode = nameof(ServiceNameIsEmpty), ErrorMessage = "Service Name is Empty" };
 
     public static Err FileStorageDoesNotExists(string fileStorageName)
     {
@@ -28,13 +28,13 @@ public static class ProjectsErrors
         };
     }
 
-    public static Err SettingsCannotBeUpdated(string projectName, string serviceName)
+    public static Err SettingsCannotBeUpdated(string projectName)
     {
         return new Err
         {
             ErrorCode = nameof(SettingsCannotBeUpdated),
             ErrorMessage =
-                $"Settings cannot be updated for Project {projectName} => service {serviceName} can not stopped"
+                $"Settings cannot be updated for Project {projectName} => service can not stopped"
         };
     }
 
@@ -44,25 +44,25 @@ public static class ProjectsErrors
             { ErrorCode = nameof(CannotBeUpdatedProject), ErrorMessage = $"cannot be updated Project {projectName}" };
     }
 
-    public static Err CannotBeStoppedService(string serviceName)
+    public static Err CannotBeStoppedService(string projectName)
     {
         return new Err
-            { ErrorCode = nameof(CannotBeStoppedService), ErrorMessage = $"{serviceName} service can not stopped" };
+            { ErrorCode = nameof(CannotBeStoppedService), ErrorMessage = $"{projectName} service can not stopped" };
     }
 
-    public static Err CannotBeStartedService(string serviceName)
+    public static Err CannotBeStartedService(string projectName)
     {
         return new Err
-            { ErrorCode = nameof(CannotBeStartedService), ErrorMessage = $"{serviceName} service can not started" };
+            { ErrorCode = nameof(CannotBeStartedService), ErrorMessage = $"{projectName} service can not started" };
     }
 
-    public static Err ProjectServiceCannotBeRemoved(string projectName, string? serviceName)
+    public static Err ProjectServiceCannotBeRemoved(string projectName)
     {
         return new Err
         {
             ErrorCode = nameof(ProjectServiceCannotBeRemoved),
             ErrorMessage =
-                $"Project {projectName}{(serviceName is null ? "" : $" => service {serviceName}")} can not be removed"
+                $"Project {projectName} can not be removed"
         };
     }
 }

@@ -8,7 +8,6 @@ public sealed class RemoveProjectServiceCommandValidator : AbstractValidator<Rem
 {
     public RemoveProjectServiceCommandValidator()
     {
-        RuleFor(x => x.ServiceName).FileName();
         RuleFor(x => x.ProjectName).FileName();
         RuleFor(x => x.EnvironmentName).Name();
     }

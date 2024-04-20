@@ -69,8 +69,10 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
 
 
-        if (await agentClient.UpdateAppParametersFile(request.ProjectName, request.EnvironmentName,
-                request.AppSettingsFileName, parametersFileDateMask, parametersFileExtension, cancellationToken))
+        var updateAppParametersFileResult = await agentClient.UpdateAppParametersFile(request.ProjectName,
+            request.EnvironmentName, request.AppSettingsFileName, parametersFileDateMask, parametersFileExtension,
+            cancellationToken);
+        if (updateAppParametersFileResult.IsNone)
             return new Unit();
 
         var err = ProjectsErrors.SettingsCannotBeUpdated(request.ProjectName);

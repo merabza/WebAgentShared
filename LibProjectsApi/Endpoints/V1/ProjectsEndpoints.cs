@@ -133,7 +133,8 @@ public sealed class ProjectsEndpoints : IInstaller
     }
 
     // POST api/projects/removeprojectservice/{projectName}/{environmentName}
-    private static async Task<IResult> RemoveProjectService([FromRoute] string projectName, [FromRoute] string environmentName, [FromRoute] bool isService,
+    private static async Task<IResult> RemoveProjectService([FromRoute] string projectName,
+        [FromRoute] string environmentName, [FromRoute] bool isService,
         HttpRequest httpRequest, IMediator mediator, IMessagesDataManager messagesDataManager,
         CancellationToken cancellationToken)
     {

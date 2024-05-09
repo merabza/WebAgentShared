@@ -33,7 +33,6 @@ public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveP
     public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(RemoveProjectServiceCommandRequest request,
         CancellationToken cancellationToken)
     {
-
         var installerSettings = InstallerSettings.Create(_config);
 
         var agentClient = await AgentClientsFabric.CreateAgentClient(_logger, false, installerSettings.InstallFolder,

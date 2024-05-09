@@ -5,7 +5,8 @@ namespace LibProjectsApi.Mappers;
 
 public static class UpdateSettingsCommandRequestMapper
 {
-    public static UpdateSettingsCommandRequest AdaptTo(this UpdateSettingsRequest updateSettingsRequest, string? userName)
+    public static UpdateSettingsCommandRequest AdaptTo(this UpdateSettingsRequest updateSettingsRequest,
+        string? userName)
     {
         return new UpdateSettingsCommandRequest
         {

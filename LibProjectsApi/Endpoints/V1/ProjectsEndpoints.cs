@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SystemToolsShared;
+using SignalRContracts;
 using WebAgentProjectsApiContracts.V1.Requests;
 using WebAgentProjectsApiContracts.V1.Routes;
 using WebInstallers;
@@ -24,7 +25,7 @@ public sealed class ProjectsEndpoints : IInstaller
     public int InstallPriority => 50;
     public int ServiceUsePriority => 50;
 
-    public void InstallServices(WebApplicationBuilder builder, string[] args)
+    public void InstallServices(WebApplicationBuilder builder, string[] args, Dictionary<string, string> parameters)
     {
     }
 

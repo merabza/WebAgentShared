@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using ApiClientsManagement;
@@ -16,18 +17,19 @@ namespace LibProjectsApi.Handlers;
 public sealed class GetAppSettingsVersionQueryHandler : IQueryHandler<GetAppSettingsVersionQueryRequest, string?>
 {
     private readonly ILogger<GetAppSettingsVersionQueryHandler> _logger;
+    private readonly IHttpClientFactory _httpClientFactory;
 
-    public GetAppSettingsVersionQueryHandler(ILogger<GetAppSettingsVersionQueryHandler> logger)
+    public GetAppSettingsVersionQueryHandler(ILogger<GetAppSettingsVersionQueryHandler> logger,
+        IHttpClientFactory httpClientFactory)
     {
         _logger = logger;
+        _httpClientFactory = httpClientFactory;
     }
 
     public async Task<OneOf<string?, IEnumerable<Err>>> Handle(GetAppSettingsVersionQueryRequest request,
         CancellationToken cancellationToken)
     {
-        // ReSharper disable once using
-        // ReSharper disable once DisposableConstructor
-        await using var webAgentClient = new TestApiClient(_logger,
+        var webAgentClient = new TestApiClient(_logger, _httpClientFactory,
             $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/");
         var getAppSettingsVersionResult = await webAgentClient.GetAppSettingsVersion(cancellationToken);
         if (getAppSettingsVersionResult.IsT1)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using ApiClientsManagement;
@@ -18,11 +19,14 @@ namespace LibProjectsApi.Handlers;
 public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionQueryRequest, string?>
 {
     private readonly ILogger<GetVersionQueryHandler> _logger;
+    private readonly IHttpClientFactory _httpClientFactory;
     private readonly IMessagesDataManager _messagesDataManager;
 
-    public GetVersionQueryHandler(ILogger<GetVersionQueryHandler> logger, IMessagesDataManager messagesDataManager)
+    public GetVersionQueryHandler(ILogger<GetVersionQueryHandler> logger, IHttpClientFactory httpClientFactory,
+        IMessagesDataManager messagesDataManager)
     {
         _logger = logger;
+        _httpClientFactory = httpClientFactory;
         _messagesDataManager = messagesDataManager;
     }
 
@@ -59,11 +63,8 @@ public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionQueryReques
                     cancellationToken);
                 _logger.LogInformation("Try to get Version {tryCount}...", tryCount);
 
-                // ReSharper disable once using
-                await using var webAgentClient =
-                    // ReSharper disable once DisposableConstructor
-                    new TestApiClient(_logger,
-                        $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/");
+                var webAgentClient = new TestApiClient(_logger, _httpClientFactory,
+                    $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/");
                 var getVersionResult = await webAgentClient.GetVersion(cancellationToken);
                 if (getVersionResult.IsT0)
                     //აქ თუ მოვედით, ყველაფერი კარგად არის

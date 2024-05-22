@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\SystemTools\ApiToolsShared\ApiToolsShared.csproj" />
     <ProjectReference Include="..\..\SystemTools\MessagingAbstractions\MessagingAbstractions.csproj" />
+    <ProjectReference Include="..\..\SystemTools\TestApiContracts\TestApiContracts.csproj" />
     <ProjectReference Include="..\..\ToolsManagement\ApiClientsManagement\ApiClientsManagement.csproj" />
     <ProjectReference Include="..\..\ToolsManagement\Installer\Installer.csproj" />
     <ProjectReference Include="..\..\WebAgentContracts\WebAgentProjectsApiContracts\WebAgentProjectsApiContracts.csproj" />

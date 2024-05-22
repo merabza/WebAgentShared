@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using ApiToolsShared;
+﻿using ApiToolsShared;
 using Installer.AgentClients;
 using Installer.Models;
 using LibFileParameters.Models;
@@ -11,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using SignalRContracts;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using SystemToolsShared;
 
 // ReSharper disable ConvertToPrimaryConstructor

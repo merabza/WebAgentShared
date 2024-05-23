@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Installer.AgentClients;
-using Installer.Models;
+﻿using Installer.Models;
+using Installer.ProjectManagers;
 using LibProjectsApi.CommandRequests;
 using MediatR;
 using MessagingAbstractions;
@@ -10,6 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using SignalRContracts;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using SystemToolsShared;
 
 // ReSharper disable ConvertToPrimaryConstructor
@@ -40,7 +40,7 @@ public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceComma
 
         var installerSettings = InstallerSettings.Create(_config);
 
-        var agentClient = await AgentClientsFabric.CreateAgentClient(_logger, false, installerSettings.InstallFolder,
+        var agentClient = await ProjectManagersFabric.CreateAgentClient(_logger, false, installerSettings.InstallFolder,
             _messagesDataManager, request.UserName, cancellationToken);
 
         if (agentClient is null)

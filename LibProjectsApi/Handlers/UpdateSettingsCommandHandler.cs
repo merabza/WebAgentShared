@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Installer.AgentClients;
-using Installer.Models;
+﻿using Installer.Models;
+using Installer.ProjectManagers;
 using LibFileParameters.Models;
 using LibProjectsApi.CommandRequests;
 using MediatR;
@@ -11,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using SignalRContracts;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using SystemToolsShared;
 
 // ReSharper disable ConvertToPrimaryConstructor
@@ -63,7 +63,7 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
             return await Task.FromResult(new[]
                 { ProjectsErrors.FileStorageDoesNotExists(installerSettings.ProgramExchangeFileStorageName) });
 
-        var agentClient = await AgentClientsFabric.CreateAgentClientWithFileStorage(_logger, installerSettings,
+        var agentClient = await ProjectManagersFabric.CreateAgentClientWithFileStorage(_logger, installerSettings,
             fileStorageForUpload, false, _messagesDataManager, request.UserName, cancellationToken);
 
         if (agentClient is null)

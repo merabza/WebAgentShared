@@ -1,6 +1,6 @@
 ﻿using ApiToolsShared;
-using Installer.AgentClients;
 using Installer.Models;
+using Installer.ProjectManagers;
 using LibFileParameters.Models;
 using LibProjectsApi.CommandRequests;
 using MessagingAbstractions;
@@ -63,7 +63,7 @@ public sealed class ProjectUpdateCommandHandler : ICommandHandler<ProjectUpdateC
         if (fileStorageForUpload is null)
             return new[] { ProjectsErrors.FileStorageDoesNotExists(installerSettings.ProgramExchangeFileStorageName) };
 
-        var agentClient = await AgentClientsFabric.CreateAgentClientWithFileStorage(_logger, installerSettings,
+        var agentClient = await ProjectManagersFabric.CreateAgentClientWithFileStorage(_logger, installerSettings,
             fileStorageForUpload, false, _messagesDataManager, request.UserName, cancellationToken);
 
         if (agentClient is null)

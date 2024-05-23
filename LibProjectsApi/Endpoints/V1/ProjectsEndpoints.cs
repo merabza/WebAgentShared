@@ -34,13 +34,14 @@ public sealed class ProjectsEndpoints : IInstaller
         //.RequireAuthorization(); იყო //.AddEndpointFilter<ApiKeysChecker>();
 
         //Console.WriteLine("InstallServices.UseServices Started");
-        var group = app.MapGroup(ProjectsApiRoutes.Projects.ProjectBase).RequireAuthorization();
+        var group = app.MapGroup(ProjectsApiRoutes.ApiBase + ProjectsApiRoutes.Projects.ProjectBase)
+            .RequireAuthorization();
 
         group.MapPost(ProjectsApiRoutes.Projects.UpdateSettings, UpdateSettings);
         group.MapPost(ProjectsApiRoutes.Projects.Update, Update);
         group.MapPost(ProjectsApiRoutes.Projects.UpdateService, UpdateService);
-        group.MapPost(ProjectsApiRoutes.Projects.StopService, StopService);
-        group.MapPost(ProjectsApiRoutes.Projects.StartService, StartService);
+        group.MapPost(ProjectsApiRoutes.Projects.Stop, StopService);
+        group.MapPost(ProjectsApiRoutes.Projects.Start, StartService);
         group.MapDelete(ProjectsApiRoutes.Projects.RemoveProjectService, RemoveProjectService);
         //group.MapDelete(ProjectsApiRoutes.Projects.RemoveService, RemoveService);
         group.MapGet(ProjectsApiRoutes.Projects.GetAppSettingsVersion, GetAppSettingsVersion);

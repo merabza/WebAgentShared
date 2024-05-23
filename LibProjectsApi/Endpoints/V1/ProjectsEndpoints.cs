@@ -36,15 +36,15 @@ public sealed class ProjectsEndpoints : IInstaller
         //Console.WriteLine("InstallServices.UseServices Started");
         var group = app.MapGroup(ProjectsApiRoutes.Projects.ProjectBase).RequireAuthorization();
 
-        group.MapPost(ProjectsApiRoutes.Projects.UpdateSettings, UpdateSettings);
-        group.MapPost(ProjectsApiRoutes.Projects.Update, Update);
-        group.MapPost(ProjectsApiRoutes.Projects.UpdateService, UpdateService);
-        group.MapPost(ProjectsApiRoutes.Projects.StopService, StopService);
-        group.MapPost(ProjectsApiRoutes.Projects.StartService, StartService);
-        group.MapDelete(ProjectsApiRoutes.Projects.RemoveProjectService, RemoveProjectService);
-        //group.MapDelete(ProjectsApiRoutes.Projects.RemoveService, RemoveService);
         group.MapGet(ProjectsApiRoutes.Projects.GetAppSettingsVersion, GetAppSettingsVersion);
         group.MapGet(ProjectsApiRoutes.Projects.GetVersion, GetVersion);
+        group.MapDelete(ProjectsApiRoutes.Projects.RemoveProjectService, RemoveProjectService);
+        group.MapPost(ProjectsApiRoutes.Projects.StartService, StartService);
+        group.MapPost(ProjectsApiRoutes.Projects.StopService, StopService);
+        group.MapPost(ProjectsApiRoutes.Projects.Update, Update);
+        group.MapPost(ProjectsApiRoutes.Projects.UpdateService, UpdateService);
+        group.MapPost(ProjectsApiRoutes.Projects.UpdateSettings, UpdateSettings);
+        //group.MapDelete(ProjectsApiRoutes.Projects.RemoveService, RemoveService);
         //Console.WriteLine("InstallServices.UseServices Finished");
     }
 

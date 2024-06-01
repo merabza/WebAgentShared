@@ -1,12 +1,12 @@
-﻿using LibProjectsApi.QueryRequests;
-using MessagingAbstractions;
-using Microsoft.Extensions.Logging;
-using OneOf;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using LibProjectsApi.QueryRequests;
+using MessagingAbstractions;
+using Microsoft.Extensions.Logging;
+using OneOf;
 using SystemToolsShared;
 using TestApiContracts;
 
@@ -17,8 +17,8 @@ namespace LibProjectsApi.Handlers;
 // ReSharper disable once ClassNeverInstantiated.Global
 public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionQueryRequest, string?>
 {
-    private readonly ILogger<GetVersionQueryHandler> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ILogger<GetVersionQueryHandler> _logger;
     private readonly IMessagesDataManager _messagesDataManager;
 
     public GetVersionQueryHandler(ILogger<GetVersionQueryHandler> logger, IHttpClientFactory httpClientFactory,

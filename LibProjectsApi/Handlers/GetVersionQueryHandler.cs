@@ -2,7 +2,6 @@
 using MessagingAbstractions;
 using Microsoft.Extensions.Logging;
 using OneOf;
-using SignalRContracts;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;

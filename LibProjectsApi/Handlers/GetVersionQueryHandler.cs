@@ -8,6 +8,7 @@ using MessagingAbstractions;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using SystemToolsShared;
+using SystemToolsShared.Errors;
 using TestApiContracts;
 
 // ReSharper disable ConvertToPrimaryConstructor

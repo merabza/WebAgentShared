@@ -30,7 +30,7 @@ public sealed class GetAppSettingsVersionQueryHandler : IQueryHandler<GetAppSett
         CancellationToken cancellationToken)
     {
         var webAgentClient = new TestApiClient(_logger, _httpClientFactory,
-            $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/");
+            $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/", false);
         var getAppSettingsVersionResult = await webAgentClient.GetAppSettingsVersion(cancellationToken);
         if (getAppSettingsVersionResult.IsT1)
             return getAppSettingsVersionResult.AsT1;

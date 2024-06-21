@@ -33,16 +33,6 @@ public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionQueryReques
     public async Task<OneOf<string?, IEnumerable<Err>>> Handle(GetVersionQueryRequest request,
         CancellationToken cancellationToken)
     {
-        //var webAgentClient =
-        //    new TestApiClient(_logger, $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/");
-        //var getVersionResult = await webAgentClient.GetVersion(cancellationToken);
-        //if (getVersionResult.IsT1)
-        //    return getVersionResult.AsT1;
-        //return getVersionResult.AsT0;
-
-
-        //---
-//        await _messagesDataManager.SendMessage(request.UserName, $"{nameof(UpdateSettings)} started", cancellationToken);
         var errors = new List<Err>();
         const int maxTryCount = 3;
         var tryCount = 0;
@@ -64,7 +54,7 @@ public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionQueryReques
                 _logger.LogInformation("Try to get Version {tryCount}...", tryCount);
 
                 var webAgentClient = new TestApiClient(_logger, _httpClientFactory,
-                    $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/");
+                    $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/", false);
                 var getVersionResult = await webAgentClient.GetVersion(cancellationToken);
                 if (getVersionResult.IsT0)
                     //აქ თუ მოვედით, ყველაფერი კარგად არის

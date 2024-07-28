@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
@@ -25,15 +26,16 @@ public sealed class ProjectsEndpoints : IInstaller
     public int InstallPriority => 50;
     public int ServiceUsePriority => 50;
 
-    public void InstallServices(WebApplicationBuilder builder, string[] args, Dictionary<string, string> parameters)
+    public void InstallServices(WebApplicationBuilder builder, bool debugMode, string[] args,
+        Dictionary<string, string> parameters)
     {
     }
 
-    public void UseServices(WebApplication app)
+    public void UseServices(WebApplication app, bool debugMode)
     {
-        //.RequireAuthorization(); იყო //.AddEndpointFilter<ApiKeysChecker>();
+        if (debugMode)
+            Console.WriteLine($"{GetType().Name}.{nameof(UseServices)} Started");
 
-        //Console.WriteLine("InstallServices.UseServices Started");
         var group = app.MapGroup(ProjectsApiRoutes.ApiBase + ProjectsApiRoutes.Projects.ProjectBase)
             .RequireAuthorization();
 
@@ -45,7 +47,9 @@ public sealed class ProjectsEndpoints : IInstaller
         group.MapPost(ProjectsApiRoutes.Projects.Update, Update);
         group.MapPost(ProjectsApiRoutes.Projects.UpdateService, UpdateService);
         group.MapPost(ProjectsApiRoutes.Projects.UpdateSettings, UpdateSettings);
-        //Console.WriteLine("InstallServices.UseServices Finished");
+
+        if (debugMode)
+            Console.WriteLine($"{GetType().Name}.{nameof(UseServices)} Finished");
     }
 
     // POST api/projects/updatesettings

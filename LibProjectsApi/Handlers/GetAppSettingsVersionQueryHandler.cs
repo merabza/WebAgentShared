@@ -27,7 +27,7 @@ public sealed class GetAppSettingsVersionQueryHandler : IQueryHandler<GetAppSett
     }
 
     public async Task<OneOf<string?, IEnumerable<Err>>> Handle(GetAppSettingsVersionQueryRequest request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         var webAgentClient = new TestApiClient(_logger, _httpClientFactory,
             $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/", false);

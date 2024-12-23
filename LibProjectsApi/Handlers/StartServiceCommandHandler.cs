@@ -32,7 +32,7 @@ public sealed class StartServiceCommandHandler : ICommandHandler<StartServiceCom
     }
 
     public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(StartServiceCommandRequest request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         if (request.ProjectName is null)
             return await Task.FromResult(new[] { ProjectsErrors.SameParametersAreEmpty });

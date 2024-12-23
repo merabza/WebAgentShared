@@ -33,7 +33,7 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
     }
 
     public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(UpdateSettingsCommandRequest request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         await _messagesDataManager.SendMessage(request.UserName, "Creating installer settings", cancellationToken);
 

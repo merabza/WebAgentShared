@@ -33,7 +33,7 @@ public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceComma
     }
 
     public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(StopServiceCommandRequest request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         if (request.ProjectName is null)
             return await Task.FromResult(new[] { ProjectsErrors.SameParametersAreEmpty });

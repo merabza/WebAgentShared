@@ -33,7 +33,7 @@ public sealed class ProjectUpdateCommandHandler : ICommandHandler<ProjectUpdateC
     }
 
     public async Task<OneOf<string, IEnumerable<Err>>> Handle(ProjectUpdateCommandRequest request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         var installerSettings = InstallerSettings.Create(_config);
 

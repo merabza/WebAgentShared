@@ -31,7 +31,7 @@ public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionQueryReques
     }
 
     public async Task<OneOf<string?, IEnumerable<Err>>> Handle(GetVersionQueryRequest request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         var errors = new List<Err>();
         const int maxTryCount = 3;

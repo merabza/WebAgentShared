@@ -32,7 +32,7 @@ public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveP
     }
 
     public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(RemoveProjectServiceCommandRequest request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         var installerSettings = InstallerSettings.Create(_config);
 

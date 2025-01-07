@@ -37,17 +37,13 @@ public sealed class ProjectUpdateCommandHandler : ICommandHandler<ProjectUpdateC
     {
         var installerSettings = InstallerSettings.Create(_config);
 
-        var programArchiveDateMask =
-            request.ProgramArchiveDateMask ?? installerSettings.ProgramArchiveDateMask;
+        var programArchiveDateMask = request.ProgramArchiveDateMask ?? installerSettings.ProgramArchiveDateMask;
 
-        var programArchiveExtension =
-            request.ProgramArchiveExtension ?? installerSettings.ProgramArchiveExtension;
+        var programArchiveExtension = request.ProgramArchiveExtension ?? installerSettings.ProgramArchiveExtension;
 
-        var parametersFileDateMask =
-            request.ParametersFileDateMask ?? installerSettings.ParametersFileDateMask;
+        var parametersFileDateMask = request.ParametersFileDateMask ?? installerSettings.ParametersFileDateMask;
 
-        var parametersFileExtension =
-            request.ParametersFileExtension ?? installerSettings.ParametersFileExtension;
+        var parametersFileExtension = request.ParametersFileExtension ?? installerSettings.ParametersFileExtension;
 
         if (request.ProjectName is null || request.EnvironmentName is null || programArchiveDateMask is null ||
             programArchiveExtension is null || parametersFileDateMask is null || parametersFileExtension is null)

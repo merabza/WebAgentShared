@@ -1,4 +1,10 @@
-﻿using ApiContracts.Errors;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using ApiContracts.Errors;
 using LibProjectsApi.CommandRequests;
 using LibProjectsApi.Handlers;
 using LibProjectsApi.Mappers;
@@ -7,12 +13,6 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using SystemToolsShared;
 using WebAgentProjectsApiContracts.V1.Requests;
 using WebAgentProjectsApiContracts.V1.Routes;
@@ -142,9 +142,8 @@ public sealed class ProjectsEndpoints : IInstaller
 
     // POST api/projects/removeprojectservice/{projectName}/{environmentName}
     private static async Task<IResult> RemoveProjectService([FromRoute] string projectName,
-        [FromRoute] string environmentName, [FromRoute] bool isService,
-        HttpRequest httpRequest, IMediator mediator, IMessagesDataManager messagesDataManager,
-        CancellationToken cancellationToken = default)
+        [FromRoute] string environmentName, [FromRoute] bool isService, HttpRequest httpRequest, IMediator mediator,
+        IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
     {
         var userName = httpRequest.HttpContext.User.Identity?.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} started", cancellationToken);

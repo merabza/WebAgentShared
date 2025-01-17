@@ -13,9 +13,7 @@ public sealed class GetAppSettingsVersionQueryRequest : IQuery<string>
     {
         return new GetAppSettingsVersionQueryRequest
         {
-            ServerSidePort = serverSidePort,
-            ApiVersionId = apiVersionId,
-            UserName = userName
+            ServerSidePort = serverSidePort, ApiVersionId = apiVersionId, UserName = userName
         };
     }
 }

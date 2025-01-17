@@ -12,9 +12,7 @@ public sealed class GetVersionQueryRequest : IQuery<string?>
     {
         return new GetVersionQueryRequest
         {
-            ServerSidePort = serverSidePort,
-            ApiVersionId = apiVersionId,
-            UserName = userName
+            ServerSidePort = serverSidePort, ApiVersionId = apiVersionId, UserName = userName
         };
     }
 }

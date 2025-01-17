@@ -1,12 +1,12 @@
-﻿using LibProjectsApi.QueryRequests;
-using MessagingAbstractions;
-using Microsoft.Extensions.Logging;
-using OneOf;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using LibProjectsApi.QueryRequests;
+using MessagingAbstractions;
+using Microsoft.Extensions.Logging;
+using OneOf;
 using SystemToolsShared;
 using SystemToolsShared.Errors;
 using TestApiContracts;
@@ -80,6 +80,8 @@ public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionQueryReques
             return errors;
 
         return new Err[]
-            { new() { ErrorCode = "GetVersionUnknownError", ErrorMessage = "Unknown Error returned GetVersion" } };
+        {
+            new() { ErrorCode = "GetVersionUnknownError", ErrorMessage = "Unknown Error returned GetVersion" }
+        };
     }
 }

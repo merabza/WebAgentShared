@@ -1,4 +1,7 @@
-﻿using Installer.Models;
+﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Installer.Models;
 using Installer.ProjectManagers;
 using LibFileParameters.Models;
 using LibProjectsApi.CommandRequests;
@@ -7,9 +10,6 @@ using MessagingAbstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OneOf;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using SystemToolsShared;
 using SystemToolsShared.Errors;
 
@@ -39,11 +39,9 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
 
         var installerSettings = InstallerSettings.Create(_config);
 
-        var parametersFileDateMask =
-            request.ParametersFileDateMask ?? installerSettings.ParametersFileDateMask;
+        var parametersFileDateMask = request.ParametersFileDateMask ?? installerSettings.ParametersFileDateMask;
 
-        var parametersFileExtension =
-            request.ParametersFileExtension ?? installerSettings.ParametersFileExtension;
+        var parametersFileExtension = request.ParametersFileExtension ?? installerSettings.ParametersFileExtension;
 
         if (request.ProjectName is null || request.EnvironmentName is null || request.AppSettingsFileName is null ||
             parametersFileDateMask is null || parametersFileExtension is null)
@@ -61,7 +59,9 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
 
         if (fileStorageForUpload is null)
             return await Task.FromResult(new[]
-                { ProjectsErrors.FileStorageDoesNotExists(installerSettings.ProgramExchangeFileStorageName) });
+            {
+                ProjectsErrors.FileStorageDoesNotExists(installerSettings.ProgramExchangeFileStorageName)
+            });
 
         var agentClient = await ProjectManagersFabric.CreateAgentClientWithFileStorage(_logger, installerSettings,
             fileStorageForUpload, false, _messagesDataManager, request.UserName, cancellationToken);

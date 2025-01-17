@@ -5,16 +5,24 @@ namespace LibWebAgentData.ErrorModels;
 public static class DbApiErrors
 {
     public static readonly Err CommandTextIsEmpty = new()
-    { ErrorCode = nameof(CommandTextIsEmpty), ErrorMessage = "Command Text Is Empty" };
+    {
+        ErrorCode = nameof(CommandTextIsEmpty), ErrorMessage = "Command Text Is Empty"
+    };
 
     public static readonly Err ErrorCreateDatabaseConnection = new()
-    { ErrorCode = nameof(ErrorCreateDatabaseConnection), ErrorMessage = "Database connection does not created" };
+    {
+        ErrorCode = nameof(ErrorCreateDatabaseConnection), ErrorMessage = "Database connection does not created"
+    };
 
     public static readonly Err CannotDetectRemoteAddress = new()
-    { ErrorCode = nameof(CannotDetectRemoteAddress), ErrorMessage = "Cannot detect Remote address" };
+    {
+        ErrorCode = nameof(CannotDetectRemoteAddress), ErrorMessage = "Cannot detect Remote address"
+    };
 
     public static readonly Err ApiKeyIsInvalid = new()
-    { ErrorCode = nameof(ApiKeyIsInvalid), ErrorMessage = "API Key is invalid" };
+    {
+        ErrorCode = nameof(ApiKeyIsInvalid), ErrorMessage = "API Key is invalid"
+    };
 
     public static readonly Err InvalidServerName = new()
     {
@@ -29,7 +37,9 @@ public static class DbApiErrors
     };
 
     public static readonly Err InvalidDatabaseBackupParameters = new()
-    { ErrorCode = nameof(InvalidDatabaseBackupParameters), ErrorMessage = "Invalid DatabaseBackupParameters" };
+    {
+        ErrorCode = nameof(InvalidDatabaseBackupParameters), ErrorMessage = "Invalid DatabaseBackupParameters"
+    };
 
     public static readonly Err DatabaseManagementClientDoesNotCreated = new()
     {
@@ -38,7 +48,9 @@ public static class DbApiErrors
     };
 
     public static readonly Err CreateBackupRequestIsInvalid = new()
-    { ErrorCode = nameof(CreateBackupRequestIsInvalid), ErrorMessage = "Create Backup Request is invalid" };
+    {
+        ErrorCode = nameof(CreateBackupRequestIsInvalid), ErrorMessage = "Create Backup Request is invalid"
+    };
 
     public static readonly Err DatabaseBackupsFileStorageDoesNotCreated = new()
     {
@@ -53,10 +65,14 @@ public static class DbApiErrors
     };
 
     public static readonly Err LocalFileStorageDoesNotCreated = new()
-    { ErrorCode = nameof(LocalFileStorageDoesNotCreated), ErrorMessage = "Local File Storage does not created" };
+    {
+        ErrorCode = nameof(LocalFileStorageDoesNotCreated), ErrorMessage = "Local File Storage does not created"
+    };
 
     public static readonly Err LocalFileManagerDoesNotCreated = new()
-    { ErrorCode = nameof(LocalFileManagerDoesNotCreated), ErrorMessage = "Local File Manager does not created" };
+    {
+        ErrorCode = nameof(LocalFileManagerDoesNotCreated), ErrorMessage = "Local File Manager does not created"
+    };
 
     public static readonly Err ExchangeFileManagerDoesNotCreated = new()
     {
@@ -65,10 +81,14 @@ public static class DbApiErrors
     };
 
     public static Err DatabaseSettingsDoesNotSpecified = new()
-    { ErrorCode = nameof(DatabaseSettingsDoesNotSpecified), ErrorMessage = "Database settings does not specified" };
+    {
+        ErrorCode = nameof(DatabaseSettingsDoesNotSpecified), ErrorMessage = "Database settings does not specified"
+    };
 
     public static readonly Err BackupDoesNotCreated = new()
-    { ErrorCode = nameof(BackupDoesNotCreated), ErrorMessage = "Backup not Created" };
+    {
+        ErrorCode = nameof(BackupDoesNotCreated), ErrorMessage = "Backup not Created"
+    };
 
     public static readonly Err CanNotReceiveBackupFromExchangeStorage = new()
     {
@@ -117,18 +137,13 @@ public static class DbApiErrors
     {
         return new Err
         {
-            ErrorCode = nameof(CanNotDownloadFile),
-            ErrorMessage = $"Can not Download File {backupFileName}"
+            ErrorCode = nameof(CanNotDownloadFile), ErrorMessage = $"Can not Download File {backupFileName}"
         };
     }
 
     public static Err CanNotUploadFile(string backupFileName)
     {
-        return new Err
-        {
-            ErrorCode = nameof(CanNotUploadFile),
-            ErrorMessage = $"Can not Upload File {backupFileName}"
-        };
+        return new Err { ErrorCode = nameof(CanNotUploadFile), ErrorMessage = $"Can not Upload File {backupFileName}" };
     }
 
     public static Err CannotRestoreDatabase(string databaseName, string fileName)

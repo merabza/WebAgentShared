@@ -36,22 +36,17 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceC
     {
         var installerSettings = InstallerSettings.Create(_config);
 
-        var programArchiveDateMask =
-            request.ProgramArchiveDateMask ?? installerSettings.ProgramArchiveDateMask;
+        var programArchiveDateMask = request.ProgramArchiveDateMask ?? installerSettings.ProgramArchiveDateMask;
 
-        var programArchiveExtension =
-            request.ProgramArchiveExtension ?? installerSettings.ProgramArchiveExtension;
+        var programArchiveExtension = request.ProgramArchiveExtension ?? installerSettings.ProgramArchiveExtension;
 
-        var parametersFileDateMask =
-            request.ParametersFileDateMask ?? installerSettings.ParametersFileDateMask;
+        var parametersFileDateMask = request.ParametersFileDateMask ?? installerSettings.ParametersFileDateMask;
 
-        var parametersFileExtension =
-            request.ParametersFileExtension ?? installerSettings.ParametersFileExtension;
+        var parametersFileExtension = request.ParametersFileExtension ?? installerSettings.ParametersFileExtension;
 
         if (request.ProjectName is null || request.EnvironmentName is null || request.AppSettingsFileName is null ||
             request.ServiceUserName is null || programArchiveDateMask is null || programArchiveExtension is null ||
-            parametersFileDateMask is null ||
-            parametersFileExtension is null)
+            parametersFileDateMask is null || parametersFileExtension is null)
             return await Task.FromResult(new[] { ProjectsErrors.SameParametersAreEmpty });
 
         if (string.IsNullOrWhiteSpace(installerSettings.ProgramExchangeFileStorageName))
@@ -63,7 +58,9 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceC
             fileStorages.GetFileStorageDataByKey(installerSettings.ProgramExchangeFileStorageName);
         if (fileStorageForUpload is null)
             return await Task.FromResult(new[]
-                { ProjectsErrors.FileStorageDoesNotExists(installerSettings.ProgramExchangeFileStorageName) });
+            {
+                ProjectsErrors.FileStorageDoesNotExists(installerSettings.ProgramExchangeFileStorageName)
+            });
 
         var agentClient = await ProjectManagersFabric.CreateAgentClientWithFileStorage(_logger, installerSettings,
             fileStorageForUpload, false, _messagesDataManager, request.UserName, cancellationToken);
@@ -76,7 +73,7 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceC
             parametersFileDateMask, parametersFileExtension, request.ServiceDescriptionSignature,
             request.ProjectDescription, cancellationToken);
         if (installServiceResult.IsT1)
-            return installServiceResult.AsT1;
+            return (Err[])installServiceResult.AsT1;
         var assemblyVersion = installServiceResult.AsT0;
 
         if (assemblyVersion != null)

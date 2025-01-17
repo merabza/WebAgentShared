@@ -70,7 +70,7 @@ public sealed class ProjectUpdateCommandHandler : ICommandHandler<ProjectUpdateC
             cancellationToken);
 
         if (installProgramResult.IsT1)
-            return installProgramResult.AsT1;
+            return (Err[])installProgramResult.AsT1;
         var assemblyVersion = installProgramResult.AsT0;
 
         if (assemblyVersion != null)

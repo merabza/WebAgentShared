@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using LibProjectsApi.QueryRequests;
+﻿using LibProjectsApi.QueryRequests;
 using MessagingAbstractions;
 using Microsoft.Extensions.Logging;
 using OneOf;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using SystemToolsShared.Errors;
 using TestApiContracts;
 

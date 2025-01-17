@@ -5,7 +5,7 @@ namespace LibProjectsApi;
 public static class ProjectsErrors
 {
     public static readonly Err SameParametersAreEmpty = new()
-        { ErrorCode = nameof(SameParametersAreEmpty), ErrorMessage = "Same Parameters are Empty" };
+    { ErrorCode = nameof(SameParametersAreEmpty), ErrorMessage = "Same Parameters are Empty" };
 
     public static readonly Err ProgramExchangeFileStorageNameDoesNotSpecified = new()
     {
@@ -14,7 +14,7 @@ public static class ProjectsErrors
     };
 
     public static readonly Err AgentClientDoesNotCreated = new()
-        { ErrorCode = nameof(AgentClientDoesNotCreated), ErrorMessage = "AgentClient does not created" };
+    { ErrorCode = nameof(AgentClientDoesNotCreated), ErrorMessage = "AgentClient does not created" };
 
     //public static readonly Err ServiceNameIsEmpty = new()
     //    { ErrorCode = nameof(ServiceNameIsEmpty), ErrorMessage = "Service Name is Empty" };
@@ -41,19 +41,19 @@ public static class ProjectsErrors
     public static Err CannotBeUpdatedProject(string projectName)
     {
         return new Err
-            { ErrorCode = nameof(CannotBeUpdatedProject), ErrorMessage = $"cannot be updated Project {projectName}" };
+        { ErrorCode = nameof(CannotBeUpdatedProject), ErrorMessage = $"cannot be updated Project {projectName}" };
     }
 
     public static Err CannotBeStoppedService(string projectName)
     {
         return new Err
-            { ErrorCode = nameof(CannotBeStoppedService), ErrorMessage = $"{projectName} service can not stopped" };
+        { ErrorCode = nameof(CannotBeStoppedService), ErrorMessage = $"{projectName} service can not stopped" };
     }
 
     public static Err CannotBeStartedService(string projectName)
     {
         return new Err
-            { ErrorCode = nameof(CannotBeStartedService), ErrorMessage = $"{projectName} service can not started" };
+        { ErrorCode = nameof(CannotBeStartedService), ErrorMessage = $"{projectName} service can not started" };
     }
 
     public static Err ProjectServiceCannotBeRemoved(string projectName)

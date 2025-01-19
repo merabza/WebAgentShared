@@ -5,6 +5,7 @@ using Installer.Models;
 using Installer.ProjectManagers;
 using LibFileParameters.Models;
 using LibProjectsApi.CommandRequests;
+using LibWebAgentData;
 using MediatR;
 using MessagingAbstractions;
 using Microsoft.Extensions.Configuration;
@@ -52,7 +53,11 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
 
         await _messagesDataManager.SendMessage(request.UserName, "Creating File Storages", cancellationToken);
 
-        var fileStorages = FileStorages.Create(_config);
+        var appSettings = AppSettings.Create(_config);
+        if (appSettings is null)
+            return await Task.FromResult(new[] { ProjectsErrors.AppSettingsIsNotCreated });
+
+        var fileStorages = new FileStorages(appSettings.FileStorages);
 
         var fileStorageForUpload =
             fileStorages.GetFileStorageDataByKey(installerSettings.ProgramExchangeFileStorageName);

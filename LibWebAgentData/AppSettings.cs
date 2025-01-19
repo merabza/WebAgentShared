@@ -9,18 +9,18 @@ namespace LibWebAgentData;
 
 public sealed class AppSettings
 {
-    public string? BaseBackupsLocalPatch { get; set; }
-    public string? BackupsExchangeStorage { get; set; }
-    public string? BackupsExchangeStorageSmartSchemaName { get; set; }
+    public DatabasesBackupFilesExchangeParameters? DatabasesBackupFilesExchangeParameters { get; init; }
+    //public string? BaseBackupsLocalPatch { get; init; }
+    //public string? BackupsExchangeStorage { get; init; }
+    //public string? BackupsExchangeStorageSmartSchemaName { get; init; }
+    //public string? LocalSmartSchemaName { get; init; }
 
-    public string? LocalSmartSchemaName { get; set; }
+    public DatabaseServerData? DatabaseServerData { get; init; } = new();
 
-    //public Dictionary<string, DatabaseServerData> DatabaseServers { get; set; } = new();
-    public DatabaseServerData? DatabaseServerData { get; set; } = new();
-
-    public Dictionary<string, ApiClientSettings> ApiClients { get; set; } = new();
-    public Dictionary<string, DatabaseServerConnectionData> DatabaseServerConnections { get; set; } = new();
-    public Dictionary<string, SmartSchema> SmartSchemas { get; set; } = new();
+    public Dictionary<string, ApiClientSettings> ApiClients { get; init; } = new();
+    public Dictionary<string, FileStorageData> FileStorages { get; init; } = new();
+    public Dictionary<string, DatabaseServerConnectionData> DatabaseServerConnections { get; init; } = new();
+    public Dictionary<string, SmartSchema> SmartSchemas { get; init; } = new();
 
     public static AppSettings? Create(IConfiguration configuration)
     {

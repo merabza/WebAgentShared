@@ -5,6 +5,7 @@ using Installer.Models;
 using Installer.ProjectManagers;
 using LibFileParameters.Models;
 using LibProjectsApi.CommandRequests;
+using LibWebAgentData;
 using MessagingAbstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -52,7 +53,11 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceC
         if (string.IsNullOrWhiteSpace(installerSettings.ProgramExchangeFileStorageName))
             return await Task.FromResult(new[] { ProjectsErrors.ProgramExchangeFileStorageNameDoesNotSpecified });
 
-        var fileStorages = FileStorages.Create(_config);
+        var appSettings = AppSettings.Create(_config);
+        if (appSettings is null)
+            return await Task.FromResult(new[] { ProjectsErrors.AppSettingsIsNotCreated });
+
+        var fileStorages = new FileStorages(appSettings.FileStorages);
 
         var fileStorageForUpload =
             fileStorages.GetFileStorageDataByKey(installerSettings.ProgramExchangeFileStorageName);

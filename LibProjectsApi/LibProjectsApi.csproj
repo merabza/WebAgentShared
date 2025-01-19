@@ -16,6 +16,7 @@
     <ProjectReference Include="..\..\ToolsManagement\Installer\Installer.csproj" />
     <ProjectReference Include="..\..\WebAgentContracts\WebAgentProjectsApiContracts\WebAgentProjectsApiContracts.csproj" />
     <ProjectReference Include="..\..\WebSystemTools\WebInstallers\WebInstallers.csproj" />
+    <ProjectReference Include="..\LibWebAgentData\LibWebAgentData.csproj" />
   </ItemGroup>
 
 </Project>

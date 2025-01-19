@@ -4,6 +4,11 @@ namespace LibProjectsApi;
 
 public static class ProjectsErrors
 {
+    public static readonly Err AppSettingsIsNotCreated = new()
+    {
+        ErrorCode = nameof(AppSettingsIsNotCreated), ErrorMessage = "appSettings is not created"
+    };
+
     public static readonly Err SameParametersAreEmpty = new()
     {
         ErrorCode = nameof(SameParametersAreEmpty), ErrorMessage = "Same Parameters are Empty"

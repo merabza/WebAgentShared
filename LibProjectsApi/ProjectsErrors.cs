@@ -14,6 +14,15 @@ public static class ProjectsErrors
         ErrorCode = nameof(SameParametersAreEmpty), ErrorMessage = "Same Parameters are Empty"
     };
 
+    public static Err ParametersIsEmpty(string parameterName)
+    {
+        return new Err
+        {
+            ErrorCode = nameof(ParametersIsEmpty),
+            ErrorMessage = $"Parameter {parameterName} is Empty"
+        };
+    }
+
     public static readonly Err ProgramExchangeFileStorageNameDoesNotSpecified = new()
     {
         ErrorCode = nameof(ProgramExchangeFileStorageNameDoesNotSpecified),

@@ -7,7 +7,7 @@ using LibFileParameters.Models;
 using LibProjectsApi.CommandRequests;
 using LibWebAgentData;
 using MediatR;
-using MessagingAbstractions;
+using MediatRMessagingAbstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OneOf;
@@ -73,7 +73,6 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
 
         if (agentClient is null)
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
-
 
         var updateAppParametersFileResult = await agentClient.UpdateAppParametersFile(request.ProjectName,
             request.EnvironmentName, request.AppSettingsFileName, parametersFileDateMask, parametersFileExtension,

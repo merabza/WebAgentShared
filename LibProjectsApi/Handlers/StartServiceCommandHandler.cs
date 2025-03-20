@@ -5,7 +5,7 @@ using Installer.Models;
 using Installer.ProjectManagers;
 using LibProjectsApi.CommandRequests;
 using MediatR;
-using MessagingAbstractions;
+using MediatRMessagingAbstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OneOf;

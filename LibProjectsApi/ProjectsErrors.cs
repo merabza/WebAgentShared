@@ -14,15 +14,6 @@ public static class ProjectsErrors
         ErrorCode = nameof(SameParametersAreEmpty), ErrorMessage = "Same Parameters are Empty"
     };
 
-    public static Err ParametersIsEmpty(string parameterName)
-    {
-        return new Err
-        {
-            ErrorCode = nameof(ParametersIsEmpty),
-            ErrorMessage = $"Parameter {parameterName} is Empty"
-        };
-    }
-
     public static readonly Err ProgramExchangeFileStorageNameDoesNotSpecified = new()
     {
         ErrorCode = nameof(ProgramExchangeFileStorageNameDoesNotSpecified),
@@ -33,6 +24,11 @@ public static class ProjectsErrors
     {
         ErrorCode = nameof(AgentClientDoesNotCreated), ErrorMessage = "AgentClient does not created"
     };
+
+    public static Err ParametersIsEmpty(string parameterName)
+    {
+        return new Err { ErrorCode = nameof(ParametersIsEmpty), ErrorMessage = $"Parameter {parameterName} is Empty" };
+    }
 
     //public static readonly Err ServiceNameIsEmpty = new()
     //    { ErrorCode = nameof(ServiceNameIsEmpty), ErrorMessage = "Service Name is Empty" };

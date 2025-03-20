@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using LibProjectsApi.QueryRequests;
-using MessagingAbstractions;
+using MediatRMessagingAbstractions;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using SystemToolsShared.Errors;

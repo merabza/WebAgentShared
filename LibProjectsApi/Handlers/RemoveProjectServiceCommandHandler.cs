@@ -36,7 +36,7 @@ public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveP
     {
         var installerSettings = InstallerSettings.Create(_config);
 
-        var agentClient = await ProjectManagersFabric.CreateAgentClient(_logger, false, installerSettings.InstallFolder,
+        var agentClient = await ProjectManagersFactory.CreateAgentClient(_logger, false, installerSettings.InstallFolder,
             _messagesDataManager, request.UserName, cancellationToken);
 
         if (agentClient is null)

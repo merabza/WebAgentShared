@@ -56,7 +56,7 @@ public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionQueryReques
                 var webAgentClient = new TestApiClient(_logger, _httpClientFactory,
                     $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/", false);
                 var getVersionResult = await webAgentClient.GetVersion(cancellationToken);
-                if (getVersionResult.IsT0)
+                if (getVersionResult.IsT0 && !string.IsNullOrWhiteSpace(getVersionResult.AsT0))
                     //აქ თუ მოვედით, ყველაფერი კარგად არის
                     return getVersionResult.AsT0;
 

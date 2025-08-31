@@ -189,7 +189,7 @@ public sealed class ProjectsEndpoints : IInstaller
     }
 
     // POST api/projects/getversion/{serverSidePort}/{apiVersionId}
-    private static async Task<Results<Ok<string?>, BadRequest<IEnumerable<Err>>>> GetVersion(
+    private static async Task<Results<Ok<string>, BadRequest<IEnumerable<Err>>>> GetVersion(
         [FromRoute] int serverSidePort, [FromRoute] string apiVersionId, ICurrentUserByApiKey currentUserByApiKey,
         IMediator mediator, IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
     {
@@ -204,7 +204,7 @@ public sealed class ProjectsEndpoints : IInstaller
         var result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(GetVersion)} finished", cancellationToken);
-        return result.Match<Results<Ok<string?>, BadRequest<IEnumerable<Err>>>>(res => TypedResults.Ok(res),
+        return result.Match<Results<Ok<string>, BadRequest<IEnumerable<Err>>>>(res => TypedResults.Ok(res),
             errors => TypedResults.BadRequest(errors));
     }
 }

@@ -5,9 +5,9 @@ namespace LibProjectsApi.Mappers;
 
 public static class ProjectUpdateCommandRequestMapper
 {
-    public static ProjectUpdateCommandRequest AdaptTo(this ProjectUpdateRequest projectUpdateRequest, string? userName)
+    public static ProjectUpdateRequestCommand AdaptTo(this ProjectUpdateRequest projectUpdateRequest, string? userName)
     {
-        return new ProjectUpdateCommandRequest
+        return new ProjectUpdateRequestCommand
         {
             ProjectName = projectUpdateRequest.ProjectName,
             EnvironmentName = projectUpdateRequest.EnvironmentName,

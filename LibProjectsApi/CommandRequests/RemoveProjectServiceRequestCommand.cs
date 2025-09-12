@@ -2,9 +2,9 @@
 
 namespace LibProjectsApi.CommandRequests;
 
-public sealed class RemoveProjectServiceCommandRequest : ICommand
+public sealed class RemoveProjectServiceRequestCommand : ICommand
 {
-    private RemoveProjectServiceCommandRequest(string projectName, string environmentName, bool isService,
+    private RemoveProjectServiceRequestCommand(string projectName, string environmentName, bool isService,
         string? userName)
     {
         ProjectName = projectName;
@@ -18,9 +18,9 @@ public sealed class RemoveProjectServiceCommandRequest : ICommand
     public string EnvironmentName { get; set; }
     public string? UserName { get; }
 
-    public static RemoveProjectServiceCommandRequest Create(string projectName, string environmentName, bool isService,
+    public static RemoveProjectServiceRequestCommand Create(string projectName, string environmentName, bool isService,
         string? userName)
     {
-        return new RemoveProjectServiceCommandRequest(projectName, environmentName, isService, userName);
+        return new RemoveProjectServiceRequestCommand(projectName, environmentName, isService, userName);
     }
 }

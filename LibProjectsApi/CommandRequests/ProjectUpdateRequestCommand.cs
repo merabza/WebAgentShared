@@ -2,7 +2,7 @@
 
 namespace LibProjectsApi.CommandRequests;
 
-public sealed class ProjectUpdateCommandRequest : ICommand<string>
+public sealed class ProjectUpdateRequestCommand : ICommand<string>
 {
     public string? ProjectName { get; set; }
     public string? EnvironmentName { get; set; }

@@ -17,7 +17,7 @@ using SystemToolsShared.Errors;
 namespace LibProjectsApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveProjectServiceCommandRequest>
+public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveProjectServiceRequestCommand>
 {
     private readonly IConfiguration _config;
     private readonly ILogger<RemoveProjectServiceCommandHandler> _logger;
@@ -31,7 +31,7 @@ public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveP
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(RemoveProjectServiceCommandRequest request,
+    public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(RemoveProjectServiceRequestCommand request,
         CancellationToken cancellationToken = default)
     {
         var installerSettings = InstallerSettings.Create(_config);

@@ -160,7 +160,7 @@ public sealed class ProjectsEndpoints : IInstaller
         await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(RemoveProjectServiceCommandHandler)} from {nameof(RemoveProjectService)}");
 
-        var command = RemoveProjectServiceCommandRequest.Create(projectName, environmentName, isService, userName);
+        var command = RemoveProjectServiceRequestCommand.Create(projectName, environmentName, isService, userName);
         var result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} finished", cancellationToken);

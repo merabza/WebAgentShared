@@ -125,7 +125,7 @@ public sealed class ProjectsEndpoints : IInstaller
         await messagesDataManager.SendMessage(userName, $"{nameof(StopService)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(StopServiceCommandHandler)} from {nameof(StopService)}");
 
-        var command = StopServiceCommandRequest.Create(projectName, environmentName, userName);
+        var command = StopServiceRequestCommand.Create(projectName, environmentName, userName);
         var result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(StopService)} finished", cancellationToken);
@@ -142,7 +142,7 @@ public sealed class ProjectsEndpoints : IInstaller
         await messagesDataManager.SendMessage(userName, $"{nameof(StartService)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(StartServiceCommandHandler)} from {nameof(StartService)}");
 
-        var command = StartServiceCommandRequest.Create(projectName, environmentName, userName);
+        var command = StartServiceRequestCommand.Create(projectName, environmentName, userName);
         var result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(StartService)} finished", cancellationToken);
@@ -180,7 +180,7 @@ public sealed class ProjectsEndpoints : IInstaller
         if (string.IsNullOrWhiteSpace(apiVersionId) || serverSidePort == 0)
             return TypedResults.BadRequest(Err.Create(ProjectsErrors.SameParametersAreEmpty));
 
-        var command = GetAppSettingsVersionQueryRequest.Create(serverSidePort, apiVersionId, userName);
+        var command = GetAppSettingsVersionRequestQuery.Create(serverSidePort, apiVersionId, userName);
         var result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(GetAppSettingsVersion)} finished", cancellationToken);
@@ -200,7 +200,7 @@ public sealed class ProjectsEndpoints : IInstaller
         if (string.IsNullOrWhiteSpace(apiVersionId) || serverSidePort == 0)
             return TypedResults.BadRequest(Err.Create(ProjectsErrors.SameParametersAreEmpty));
 
-        var command = GetVersionQueryRequest.Create(serverSidePort, apiVersionId, userName);
+        var command = GetVersionRequestQuery.Create(serverSidePort, apiVersionId, userName);
         var result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(GetVersion)} finished", cancellationToken);

@@ -19,7 +19,7 @@ using SystemToolsShared.Errors;
 namespace LibProjectsApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSettingsCommandRequest>
+public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSettingsRequestCommand>
 {
     private readonly IConfiguration _config;
     private readonly ILogger<UpdateSettingsCommandHandler> _logger;
@@ -33,9 +33,10 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(UpdateSettingsCommandRequest request,
+    public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(UpdateSettingsRequestCommand request,
         CancellationToken cancellationToken = default)
     {
+        // ReSharper disable once BothContextCallUsage.Global
         await _messagesDataManager.SendMessage(request.UserName, "Creating installer settings", cancellationToken);
 
         var installerSettings = InstallerSettings.Create(_config);
@@ -51,6 +52,7 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
         if (string.IsNullOrWhiteSpace(installerSettings.ProgramExchangeFileStorageName))
             return await Task.FromResult(new[] { ProjectsErrors.ProgramExchangeFileStorageNameDoesNotSpecified });
 
+        // ReSharper disable once BothContextCallUsage.Global
         await _messagesDataManager.SendMessage(request.UserName, "Creating File Storages", cancellationToken);
 
         var appSettings = AppSettings.Create(_config);
@@ -82,6 +84,7 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
 
         var err = ProjectsErrors.SettingsCannotBeUpdated(request.ProjectName);
 
+        // ReSharper disable once BothContextCallUsage.Global
         _logger.LogError(err.ErrorMessage);
         return await Task.FromResult(new[] { err });
     }

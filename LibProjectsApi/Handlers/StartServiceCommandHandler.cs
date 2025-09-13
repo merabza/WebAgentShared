@@ -17,7 +17,7 @@ using SystemToolsShared.Errors;
 namespace LibProjectsApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class StartServiceCommandHandler : ICommandHandler<StartServiceCommandRequest>
+public sealed class StartServiceCommandHandler : ICommandHandler<StartServiceRequestCommand>
 {
     private readonly IConfiguration _config;
     private readonly ILogger<StartServiceCommandHandler> _logger;
@@ -31,7 +31,7 @@ public sealed class StartServiceCommandHandler : ICommandHandler<StartServiceCom
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(StartServiceCommandRequest request,
+    public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(StartServiceRequestCommand request,
         CancellationToken cancellationToken = default)
     {
         if (request.ProjectName is null)

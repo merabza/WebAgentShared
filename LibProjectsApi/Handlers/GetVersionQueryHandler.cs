@@ -16,7 +16,7 @@ using TestApiContracts;
 namespace LibProjectsApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionQueryRequest, string?>
+public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionRequestQuery, string?>
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<GetVersionQueryHandler> _logger;
@@ -30,7 +30,7 @@ public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionQueryReques
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<string?, IEnumerable<Err>>> Handle(GetVersionQueryRequest request,
+    public async Task<OneOf<string?, IEnumerable<Err>>> Handle(GetVersionRequestQuery request,
         CancellationToken cancellationToken = default)
     {
         var errors = new List<Err>();

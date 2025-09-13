@@ -18,7 +18,7 @@ using SystemToolsShared.Errors;
 namespace LibProjectsApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceCommandRequest, string>
+public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceRequestCommand, string>
 {
     private readonly IConfiguration _config;
     private readonly ILogger<UpdateServiceCommandHandler> _logger;
@@ -32,7 +32,7 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceC
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<string, IEnumerable<Err>>> Handle(UpdateServiceCommandRequest request,
+    public async Task<OneOf<string, IEnumerable<Err>>> Handle(UpdateServiceRequestCommand request,
         CancellationToken cancellationToken = default)
     {
         var installerSettings = InstallerSettings.Create(_config);

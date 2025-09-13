@@ -5,10 +5,10 @@ namespace LibProjectsApi.Mappers;
 
 public static class UpdateSettingsCommandRequestMapper
 {
-    public static UpdateSettingsCommandRequest AdaptTo(this UpdateSettingsRequest updateSettingsRequest,
+    public static UpdateSettingsRequestCommand AdaptTo(this UpdateSettingsRequest updateSettingsRequest,
         string? userName)
     {
-        return new UpdateSettingsCommandRequest
+        return new UpdateSettingsRequestCommand
         {
             ProjectName = updateSettingsRequest.ProjectName,
             EnvironmentName = updateSettingsRequest.EnvironmentName,

@@ -5,9 +5,9 @@ namespace LibProjectsApi.Mappers;
 
 public static class UpdateServiceCommandRequestMapper
 {
-    public static UpdateServiceCommandRequest AdaptTo(this UpdateServiceRequest updateServiceRequest, string? userName)
+    public static UpdateServiceRequestCommand AdaptTo(this UpdateServiceRequest updateServiceRequest, string? userName)
     {
-        return new UpdateServiceCommandRequest
+        return new UpdateServiceRequestCommand
         {
             ProjectName = updateServiceRequest.ProjectName,
             EnvironmentName = updateServiceRequest.EnvironmentName,

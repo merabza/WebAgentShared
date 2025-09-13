@@ -4,7 +4,7 @@ using LibProjectsApi.CommandRequests;
 namespace LibProjectsApi.Validators;
 
 // ReSharper disable once UnusedType.Global
-public sealed class UpdateSettingsCommandValidator : AbstractValidator<UpdateSettingsCommandRequest>
+public sealed class UpdateSettingsCommandValidator : AbstractValidator<UpdateSettingsRequestCommand>
 {
     public UpdateSettingsCommandValidator()
     {

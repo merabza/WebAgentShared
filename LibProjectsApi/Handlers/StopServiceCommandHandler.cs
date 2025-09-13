@@ -18,7 +18,7 @@ namespace LibProjectsApi.Handlers;
 
 // ReSharper disable once UnusedType.Global
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceCommandRequest>
+public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceRequestCommand>
 {
     private readonly IConfiguration _config;
     private readonly ILogger<StopServiceCommandHandler> _logger;
@@ -32,7 +32,7 @@ public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceComma
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(StopServiceCommandRequest request,
+    public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(StopServiceRequestCommand request,
         CancellationToken cancellationToken = default)
     {
         if (request.ProjectName is null)

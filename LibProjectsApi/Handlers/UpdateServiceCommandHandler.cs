@@ -111,7 +111,7 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceR
             parametersFileDateMask, parametersFileExtension, request.ServiceDescriptionSignature,
             request.ProjectDescription, cancellationToken);
         if (installServiceResult.IsT1)
-            return (Err[])installServiceResult.AsT1;
+            return installServiceResult.AsT1;
         var assemblyVersion = installServiceResult.AsT0;
 
         if (assemblyVersion != null)

@@ -30,7 +30,7 @@ public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionRequestQuer
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<string?, IEnumerable<Err>>> Handle(GetVersionRequestQuery request,
+    public async Task<OneOf<string?, Err[]>> Handle(GetVersionRequestQuery request,
         CancellationToken cancellationToken = default)
     {
         var errors = new List<Err>();
@@ -76,7 +76,7 @@ public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionRequestQuer
 
         //---
         if (errors.Count > 0)
-            return errors;
+            return errors.ToArray();
 
         return new Err[]
         {

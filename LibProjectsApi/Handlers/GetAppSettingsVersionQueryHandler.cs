@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using LibProjectsApi.QueryRequests;
@@ -26,7 +25,7 @@ public sealed class GetAppSettingsVersionQueryHandler : IQueryHandler<GetAppSett
         _httpClientFactory = httpClientFactory;
     }
 
-    public async Task<OneOf<string, IEnumerable<Err>>> Handle(GetAppSettingsVersionRequestQuery request,
+    public async Task<OneOf<string, Err[]>> Handle(GetAppSettingsVersionRequestQuery request,
         CancellationToken cancellationToken = default)
     {
         var webAgentClient = new TestApiClient(_logger, _httpClientFactory,

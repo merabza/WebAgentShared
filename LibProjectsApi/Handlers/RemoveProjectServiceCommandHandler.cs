@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Installer.Models;
 using Installer.ProjectManagers;
@@ -31,7 +30,7 @@ public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveP
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(RemoveProjectServiceRequestCommand request,
+    public async Task<OneOf<Unit, Err[]>> Handle(RemoveProjectServiceRequestCommand request,
         CancellationToken cancellationToken = default)
     {
         var installerSettings = InstallerSettings.Create(_config);

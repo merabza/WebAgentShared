@@ -59,9 +59,9 @@ public sealed class ProjectsEndpoints : IInstaller
     }
 
     // POST api/projects/updatesettings
-    private static async Task<Results<Ok, BadRequest<IEnumerable<Err>>>> UpdateSettings(
-        [FromBody] UpdateSettingsRequest? request, ICurrentUserByApiKey currentUserByApiKey, IMediator mediator,
-        IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
+    private static async Task<Results<Ok, BadRequest<Err[]>>> UpdateSettings([FromBody] UpdateSettingsRequest? request,
+        ICurrentUserByApiKey currentUserByApiKey, IMediator mediator, IMessagesDataManager messagesDataManager,
+        CancellationToken cancellationToken = default)
     {
         var userName = currentUserByApiKey.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(UpdateSettings)} started", cancellationToken);
@@ -74,14 +74,14 @@ public sealed class ProjectsEndpoints : IInstaller
         var result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(UpdateSettings)} finished", cancellationToken);
-        return result.Match<Results<Ok, BadRequest<IEnumerable<Err>>>>(_ => TypedResults.Ok(),
+        return result.Match<Results<Ok, BadRequest<Err[]>>>(_ => TypedResults.Ok(),
             errors => TypedResults.BadRequest(errors));
     }
 
     // POST api/projects/update
-    private static async Task<Results<Ok<string>, BadRequest<IEnumerable<Err>>>> Update(
-        [FromBody] ProjectUpdateRequest? request, ICurrentUserByApiKey currentUserByApiKey, IMediator mediator,
-        IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
+    private static async Task<Results<Ok<string>, BadRequest<Err[]>>> Update([FromBody] ProjectUpdateRequest? request,
+        ICurrentUserByApiKey currentUserByApiKey, IMediator mediator, IMessagesDataManager messagesDataManager,
+        CancellationToken cancellationToken = default)
     {
         var userName = currentUserByApiKey.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(Update)} started", cancellationToken);
@@ -93,12 +93,12 @@ public sealed class ProjectsEndpoints : IInstaller
         var result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(Update)} finished", cancellationToken);
-        return result.Match<Results<Ok<string>, BadRequest<IEnumerable<Err>>>>(res => TypedResults.Ok(res),
+        return result.Match<Results<Ok<string>, BadRequest<Err[]>>>(res => TypedResults.Ok(res),
             errors => TypedResults.BadRequest(errors));
     }
 
     // POST api/projects/updateservice
-    private static async Task<Results<Ok<string>, BadRequest<IEnumerable<Err>>>> UpdateService(
+    private static async Task<Results<Ok<string>, BadRequest<Err[]>>> UpdateService(
         [FromBody] UpdateServiceRequest? request, ICurrentUserByApiKey currentUserByApiKey, IMediator mediator,
         IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
     {
@@ -113,12 +113,12 @@ public sealed class ProjectsEndpoints : IInstaller
         var result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(UpdateService)} finished", cancellationToken);
-        return result.Match<Results<Ok<string>, BadRequest<IEnumerable<Err>>>>(res => TypedResults.Ok(res),
+        return result.Match<Results<Ok<string>, BadRequest<Err[]>>>(res => TypedResults.Ok(res),
             errors => TypedResults.BadRequest(errors));
     }
 
     // POST api/projects/stop/{projectName}/{environmentName}
-    private static async Task<Results<Ok, BadRequest<IEnumerable<Err>>>> StopService([FromRoute] string projectName,
+    private static async Task<Results<Ok, BadRequest<Err[]>>> StopService([FromRoute] string projectName,
         [FromRoute] string environmentName, ICurrentUserByApiKey currentUserByApiKey, IMediator mediator,
         IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
     {
@@ -130,12 +130,12 @@ public sealed class ProjectsEndpoints : IInstaller
         var result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(StopService)} finished", cancellationToken);
-        return result.Match<Results<Ok, BadRequest<IEnumerable<Err>>>>(_ => TypedResults.Ok(),
+        return result.Match<Results<Ok, BadRequest<Err[]>>>(_ => TypedResults.Ok(),
             errors => TypedResults.BadRequest(errors));
     }
 
     // POST api/projects/start/{projectName}/{environmentName}
-    private static async Task<Results<Ok, BadRequest<IEnumerable<Err>>>> StartService([FromRoute] string projectName,
+    private static async Task<Results<Ok, BadRequest<Err[]>>> StartService([FromRoute] string projectName,
         [FromRoute] string environmentName, ICurrentUserByApiKey currentUserByApiKey, IMediator mediator,
         IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
     {
@@ -147,15 +147,14 @@ public sealed class ProjectsEndpoints : IInstaller
         var result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(StartService)} finished", cancellationToken);
-        return result.Match<Results<Ok, BadRequest<IEnumerable<Err>>>>(_ => TypedResults.Ok(),
+        return result.Match<Results<Ok, BadRequest<Err[]>>>(_ => TypedResults.Ok(),
             errors => TypedResults.BadRequest(errors));
     }
 
     // POST api/projects/removeprojectservice/{projectName}/{environmentName}
-    private static async Task<Results<Ok, BadRequest<IEnumerable<Err>>>> RemoveProjectService(
-        [FromRoute] string projectName, [FromRoute] string environmentName, [FromRoute] bool isService,
-        ICurrentUserByApiKey currentUserByApiKey, IMediator mediator, IMessagesDataManager messagesDataManager,
-        CancellationToken cancellationToken = default)
+    private static async Task<Results<Ok, BadRequest<Err[]>>> RemoveProjectService([FromRoute] string projectName,
+        [FromRoute] string environmentName, [FromRoute] bool isService, ICurrentUserByApiKey currentUserByApiKey,
+        IMediator mediator, IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
     {
         var userName = currentUserByApiKey.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} started", cancellationToken);
@@ -165,7 +164,7 @@ public sealed class ProjectsEndpoints : IInstaller
         var result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} finished", cancellationToken);
-        return result.Match<Results<Ok, BadRequest<IEnumerable<Err>>>>(_ => TypedResults.Ok(),
+        return result.Match<Results<Ok, BadRequest<Err[]>>>(_ => TypedResults.Ok(),
             errors => TypedResults.BadRequest(errors));
     }
 

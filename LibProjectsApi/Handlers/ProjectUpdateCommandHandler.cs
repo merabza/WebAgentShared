@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using ApiContracts.Errors;
 using Installer.Models;
@@ -33,7 +32,7 @@ public sealed class ProjectUpdateCommandHandler : ICommandHandler<ProjectUpdateR
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<string, IEnumerable<Err>>> Handle(ProjectUpdateRequestCommand request,
+    public async Task<OneOf<string, Err[]>> Handle(ProjectUpdateRequestCommand request,
         CancellationToken cancellationToken = default)
     {
         var installerSettings = InstallerSettings.Create(_config);

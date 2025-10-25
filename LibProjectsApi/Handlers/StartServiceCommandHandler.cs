@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Installer.Models;
 using Installer.ProjectManagers;
@@ -31,7 +30,7 @@ public sealed class StartServiceCommandHandler : ICommandHandler<StartServiceReq
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(StartServiceRequestCommand request,
+    public async Task<OneOf<Unit, Err[]>> Handle(StartServiceRequestCommand request,
         CancellationToken cancellationToken = default)
     {
         if (request.ProjectName is null)

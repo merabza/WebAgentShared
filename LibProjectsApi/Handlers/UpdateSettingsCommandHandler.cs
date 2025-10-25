@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Installer.Models;
 using Installer.ProjectManagers;
@@ -33,7 +32,7 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<Unit, IEnumerable<Err>>> Handle(UpdateSettingsRequestCommand request,
+    public async Task<OneOf<Unit, Err[]>> Handle(UpdateSettingsRequestCommand request,
         CancellationToken cancellationToken = default)
     {
         // ReSharper disable once BothContextCallUsage.Global

@@ -32,7 +32,7 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceR
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<string, IEnumerable<Err>>> Handle(UpdateServiceRequestCommand request,
+    public async Task<OneOf<string, Err[]>> Handle(UpdateServiceRequestCommand request,
         CancellationToken cancellationToken = default)
     {
         var installerSettings = InstallerSettings.Create(_config);
@@ -82,14 +82,14 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceR
             fileStorages = new FileStorages(appSettings.FileStorages);
 
         if (string.IsNullOrWhiteSpace(installerSettings.ProgramExchangeFileStorageName) || fileStorages == null)
-            return await Task.FromResult(errors);
+            return await Task.FromResult(errors.ToArray());
 
         var fileStorageForUpload =
             fileStorages.GetFileStorageDataByKey(installerSettings.ProgramExchangeFileStorageName);
         if (fileStorageForUpload is null)
         {
             errors.Add(ProjectsErrors.FileStorageDoesNotExists(installerSettings.ProgramExchangeFileStorageName));
-            return await Task.FromResult(errors);
+            return await Task.FromResult(errors.ToArray());
         }
 
         var agentClient = await ProjectManagersFactory.CreateAgentClientWithFileStorage(_logger, installerSettings,
@@ -98,13 +98,13 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceR
         if (agentClient is null)
         {
             errors.Add(ProjectsErrors.AgentClientDoesNotCreated);
-            return await Task.FromResult(errors);
+            return await Task.FromResult(errors.ToArray());
         }
 
         if (errors.Count > 0 || request.ProjectName is null || request.EnvironmentName is null ||
             request.ServiceUserName is null || request.AppSettingsFileName is null || programArchiveDateMask is null ||
             programArchiveExtension is null || parametersFileDateMask is null || parametersFileExtension is null)
-            return await Task.FromResult(errors);
+            return await Task.FromResult(errors.ToArray());
 
         var installServiceResult = await agentClient.InstallService(request.ProjectName, request.EnvironmentName,
             request.ServiceUserName, request.AppSettingsFileName, programArchiveDateMask, programArchiveExtension,

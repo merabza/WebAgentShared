@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
@@ -15,32 +14,23 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using SystemToolsShared;
 using SystemToolsShared.Errors;
 using WebAgentProjectsApiContracts.V1.Requests;
 using WebAgentProjectsApiContracts.V1.Routes;
-using WebInstallers;
 
 namespace LibProjectsApi.Endpoints.V1;
 
 // ReSharper disable once UnusedType.Global
-public sealed class ProjectsEndpoints : IInstaller
+public static class ProjectsEndpoints
 {
-    public int InstallPriority => 50;
-    public int ServiceUsePriority => 50;
-
-    public bool InstallServices(WebApplicationBuilder builder, bool debugMode, string[] args,
-        Dictionary<string, string> parameters)
-    {
-        return true;
-    }
-
-    public bool UseServices(WebApplication app, bool debugMode)
+    public static bool UseProjectsEndpoints(this IEndpointRouteBuilder endpoints, bool debugMode)
     {
         if (debugMode)
-            Console.WriteLine($"{GetType().Name}.{nameof(UseServices)} Started");
+            Console.WriteLine($"{nameof(UseProjectsEndpoints)} Started");
 
-        var group = app.MapGroup(ProjectsApiRoutes.ApiBase + ProjectsApiRoutes.Projects.ProjectBase)
+        var group = endpoints.MapGroup(ProjectsApiRoutes.ApiBase + ProjectsApiRoutes.Projects.ProjectBase)
             .RequireAuthorization();
 
         group.MapGet(ProjectsApiRoutes.Projects.GetAppSettingsVersion, GetAppSettingsVersion);
@@ -53,7 +43,7 @@ public sealed class ProjectsEndpoints : IInstaller
         group.MapPost(ProjectsApiRoutes.Projects.UpdateSettings, UpdateSettings);
 
         if (debugMode)
-            Console.WriteLine($"{GetType().Name}.{nameof(UseServices)} Finished");
+            Console.WriteLine($"{nameof(UseProjectsEndpoints)} Finished");
 
         return true;
     }

@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ApiContracts.Errors;
 using ApiKeyIdentity;
 using LibProjectsApi.CommandRequests;
 using LibProjectsApi.Handlers;
@@ -15,10 +14,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using SystemToolsShared;
-using SystemToolsShared.Errors;
-using WebAgentProjectsApiContracts.V1.Requests;
-using WebAgentProjectsApiContracts.V1.Routes;
+using SystemTools.ApiContracts.Errors;
+using SystemTools.SystemToolsShared;
+using SystemTools.SystemToolsShared.Errors;
+using WebAgentContracts.WebAgentProjectsApiContracts.V1.Requests;
+using WebAgentContracts.WebAgentProjectsApiContracts.V1.Routes;
 
 namespace LibProjectsApi.Endpoints.V1;
 

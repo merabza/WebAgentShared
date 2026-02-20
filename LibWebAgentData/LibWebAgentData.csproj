@@ -10,6 +10,8 @@
     <ProjectReference Include="..\..\ParametersManagement\LibApiClientParameters\LibApiClientParameters.csproj" />
     <ProjectReference Include="..\..\ParametersManagement\LibDatabaseParameters\LibDatabaseParameters.csproj" />
     <ProjectReference Include="..\..\ParametersManagement\LibFileParameters\LibFileParameters.csproj" />
+    <ProjectReference Include="..\..\ParametersManagement\ParametersManagement.LibDatabaseParameters\ParametersManagement.LibDatabaseParameters.csproj" />
+    <ProjectReference Include="..\..\ParametersManagement\ParametersManagement.LibFileParameters\ParametersManagement.LibFileParameters.csproj" />
   </ItemGroup>
 
 </Project>

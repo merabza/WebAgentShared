@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using LibApiClientParameters;
-using LibDatabaseParameters;
-using LibFileParameters.Models;
 using LibWebAgentData.Models;
 using Microsoft.Extensions.Configuration;
+using ParametersManagement.LibApiClientParameters;
+using ParametersManagement.LibDatabaseParameters;
+using ParametersManagement.LibFileParameters.Models;
 
 namespace LibWebAgentData;
 

@@ -1,0 +1,44 @@
+<Solution>
+    <Folder Name="/ConnectionTools/">
+        <Project Path="../ConnectionTools/ConnectionTools.ConnectTools/ConnectionTools.ConnectTools.csproj" />
+        <Project Path="../ConnectionTools/ConnectionTools.CToolsFactory/ConnectionTools.CToolsFactory.csproj" />
+        <Project Path="../ConnectionTools/ConnectionTools.FTPTools/ConnectionTools.FTPTools.csproj" />
+    </Folder>
+    <Folder Name="/DatabaseTools/">
+        <Project Path="../DatabaseTools/DatabaseTools.DbTools/DatabaseTools.DbTools.csproj" />
+    </Folder>
+    <Folder Name="/ParametersManagement/">
+        <Project Path="../ParametersManagement/ParametersManagement.LibApiClientParameters/ParametersManagement.LibApiClientParameters.csproj" />
+        <Project Path="../ParametersManagement/ParametersManagement.LibDatabaseParameters/ParametersManagement.LibDatabaseParameters.csproj" />
+        <Project Path="../ParametersManagement/ParametersManagement.LibFileParameters/ParametersManagement.LibFileParameters.csproj" />
+        <Project Path="../ParametersManagement/ParametersManagement.LibParameters/ParametersManagement.LibParameters.csproj" />
+        <Project Path="../ParametersManagement/ParametersManagement/ParametersManagement.csproj" />
+    </Folder>
+    <Folder Name="/Solution Items/">
+        <File Path=".editorconfig" />
+        <File Path="Directory.Build.props" />
+        <File Path="Directory.Packages.props" />
+    </Folder>
+    <Folder Name="/SystemTools/">
+        <Project Path="../SystemTools/SystemTools.ApiContracts/SystemTools.ApiContracts.csproj" />
+        <Project Path="../SystemTools/SystemTools.ApiKeysManagement/SystemTools.ApiKeysManagement.csproj" />
+        <Project Path="../SystemTools/SystemTools.MediatRMessagingAbstractions/SystemTools.MediatRMessagingAbstractions.csproj" />
+        <Project Path="../SystemTools/SystemTools.StringMessagesApiContracts/SystemTools.StringMessagesApiContracts.csproj" />
+        <Project Path="../SystemTools/SystemTools.SystemToolsShared/SystemTools.SystemToolsShared.csproj" />
+        <Project Path="../SystemTools/SystemTools.TestApiContracts/SystemTools.TestApiContracts.csproj" />
+    </Folder>
+    <Folder Name="/ToolsManagement/">
+        <Project Path="../ToolsManagement/ToolsManagement.FileManagersMain/ToolsManagement.FileManagersMain.csproj" />
+        <Project Path="../ToolsManagement/ToolsManagement.Installer/ToolsManagement.Installer.csproj" />
+        <Project Path="../ToolsManagement/ToolsManagement.LibToolActions/ToolsManagement.LibToolActions.csproj" />
+    </Folder>
+    <Folder Name="/WebAgentContracts/">
+        <Project Path="../WebAgentContracts/WebAgentContracts.WebAgentProjectsApiContracts/WebAgentContracts.WebAgentProjectsApiContracts.csproj" />
+    </Folder>
+    <Folder Name="/WebSystemTools/">
+        <Project Path="../WebSystemTools/ApiKeyIdentity/ApiKeyIdentity.csproj" />
+    </Folder>
+    <Project Path="WebAgentShared.LibProjectsApi/WebAgentShared.LibProjectsApi.csproj" />
+    <Project Path="WebAgentShared.LibWebAgentData/WebAgentShared.LibWebAgentData.csproj" />
+    <Project Path="WebAgentShared/WebAgentShared.csproj" />
+</Solution>

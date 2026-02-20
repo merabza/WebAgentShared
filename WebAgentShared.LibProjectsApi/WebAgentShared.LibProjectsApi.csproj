@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SystemTools\SystemTools.MediatRMessagingAbstractions\SystemTools.MediatRMessagingAbstractions.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.TestApiContracts\SystemTools.TestApiContracts.csproj" />
+    <ProjectReference Include="..\..\ToolsManagement\ToolsManagement.Installer\ToolsManagement.Installer.csproj" />
+    <ProjectReference Include="..\..\WebAgentContracts\WebAgentContracts.WebAgentProjectsApiContracts\WebAgentContracts.WebAgentProjectsApiContracts.csproj" />
+    <ProjectReference Include="..\..\WebSystemTools\ApiKeyIdentity\ApiKeyIdentity.csproj" />
+    <ProjectReference Include="..\WebAgentShared.LibWebAgentData\WebAgentShared.LibWebAgentData.csproj" />
+  </ItemGroup>
+
+</Project>

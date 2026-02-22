@@ -40,7 +40,7 @@ public sealed class StartServiceCommandHandler : ICommandHandler<StartServiceReq
 
         var installerSettings = InstallerSettings.Create(_config);
 
-        var agentClient = await ProjectManagersFactory.CreateAgentClient(_logger, false,
+        IProjectsManager? agentClient = await ProjectManagersFactory.CreateAgentClient(_logger, false,
             installerSettings.InstallFolder, _messagesDataManager, request.UserName, cancellationToken);
 
         if (agentClient is null)
@@ -53,7 +53,7 @@ public sealed class StartServiceCommandHandler : ICommandHandler<StartServiceReq
             return new Unit();
         }
 
-        var err = ProjectsErrors.CannotBeStartedService(request.ProjectName);
+        Err err = ProjectsErrors.CannotBeStartedService(request.ProjectName);
 
         _logger.LogError("Service start failed: {ErrorMessage}", err.ErrorMessage);
         return await Task.FromResult(new[] { err });

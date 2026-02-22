@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
+using LanguageExt;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OneOf;
@@ -12,6 +12,7 @@ using ToolsManagement.Installer.Models;
 using ToolsManagement.Installer.ProjectManagers;
 using WebAgentShared.LibProjectsApi.CommandRequests;
 using WebAgentShared.LibWebAgentData;
+using Unit = MediatR.Unit;
 
 // ReSharper disable ConvertToPrimaryConstructor
 
@@ -40,9 +41,9 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
 
         var installerSettings = InstallerSettings.Create(_config);
 
-        var parametersFileDateMask = request.ParametersFileDateMask ?? installerSettings.ParametersFileDateMask;
+        string? parametersFileDateMask = request.ParametersFileDateMask ?? installerSettings.ParametersFileDateMask;
 
-        var parametersFileExtension = request.ParametersFileExtension ?? installerSettings.ParametersFileExtension;
+        string? parametersFileExtension = request.ParametersFileExtension ?? installerSettings.ParametersFileExtension;
 
         if (request.ProjectName is null || request.EnvironmentName is null || request.AppSettingsFileName is null ||
             parametersFileDateMask is null || parametersFileExtension is null)
@@ -66,7 +67,7 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
 
         var fileStorages = new FileStorages(appSettings.FileStorages);
 
-        var fileStorageForUpload =
+        FileStorageData? fileStorageForUpload =
             fileStorages.GetFileStorageDataByKey(installerSettings.ProgramExchangeFileStorageName);
 
         if (fileStorageForUpload is null)
@@ -77,15 +78,16 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
             });
         }
 
-        var agentClient = await ProjectManagersFactory.CreateAgentClientWithFileStorage(_logger, installerSettings,
-            fileStorageForUpload, false, _messagesDataManager, request.UserName, cancellationToken);
+        IIProjectsManagerWithFileStorage? agentClient =
+            await ProjectManagersFactory.CreateAgentClientWithFileStorage(_logger, installerSettings,
+                fileStorageForUpload, false, _messagesDataManager, request.UserName, cancellationToken);
 
         if (agentClient is null)
         {
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
         }
 
-        var updateAppParametersFileResult = await agentClient.UpdateAppParametersFile(request.ProjectName,
+        Option<Err[]> updateAppParametersFileResult = await agentClient.UpdateAppParametersFile(request.ProjectName,
             request.EnvironmentName, request.AppSettingsFileName, parametersFileDateMask, parametersFileExtension,
             cancellationToken);
         if (updateAppParametersFileResult.IsNone)
@@ -93,7 +95,7 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
             return new Unit();
         }
 
-        var err = ProjectsErrors.SettingsCannotBeUpdated(request.ProjectName);
+        Err err = ProjectsErrors.SettingsCannotBeUpdated(request.ProjectName);
 
         // ReSharper disable once BothContextCallUsage.Global
         _logger.LogError("Settings update error: {ErrorMessage}", err.ErrorMessage);

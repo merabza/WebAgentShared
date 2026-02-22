@@ -18,7 +18,7 @@ public sealed class AppSettings
 
     public static AppSettings? Create(IConfiguration configuration)
     {
-        var appSettingsSection = configuration.GetSection("AppSettings");
+        IConfigurationSection appSettingsSection = configuration.GetSection("AppSettings");
         return appSettingsSection.Get<AppSettings>();
     }
 }

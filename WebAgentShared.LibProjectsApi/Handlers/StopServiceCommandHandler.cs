@@ -40,7 +40,7 @@ public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceReque
 
         var installerSettings = InstallerSettings.Create(_config);
 
-        var agentClient = await ProjectManagersFactory.CreateAgentClient(_logger, false,
+        IProjectsManager? agentClient = await ProjectManagersFactory.CreateAgentClient(_logger, false,
             installerSettings.InstallFolder, _messagesDataManager, request.UserName, cancellationToken);
 
         if (agentClient is null)
@@ -53,7 +53,7 @@ public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceReque
             return new Unit();
         }
 
-        var err = ProjectsErrors.CannotBeStoppedService(request.ProjectName);
+        Err err = ProjectsErrors.CannotBeStoppedService(request.ProjectName);
 
         _logger.LogError("{ErrorMessage}", err.ErrorMessage);
         return await Task.FromResult(new[] { err });

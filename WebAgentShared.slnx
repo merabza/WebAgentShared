@@ -36,7 +36,7 @@
         <Project Path="../WebAgentContracts/WebAgentContracts.WebAgentProjectsApiContracts/WebAgentContracts.WebAgentProjectsApiContracts.csproj" />
     </Folder>
     <Folder Name="/WebSystemTools/">
-        <Project Path="../WebSystemTools/ApiKeyIdentity/ApiKeyIdentity.csproj" />
+        <Project Path="../WebSystemTools/WebSystemTools.ApiKeyIdentity/WebSystemTools.ApiKeyIdentity.csproj" />
     </Folder>
     <Project Path="WebAgentShared.LibProjectsApi/WebAgentShared.LibProjectsApi.csproj" />
     <Project Path="WebAgentShared.LibWebAgentData/WebAgentShared.LibWebAgentData.csproj" />

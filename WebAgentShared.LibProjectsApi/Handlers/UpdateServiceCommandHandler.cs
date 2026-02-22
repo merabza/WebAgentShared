@@ -37,13 +37,13 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceR
     {
         var installerSettings = InstallerSettings.Create(_config);
 
-        var programArchiveDateMask = request.ProgramArchiveDateMask ?? installerSettings.ProgramArchiveDateMask;
+        string? programArchiveDateMask = request.ProgramArchiveDateMask ?? installerSettings.ProgramArchiveDateMask;
 
-        var programArchiveExtension = request.ProgramArchiveExtension ?? installerSettings.ProgramArchiveExtension;
+        string? programArchiveExtension = request.ProgramArchiveExtension ?? installerSettings.ProgramArchiveExtension;
 
-        var parametersFileDateMask = request.ParametersFileDateMask ?? installerSettings.ParametersFileDateMask;
+        string? parametersFileDateMask = request.ParametersFileDateMask ?? installerSettings.ParametersFileDateMask;
 
-        var parametersFileExtension = request.ParametersFileExtension ?? installerSettings.ParametersFileExtension;
+        string? parametersFileExtension = request.ParametersFileExtension ?? installerSettings.ParametersFileExtension;
 
         var errors = new List<Err>();
 
@@ -108,7 +108,7 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceR
             return await Task.FromResult(errors.ToArray());
         }
 
-        var fileStorageForUpload =
+        FileStorageData? fileStorageForUpload =
             fileStorages.GetFileStorageDataByKey(installerSettings.ProgramExchangeFileStorageName);
         if (fileStorageForUpload is null)
         {
@@ -116,8 +116,9 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceR
             return await Task.FromResult(errors.ToArray());
         }
 
-        var agentClient = await ProjectManagersFactory.CreateAgentClientWithFileStorage(_logger, installerSettings,
-            fileStorageForUpload, false, _messagesDataManager, request.UserName, cancellationToken);
+        IIProjectsManagerWithFileStorage? agentClient =
+            await ProjectManagersFactory.CreateAgentClientWithFileStorage(_logger, installerSettings,
+                fileStorageForUpload, false, _messagesDataManager, request.UserName, cancellationToken);
 
         if (agentClient is null)
         {
@@ -132,23 +133,23 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceR
             return await Task.FromResult(errors.ToArray());
         }
 
-        var installServiceResult = await agentClient.InstallService(request.ProjectName, request.EnvironmentName,
-            request.ServiceUserName, request.AppSettingsFileName, programArchiveDateMask, programArchiveExtension,
-            parametersFileDateMask, parametersFileExtension, request.ServiceDescriptionSignature,
-            request.ProjectDescription, cancellationToken);
+        OneOf<string, Err[]> installServiceResult = await agentClient.InstallService(request.ProjectName,
+            request.EnvironmentName, request.ServiceUserName, request.AppSettingsFileName, programArchiveDateMask,
+            programArchiveExtension, parametersFileDateMask, parametersFileExtension,
+            request.ServiceDescriptionSignature, request.ProjectDescription, cancellationToken);
         if (installServiceResult.IsT1)
         {
             return installServiceResult.AsT1;
         }
 
-        var assemblyVersion = installServiceResult.AsT0;
+        string? assemblyVersion = installServiceResult.AsT0;
 
         if (assemblyVersion != null)
         {
             return assemblyVersion;
         }
 
-        var err = ProjectsErrors.CannotBeUpdatedProject(request.ProjectName);
+        Err err = ProjectsErrors.CannotBeUpdatedProject(request.ProjectName);
 
         _logger.LogError("Error: {ErrorMessage}", err.ErrorMessage);
         return await Task.FromResult(new[] { err });

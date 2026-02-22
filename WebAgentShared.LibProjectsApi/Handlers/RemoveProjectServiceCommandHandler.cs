@@ -35,7 +35,7 @@ public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveP
     {
         var installerSettings = InstallerSettings.Create(_config);
 
-        var agentClient = await ProjectManagersFactory.CreateAgentClient(_logger, false,
+        IProjectsManager? agentClient = await ProjectManagersFactory.CreateAgentClient(_logger, false,
             installerSettings.InstallFolder, _messagesDataManager, request.UserName, cancellationToken);
 
         if (agentClient is null)
@@ -49,7 +49,7 @@ public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveP
             return new Unit();
         }
 
-        var err = ProjectsErrors.ProjectServiceCannotBeRemoved(request.ProjectName);
+        Err err = ProjectsErrors.ProjectServiceCannotBeRemoved(request.ProjectName);
 
         _logger.LogError("Error removing project service: {ErrorMessage}", err.ErrorMessage);
         return await Task.FromResult(new[] { err });

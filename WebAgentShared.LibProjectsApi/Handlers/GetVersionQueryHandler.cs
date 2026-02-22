@@ -34,7 +34,7 @@ public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionRequestQuer
     {
         var errors = new List<Err>();
         const int maxTryCount = 3;
-        var tryCount = 0;
+        int tryCount = 0;
         while (tryCount < maxTryCount)
         {
             if (tryCount > 0)
@@ -58,7 +58,7 @@ public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionRequestQuer
 
                 var webAgentClient = new TestApiClient(_logger, _httpClientFactory,
                     $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/", false);
-                var getVersionResult = await webAgentClient.GetVersion(cancellationToken);
+                OneOf<string, Err[]> getVersionResult = await webAgentClient.GetVersion(cancellationToken);
                 if (getVersionResult.IsT0 && !string.IsNullOrWhiteSpace(getVersionResult.AsT0))
                     //აქ თუ მოვედით, ყველაფერი კარგად არის
                 {

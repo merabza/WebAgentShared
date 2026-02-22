@@ -3,13 +3,13 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ApiKeyIdentity;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using OneOf;
 using SystemTools.ApiContracts.Errors;
 using SystemTools.SystemToolsShared;
 using SystemTools.SystemToolsShared.Errors;
@@ -19,6 +19,7 @@ using WebAgentShared.LibProjectsApi.CommandRequests;
 using WebAgentShared.LibProjectsApi.Handlers;
 using WebAgentShared.LibProjectsApi.Mappers;
 using WebAgentShared.LibProjectsApi.QueryRequests;
+using WebSystemTools.ApiKeyIdentity;
 
 namespace WebAgentShared.LibProjectsApi.Endpoints.V1;
 
@@ -32,7 +33,7 @@ public static class ProjectsEndpoints
             Console.WriteLine($"{nameof(UseProjectsEndpoints)} Started");
         }
 
-        var group = endpoints.MapGroup(ProjectsApiRoutes.ApiBase + ProjectsApiRoutes.Projects.ProjectBase)
+        RouteGroupBuilder group = endpoints.MapGroup(ProjectsApiRoutes.ApiBase + ProjectsApiRoutes.Projects.ProjectBase)
             .RequireAuthorization();
 
         group.MapGet(ProjectsApiRoutes.Projects.GetAppSettingsVersion, GetAppSettingsVersion);
@@ -57,7 +58,7 @@ public static class ProjectsEndpoints
         ICurrentUserByApiKey currentUserByApiKey, IMediator mediator, IMessagesDataManager messagesDataManager,
         CancellationToken cancellationToken = default)
     {
-        var userName = currentUserByApiKey.Name;
+        string userName = currentUserByApiKey.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(UpdateSettings)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(UpdateSettingsCommandHandler)} from {nameof(UpdateSettings)}");
 
@@ -66,8 +67,8 @@ public static class ProjectsEndpoints
             return TypedResults.BadRequest(Err.Create(ApiErrors.RequestIsEmpty));
         }
 
-        var command = request.AdaptTo(userName);
-        var result = await mediator.Send(command, cancellationToken);
+        UpdateSettingsRequestCommand command = request.AdaptTo(userName);
+        OneOf<Unit, Err[]> result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(UpdateSettings)} finished", cancellationToken);
         return result.Match<Results<Ok, BadRequest<Err[]>>>(_ => TypedResults.Ok(),
@@ -79,7 +80,7 @@ public static class ProjectsEndpoints
         ICurrentUserByApiKey currentUserByApiKey, IMediator mediator, IMessagesDataManager messagesDataManager,
         CancellationToken cancellationToken = default)
     {
-        var userName = currentUserByApiKey.Name;
+        string userName = currentUserByApiKey.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(Update)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(ProjectUpdateCommandHandler)} from {nameof(Update)}");
 
@@ -88,8 +89,8 @@ public static class ProjectsEndpoints
             return TypedResults.BadRequest(Err.Create(ApiErrors.RequestIsEmpty));
         }
 
-        var command = request.AdaptTo(userName);
-        var result = await mediator.Send(command, cancellationToken);
+        ProjectUpdateRequestCommand command = request.AdaptTo(userName);
+        OneOf<string, Err[]> result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(Update)} finished", cancellationToken);
         return result.Match<Results<Ok<string>, BadRequest<Err[]>>>(res => TypedResults.Ok(res),
@@ -101,7 +102,7 @@ public static class ProjectsEndpoints
         [FromBody] UpdateServiceRequest? request, ICurrentUserByApiKey currentUserByApiKey, IMediator mediator,
         IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
     {
-        var userName = currentUserByApiKey.Name;
+        string userName = currentUserByApiKey.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(UpdateService)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(UpdateServiceCommandHandler)} from {nameof(UpdateService)}");
 
@@ -110,8 +111,8 @@ public static class ProjectsEndpoints
             return TypedResults.BadRequest(Err.Create(ApiErrors.RequestIsEmpty));
         }
 
-        var command = request.AdaptTo(userName);
-        var result = await mediator.Send(command, cancellationToken);
+        UpdateServiceRequestCommand command = request.AdaptTo(userName);
+        OneOf<string, Err[]> result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(UpdateService)} finished", cancellationToken);
         return result.Match<Results<Ok<string>, BadRequest<Err[]>>>(res => TypedResults.Ok(res),
@@ -123,12 +124,12 @@ public static class ProjectsEndpoints
         [FromRoute] string environmentName, ICurrentUserByApiKey currentUserByApiKey, IMediator mediator,
         IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
     {
-        var userName = currentUserByApiKey.Name;
+        string userName = currentUserByApiKey.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(StopService)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(StopServiceCommandHandler)} from {nameof(StopService)}");
 
         var command = StopServiceRequestCommand.Create(projectName, environmentName, userName);
-        var result = await mediator.Send(command, cancellationToken);
+        OneOf<Unit, Err[]> result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(StopService)} finished", cancellationToken);
         return result.Match<Results<Ok, BadRequest<Err[]>>>(_ => TypedResults.Ok(),
@@ -140,12 +141,12 @@ public static class ProjectsEndpoints
         [FromRoute] string environmentName, ICurrentUserByApiKey currentUserByApiKey, IMediator mediator,
         IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
     {
-        var userName = currentUserByApiKey.Name;
+        string userName = currentUserByApiKey.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(StartService)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(StartServiceCommandHandler)} from {nameof(StartService)}");
 
         var command = StartServiceRequestCommand.Create(projectName, environmentName, userName);
-        var result = await mediator.Send(command, cancellationToken);
+        OneOf<Unit, Err[]> result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(StartService)} finished", cancellationToken);
         return result.Match<Results<Ok, BadRequest<Err[]>>>(_ => TypedResults.Ok(),
@@ -157,12 +158,12 @@ public static class ProjectsEndpoints
         [FromRoute] string environmentName, [FromRoute] bool isService, ICurrentUserByApiKey currentUserByApiKey,
         IMediator mediator, IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
     {
-        var userName = currentUserByApiKey.Name;
+        string userName = currentUserByApiKey.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(RemoveProjectServiceCommandHandler)} from {nameof(RemoveProjectService)}");
 
         var command = RemoveProjectServiceRequestCommand.Create(projectName, environmentName, isService, userName);
-        var result = await mediator.Send(command, cancellationToken);
+        OneOf<Unit, Err[]> result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} finished", cancellationToken);
         return result.Match<Results<Ok, BadRequest<Err[]>>>(_ => TypedResults.Ok(),
@@ -174,7 +175,7 @@ public static class ProjectsEndpoints
         [FromRoute] string apiVersionId, ICurrentUserByApiKey currentUserByApiKey, IMediator mediator,
         IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
     {
-        var userName = currentUserByApiKey.Name;
+        string userName = currentUserByApiKey.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(GetAppSettingsVersion)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(GetAppSettingsVersionQueryHandler)} from {nameof(GetAppSettingsVersion)}");
 
@@ -184,7 +185,7 @@ public static class ProjectsEndpoints
         }
 
         var command = GetAppSettingsVersionRequestQuery.Create(serverSidePort, apiVersionId, userName);
-        var result = await mediator.Send(command, cancellationToken);
+        OneOf<string, Err[]> result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(GetAppSettingsVersion)} finished", cancellationToken);
 
@@ -196,7 +197,7 @@ public static class ProjectsEndpoints
         ICurrentUserByApiKey currentUserByApiKey, IMediator mediator, IMessagesDataManager messagesDataManager,
         CancellationToken cancellationToken = default)
     {
-        var userName = currentUserByApiKey.Name;
+        string userName = currentUserByApiKey.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(GetVersion)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(GetVersionQueryHandler)} from {nameof(GetVersion)}");
 
@@ -206,7 +207,7 @@ public static class ProjectsEndpoints
         }
 
         var command = GetVersionRequestQuery.Create(serverSidePort, apiVersionId, userName);
-        var result = await mediator.Send(command, cancellationToken);
+        OneOf<string?, Err[]> result = await mediator.Send(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(GetVersion)} finished", cancellationToken);
 

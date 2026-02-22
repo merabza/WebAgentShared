@@ -15,7 +15,7 @@
     <ProjectReference Include="..\..\SystemTools\SystemTools.TestApiContracts\SystemTools.TestApiContracts.csproj" />
     <ProjectReference Include="..\..\ToolsManagement\ToolsManagement.Installer\ToolsManagement.Installer.csproj" />
     <ProjectReference Include="..\..\WebAgentContracts\WebAgentContracts.WebAgentProjectsApiContracts\WebAgentContracts.WebAgentProjectsApiContracts.csproj" />
-    <ProjectReference Include="..\..\WebSystemTools\ApiKeyIdentity\ApiKeyIdentity.csproj" />
+    <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.ApiKeyIdentity\WebSystemTools.ApiKeyIdentity.csproj" />
     <ProjectReference Include="..\WebAgentShared.LibWebAgentData\WebAgentShared.LibWebAgentData.csproj" />
   </ItemGroup>
 

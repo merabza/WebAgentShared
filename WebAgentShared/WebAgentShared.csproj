@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <PackageId>WebAgentShared</PackageId>
+        <Version>1.0.0</Version>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\WebAgentShared.LibProjectsApi\WebAgentShared.LibProjectsApi.csproj" />
+      <ProjectReference Include="..\WebAgentShared.LibWebAgentData\WebAgentShared.LibWebAgentData.csproj" />
+    </ItemGroup>
+
+</Project>

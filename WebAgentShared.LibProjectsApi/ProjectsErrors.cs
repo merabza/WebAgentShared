@@ -4,83 +4,73 @@ namespace WebAgentShared.LibProjectsApi;
 
 public static class ProjectsErrors
 {
-    public static readonly Err AppSettingsIsNotCreated = new()
+    public static readonly Error AppSettingsIsNotCreated = new()
     {
-        ErrorCode = nameof(AppSettingsIsNotCreated), ErrorMessage = "appSettings is not created"
+        Code = nameof(AppSettingsIsNotCreated), Name = "appSettings is not created"
     };
 
-    public static readonly Err SameParametersAreEmpty = new()
+    public static readonly Error SameParametersAreEmpty = new()
     {
-        ErrorCode = nameof(SameParametersAreEmpty), ErrorMessage = "Same Parameters are Empty"
+        Code = nameof(SameParametersAreEmpty), Name = "Same Parameters are Empty"
     };
 
-    public static readonly Err ProgramExchangeFileStorageNameDoesNotSpecified = new()
+    public static readonly Error ProgramExchangeFileStorageNameDoesNotSpecified = new()
     {
-        ErrorCode = nameof(ProgramExchangeFileStorageNameDoesNotSpecified),
-        ErrorMessage = "ProgramExchangeFileStorageName does not specified"
+        Code = nameof(ProgramExchangeFileStorageNameDoesNotSpecified),
+        Name = "ProgramExchangeFileStorageName does not specified"
     };
 
-    public static readonly Err AgentClientDoesNotCreated = new()
+    public static readonly Error AgentClientDoesNotCreated = new()
     {
-        ErrorCode = nameof(AgentClientDoesNotCreated), ErrorMessage = "AgentClient does not created"
+        Code = nameof(AgentClientDoesNotCreated), Name = "AgentClient does not created"
     };
 
-    public static Err ParametersIsEmpty(string parameterName)
+    public static Error ParametersIsEmpty(string parameterName)
     {
-        return new Err { ErrorCode = nameof(ParametersIsEmpty), ErrorMessage = $"Parameter {parameterName} is Empty" };
+        return new Error { Code = nameof(ParametersIsEmpty), Name = $"Parameter {parameterName} is Empty" };
     }
 
-    //public static readonly Err ServiceNameIsEmpty = new()
-    //    { ErrorCode = nameof(ServiceNameIsEmpty), ErrorMessage = "Service Name is Empty" };
+    //public static readonly Error ServiceNameIsEmpty = new()
+    //    { Code = nameof(ServiceNameIsEmpty), Name = "Service Name is Empty" };
 
-    public static Err FileStorageDoesNotExists(string fileStorageName)
+    public static Error FileStorageDoesNotExists(string fileStorageName)
     {
-        return new Err
+        return new Error
         {
-            ErrorCode = nameof(FileStorageDoesNotExists),
-            ErrorMessage = $"FileStorage with name {fileStorageName} does not exists"
+            Code = nameof(FileStorageDoesNotExists),
+            Name = $"FileStorage with name {fileStorageName} does not exists"
         };
     }
 
-    public static Err SettingsCannotBeUpdated(string projectName)
+    public static Error SettingsCannotBeUpdated(string projectName)
     {
-        return new Err
+        return new Error
         {
-            ErrorCode = nameof(SettingsCannotBeUpdated),
-            ErrorMessage = $"Settings cannot be updated for Project {projectName} => service can not stopped"
+            Code = nameof(SettingsCannotBeUpdated),
+            Name = $"Settings cannot be updated for Project {projectName} => service can not stopped"
         };
     }
 
-    public static Err CannotBeUpdatedProject(string projectName)
+    public static Error CannotBeUpdatedProject(string projectName)
     {
-        return new Err
-        {
-            ErrorCode = nameof(CannotBeUpdatedProject), ErrorMessage = $"cannot be updated Project {projectName}"
-        };
+        return new Error { Code = nameof(CannotBeUpdatedProject), Name = $"cannot be updated Project {projectName}" };
     }
 
-    public static Err CannotBeStoppedService(string projectName)
+    public static Error CannotBeStoppedService(string projectName)
     {
-        return new Err
-        {
-            ErrorCode = nameof(CannotBeStoppedService), ErrorMessage = $"{projectName} service can not stopped"
-        };
+        return new Error { Code = nameof(CannotBeStoppedService), Name = $"{projectName} service can not stopped" };
     }
 
-    public static Err CannotBeStartedService(string projectName)
+    public static Error CannotBeStartedService(string projectName)
     {
-        return new Err
-        {
-            ErrorCode = nameof(CannotBeStartedService), ErrorMessage = $"{projectName} service can not started"
-        };
+        return new Error { Code = nameof(CannotBeStartedService), Name = $"{projectName} service can not started" };
     }
 
-    public static Err ProjectServiceCannotBeRemoved(string projectName)
+    public static Error ProjectServiceCannotBeRemoved(string projectName)
     {
-        return new Err
+        return new Error
         {
-            ErrorCode = nameof(ProjectServiceCannotBeRemoved),
-            ErrorMessage = $"Project {projectName} can not be removed"
+            Code = nameof(ProjectServiceCannotBeRemoved), Name = $"Project {projectName} can not be removed"
         };
     }
 }

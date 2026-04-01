@@ -30,9 +30,10 @@ public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionRequestQuer
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<string?, Err[]>> Handle(GetVersionRequestQuery request, CancellationToken cancellationToken)
+    public async Task<OneOf<string?, Error[]>> Handle(GetVersionRequestQuery request,
+        CancellationToken cancellationToken)
     {
-        var errors = new List<Err>();
+        var errors = new List<Error>();
         const int maxTryCount = 3;
         int tryCount = 0;
         while (tryCount < maxTryCount)
@@ -58,7 +59,7 @@ public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionRequestQuer
 
                 var webAgentClient = new TestApiClient(_logger, _httpClientFactory,
                     $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/", false);
-                OneOf<string, Err[]> getVersionResult = await webAgentClient.GetVersion(cancellationToken);
+                OneOf<string, Error[]> getVersionResult = await webAgentClient.GetVersion(cancellationToken);
                 if (getVersionResult.IsT0 && !string.IsNullOrWhiteSpace(getVersionResult.AsT0))
                     //აქ თუ მოვედით, ყველაფერი კარგად არის
                 {
@@ -91,9 +92,6 @@ public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionRequestQuer
             return errors.ToArray();
         }
 
-        return new Err[]
-        {
-            new() { ErrorCode = "GetVersionUnknownError", ErrorMessage = "Unknown Error returned GetVersion" }
-        };
+        return new Error[] { new() { Code = "GetVersionUnknownError", Name = "Unknown Error returned GetVersion" } };
     }
 }

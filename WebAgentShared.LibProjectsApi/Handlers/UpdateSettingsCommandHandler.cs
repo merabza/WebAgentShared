@@ -33,7 +33,7 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<Unit, Err[]>> Handle(UpdateSettingsRequestCommand request,
+    public async Task<OneOf<Unit, Error[]>> Handle(UpdateSettingsRequestCommand request,
         CancellationToken cancellationToken)
     {
         // ReSharper disable once BothContextCallUsage.Global
@@ -87,7 +87,7 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
         }
 
-        Option<Err[]> updateAppParametersFileResult = await agentClient.UpdateAppParametersFile(request.ProjectName,
+        Option<Error[]> updateAppParametersFileResult = await agentClient.UpdateAppParametersFile(request.ProjectName,
             request.EnvironmentName, request.AppSettingsFileName, parametersFileDateMask, parametersFileExtension,
             cancellationToken);
         if (updateAppParametersFileResult.IsNone)
@@ -95,10 +95,10 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
             return new Unit();
         }
 
-        Err err = ProjectsErrors.SettingsCannotBeUpdated(request.ProjectName);
+        Error err = ProjectsErrors.SettingsCannotBeUpdated(request.ProjectName);
 
         // ReSharper disable once BothContextCallUsage.Global
-        _logger.LogError("Settings update error: {ErrorMessage}", err.ErrorMessage);
+        _logger.LogError("Settings update error: {Name}", err.Name);
         return await Task.FromResult(new[] { err });
     }
 }

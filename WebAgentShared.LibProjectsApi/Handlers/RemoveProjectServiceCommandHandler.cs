@@ -30,7 +30,7 @@ public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveP
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<Unit, Err[]>> Handle(RemoveProjectServiceRequestCommand request,
+    public async Task<OneOf<Unit, Error[]>> Handle(RemoveProjectServiceRequestCommand request,
         CancellationToken cancellationToken)
     {
         var installerSettings = InstallerSettings.Create(_config);
@@ -49,9 +49,9 @@ public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveP
             return new Unit();
         }
 
-        Err err = ProjectsErrors.ProjectServiceCannotBeRemoved(request.ProjectName);
+        Error err = ProjectsErrors.ProjectServiceCannotBeRemoved(request.ProjectName);
 
-        _logger.LogError("Error removing project service: {ErrorMessage}", err.ErrorMessage);
+        _logger.LogError("Error removing project service: {Name}", err.Name);
         return await Task.FromResult(new[] { err });
     }
 }

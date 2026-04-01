@@ -32,7 +32,7 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceR
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<string, Err[]>> Handle(UpdateServiceRequestCommand request,
+    public async Task<OneOf<string, Error[]>> Handle(UpdateServiceRequestCommand request,
         CancellationToken cancellationToken)
     {
         var installerSettings = InstallerSettings.Create(_config);
@@ -45,7 +45,7 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceR
 
         string? parametersFileExtension = request.ParametersFileExtension ?? installerSettings.ParametersFileExtension;
 
-        var errors = new List<Err>();
+        var errors = new List<Error>();
 
         if (request.ProjectName is null)
         {
@@ -133,7 +133,7 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceR
             return await Task.FromResult(errors.ToArray());
         }
 
-        OneOf<string, Err[]> installServiceResult = await agentClient.InstallService(request.ProjectName,
+        OneOf<string, Error[]> installServiceResult = await agentClient.InstallService(request.ProjectName,
             request.EnvironmentName, request.ServiceUserName, request.AppSettingsFileName, programArchiveDateMask,
             programArchiveExtension, parametersFileDateMask, parametersFileExtension,
             request.ServiceDescriptionSignature, request.ProjectDescription, cancellationToken);
@@ -149,9 +149,9 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceR
             return assemblyVersion;
         }
 
-        Err err = ProjectsErrors.CannotBeUpdatedProject(request.ProjectName);
+        Error err = ProjectsErrors.CannotBeUpdatedProject(request.ProjectName);
 
-        _logger.LogError("Error: {ErrorMessage}", err.ErrorMessage);
+        _logger.LogError("Error: {Name}", err.Name);
         return await Task.FromResult(new[] { err });
     }
 }

@@ -4,154 +4,144 @@ namespace WebAgentShared.LibWebAgentData.ErrorModels;
 
 public static class DbApiErrors
 {
-    public static readonly Err CommandTextIsEmpty = new()
+    public static readonly Error CommandTextIsEmpty = new()
     {
-        ErrorCode = nameof(CommandTextIsEmpty), ErrorMessage = "Command Text Is Empty"
+        Code = nameof(CommandTextIsEmpty), Name = "Command Text Is Empty"
     };
 
-    public static readonly Err ErrorCreateDatabaseConnection = new()
+    public static readonly Error ErrorCreateDatabaseConnection = new()
     {
-        ErrorCode = nameof(ErrorCreateDatabaseConnection), ErrorMessage = "Database connection does not created"
+        Code = nameof(ErrorCreateDatabaseConnection), Name = "Database connection does not created"
     };
 
-    public static readonly Err CannotDetectRemoteAddress = new()
+    public static readonly Error CannotDetectRemoteAddress = new()
     {
-        ErrorCode = nameof(CannotDetectRemoteAddress), ErrorMessage = "Cannot detect Remote address"
+        Code = nameof(CannotDetectRemoteAddress), Name = "Cannot detect Remote address"
     };
 
-    public static readonly Err ApiKeyIsInvalid = new()
+    public static readonly Error ApiKeyIsInvalid = new()
     {
-        ErrorCode = nameof(ApiKeyIsInvalid), ErrorMessage = "API Key is invalid"
+        Code = nameof(ApiKeyIsInvalid), Name = "API Key is invalid"
     };
 
-    public static readonly Err InvalidServerName = new()
+    public static readonly Error InvalidServerName = new()
     {
-        ErrorCode = nameof(InvalidServerName),
-        ErrorMessage = "Source database settings with name {serverName} does not specified"
+        Code = nameof(InvalidServerName),
+        Name = "Source database settings with name {serverName} does not specified"
     };
 
-    public static readonly Err BaseBackupsLocalPatchIsEmpty = new()
+    public static readonly Error BaseBackupsLocalPatchIsEmpty = new()
     {
-        ErrorCode = nameof(BaseBackupsLocalPatchIsEmpty),
-        ErrorMessage = "BaseBackupsLocalPatch does not specified in settings"
+        Code = nameof(BaseBackupsLocalPatchIsEmpty), Name = "BaseBackupsLocalPatch does not specified in settings"
     };
 
-    public static readonly Err InvalidDatabaseBackupParameters = new()
+    public static readonly Error InvalidDatabaseBackupParameters = new()
     {
-        ErrorCode = nameof(InvalidDatabaseBackupParameters), ErrorMessage = "Invalid DatabaseBackupParameters"
+        Code = nameof(InvalidDatabaseBackupParameters), Name = "Invalid DatabaseBackupParameters"
     };
 
-    public static readonly Err DatabaseManagementClientDoesNotCreated = new()
+    public static readonly Error DatabaseManagementClientDoesNotCreated = new()
     {
-        ErrorCode = nameof(DatabaseManagementClientDoesNotCreated),
-        ErrorMessage = "databaseManagementClient Does Not Created"
+        Code = nameof(DatabaseManagementClientDoesNotCreated), Name = "databaseManagementClient Does Not Created"
     };
 
-    public static readonly Err CreateBackupRequestIsInvalid = new()
+    public static readonly Error CreateBackupRequestIsInvalid = new()
     {
-        ErrorCode = nameof(CreateBackupRequestIsInvalid), ErrorMessage = "Create Backup Request is invalid"
+        Code = nameof(CreateBackupRequestIsInvalid), Name = "Create Backup Request is invalid"
     };
 
-    public static readonly Err DatabaseBackupsFileStorageDoesNotCreated = new()
+    public static readonly Error DatabaseBackupsFileStorageDoesNotCreated = new()
     {
-        ErrorCode = nameof(DatabaseBackupsFileStorageDoesNotCreated),
-        ErrorMessage = "Database Backups File Storage does not created"
+        Code = nameof(DatabaseBackupsFileStorageDoesNotCreated),
+        Name = "Database Backups File Storage does not created"
     };
 
-    public static readonly Err DatabaseBackupsFileManagerDoesNotCreated = new()
+    public static readonly Error DatabaseBackupsFileManagerDoesNotCreated = new()
     {
-        ErrorCode = nameof(DatabaseBackupsFileManagerDoesNotCreated),
-        ErrorMessage = "Database Backups File Manager does not created"
+        Code = nameof(DatabaseBackupsFileManagerDoesNotCreated),
+        Name = "Database Backups File Manager does not created"
     };
 
-    public static readonly Err LocalFileStorageDoesNotCreated = new()
+    public static readonly Error LocalFileStorageDoesNotCreated = new()
     {
-        ErrorCode = nameof(LocalFileStorageDoesNotCreated), ErrorMessage = "Local File Storage does not created"
+        Code = nameof(LocalFileStorageDoesNotCreated), Name = "Local File Storage does not created"
     };
 
-    public static readonly Err LocalFileManagerDoesNotCreated = new()
+    public static readonly Error LocalFileManagerDoesNotCreated = new()
     {
-        ErrorCode = nameof(LocalFileManagerDoesNotCreated), ErrorMessage = "Local File Manager does not created"
+        Code = nameof(LocalFileManagerDoesNotCreated), Name = "Local File Manager does not created"
     };
 
-    public static readonly Err ExchangeFileManagerDoesNotCreated = new()
+    public static readonly Error ExchangeFileManagerDoesNotCreated = new()
     {
-        ErrorCode = nameof(ExchangeFileManagerDoesNotCreated),
-        ErrorMessage = "Exchange File Manager does not created"
+        Code = nameof(ExchangeFileManagerDoesNotCreated), Name = "Exchange File Manager does not created"
     };
 
-    public static readonly Err DatabaseSettingsDoesNotSpecified = new()
+    public static readonly Error DatabaseSettingsDoesNotSpecified = new()
     {
-        ErrorCode = nameof(DatabaseSettingsDoesNotSpecified), ErrorMessage = "Database settings does not specified"
+        Code = nameof(DatabaseSettingsDoesNotSpecified), Name = "Database settings does not specified"
     };
 
-    public static readonly Err BackupDoesNotCreated = new()
+    public static readonly Error BackupDoesNotCreated = new()
     {
-        ErrorCode = nameof(BackupDoesNotCreated), ErrorMessage = "Backup not Created"
+        Code = nameof(BackupDoesNotCreated), Name = "Backup not Created"
     };
 
-    public static readonly Err CanNotReceiveBackupFromExchangeStorage = new()
+    public static readonly Error CanNotReceiveBackupFromExchangeStorage = new()
     {
-        ErrorCode = nameof(CanNotReceiveBackupFromExchangeStorage),
-        ErrorMessage = "can not receive backup from exchange storage"
+        Code = nameof(CanNotReceiveBackupFromExchangeStorage), Name = "can not receive backup from exchange storage"
     };
 
-    public static Err CannotCheckAndRepairDatabase(string databaseName)
+    public static Error CannotCheckAndRepairDatabase(string databaseName)
     {
-        return new Err
+        return new Error
         {
-            ErrorCode = nameof(CannotCheckAndRepairDatabase),
-            ErrorMessage = $"Cannot check and repair Database {databaseName}"
+            Code = nameof(CannotCheckAndRepairDatabase), Name = $"Cannot check and repair Database {databaseName}"
         };
     }
 
-    public static Err TestConnectionFailed(string? databaseName)
+    public static Error TestConnectionFailed(string? databaseName)
     {
-        return new Err
+        return new Error
         {
-            ErrorCode = nameof(TestConnectionFailed),
-            ErrorMessage =
+            Code = nameof(TestConnectionFailed),
+            Name =
                 $"Test Connection Failed{(string.IsNullOrWhiteSpace(databaseName) ? "" : $" for Database {databaseName} on")}"
         };
     }
 
-    public static Err CannotRecompileProcedures(string databaseName)
+    public static Error CannotRecompileProcedures(string databaseName)
     {
-        return new Err
+        return new Error
         {
-            ErrorCode = nameof(CannotRecompileProcedures),
-            ErrorMessage = $"Cannot Recompile Procedures Database {databaseName}"
+            Code = nameof(CannotRecompileProcedures), Name = $"Cannot Recompile Procedures Database {databaseName}"
         };
     }
 
-    public static Err CouldNotExecuteCommand(string databaseName)
+    public static Error CouldNotExecuteCommand(string databaseName)
     {
-        return new Err
+        return new Error
         {
-            ErrorCode = nameof(CouldNotExecuteCommand),
-            ErrorMessage = $"Could not Execute Command for Database {databaseName}"
+            Code = nameof(CouldNotExecuteCommand), Name = $"Could not Execute Command for Database {databaseName}"
         };
     }
 
-    public static Err CanNotDownloadFile(string backupFileName)
+    public static Error CanNotDownloadFile(string backupFileName)
     {
-        return new Err
-        {
-            ErrorCode = nameof(CanNotDownloadFile), ErrorMessage = $"Can not Download File {backupFileName}"
-        };
+        return new Error { Code = nameof(CanNotDownloadFile), Name = $"Can not Download File {backupFileName}" };
     }
 
-    public static Err CanNotUploadFile(string backupFileName)
+    public static Error CanNotUploadFile(string backupFileName)
     {
-        return new Err { ErrorCode = nameof(CanNotUploadFile), ErrorMessage = $"Can not Upload File {backupFileName}" };
+        return new Error { Code = nameof(CanNotUploadFile), Name = $"Can not Upload File {backupFileName}" };
     }
 
-    public static Err CannotRestoreDatabase(string databaseName, string fileName)
+    public static Error CannotRestoreDatabase(string databaseName, string fileName)
     {
-        return new Err
+        return new Error
         {
-            ErrorCode = nameof(CannotRestoreDatabase),
-            ErrorMessage = $"Cannot restore database {databaseName} from file {fileName}"
+            Code = nameof(CannotRestoreDatabase),
+            Name = $"Cannot restore database {databaseName} from file {fileName}"
         };
     }
 }

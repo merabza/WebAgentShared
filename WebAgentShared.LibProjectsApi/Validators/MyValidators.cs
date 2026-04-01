@@ -7,7 +7,7 @@ public static class MyValidators
 {
     public static void FilePath<T>(this IRuleBuilder<T, string?> ruleBuilder)
     {
-        IRuleBuilderOptions<T, string>? rules = ruleBuilder.NotEmpty().MaximumLength(256);
+        var rules = ruleBuilder.NotEmpty().MaximumLength(256);
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {

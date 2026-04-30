@@ -24,13 +24,15 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
     private readonly IConfiguration _config;
     private readonly ILogger<UpdateSettingsCommandHandler> _logger;
     private readonly IMessagesDataManager _messagesDataManager;
+    private readonly IApplication _application;
 
     public UpdateSettingsCommandHandler(IConfiguration config, ILogger<UpdateSettingsCommandHandler> logger,
-        IMessagesDataManager messagesDataManager)
+        IMessagesDataManager messagesDataManager, IApplication application)
     {
         _config = config;
         _logger = logger;
         _messagesDataManager = messagesDataManager;
+        _application = application;
     }
 
     public async Task<OneOf<Unit, Error[]>> Handle(UpdateSettingsRequestCommand request,
@@ -79,7 +81,7 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSetting
         }
 
         IIProjectsManagerWithFileStorage? agentClient =
-            await ProjectManagersFactory.CreateAgentClientWithFileStorage(_logger, installerSettings,
+            await ProjectManagersFactory.CreateAgentClientWithFileStorage(_application.AppName, _logger, installerSettings,
                 fileStorageForUpload, false, _messagesDataManager, request.UserName, cancellationToken);
 
         if (agentClient is null)

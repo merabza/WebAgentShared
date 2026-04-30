@@ -20,16 +20,18 @@ namespace WebAgentShared.LibProjectsApi.Handlers;
 // ReSharper disable once ClassNeverInstantiated.Global
 public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceRequestCommand, string>
 {
+    private readonly IApplication _application;
     private readonly IConfiguration _config;
     private readonly ILogger<UpdateServiceCommandHandler> _logger;
     private readonly IMessagesDataManager _messagesDataManager;
 
     public UpdateServiceCommandHandler(IConfiguration config, ILogger<UpdateServiceCommandHandler> logger,
-        IMessagesDataManager messagesDataManager)
+        IMessagesDataManager messagesDataManager, IApplication application)
     {
         _config = config;
         _logger = logger;
         _messagesDataManager = messagesDataManager;
+        _application = application;
     }
 
     public async Task<OneOf<string, Error[]>> Handle(UpdateServiceRequestCommand request,
@@ -117,8 +119,9 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceR
         }
 
         IIProjectsManagerWithFileStorage? agentClient =
-            await ProjectManagersFactory.CreateAgentClientWithFileStorage(_logger, installerSettings,
-                fileStorageForUpload, false, _messagesDataManager, request.UserName, cancellationToken);
+            await ProjectManagersFactory.CreateAgentClientWithFileStorage(_application.AppName, _logger,
+                installerSettings, fileStorageForUpload, false, _messagesDataManager, request.UserName,
+                cancellationToken);
 
         if (agentClient is null)
         {

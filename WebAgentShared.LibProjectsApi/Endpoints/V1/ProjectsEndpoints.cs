@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,6 +9,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using OneOf;
+using Serilog;
 using SystemTools.ApiContracts.Errors;
 using SystemTools.SystemToolsShared;
 using SystemTools.SystemToolsShared.Errors;
@@ -26,12 +26,9 @@ namespace WebAgentShared.LibProjectsApi.Endpoints.V1;
 // ReSharper disable once UnusedType.Global
 public static class ProjectsEndpoints
 {
-    public static bool UseProjectsEndpoints(this IEndpointRouteBuilder endpoints, bool debugMode)
+    public static bool UseProjectsEndpoints(this IEndpointRouteBuilder endpoints, ILogger? debugLogger)
     {
-        if (debugMode)
-        {
-            Console.WriteLine($"{nameof(UseProjectsEndpoints)} Started");
-        }
+        debugLogger?.Information("{MethodName} Started", nameof(UseProjectsEndpoints));
 
         RouteGroupBuilder group = endpoints.MapGroup(ProjectsApiRoutes.ApiBase + ProjectsApiRoutes.Projects.ProjectBase)
             .RequireAuthorization();
@@ -45,10 +42,7 @@ public static class ProjectsEndpoints
         group.MapPost(ProjectsApiRoutes.Projects.UpdateService, UpdateService);
         group.MapPost(ProjectsApiRoutes.Projects.UpdateSettings, UpdateSettings);
 
-        if (debugMode)
-        {
-            Console.WriteLine($"{nameof(UseProjectsEndpoints)} Finished");
-        }
+        debugLogger?.Information("{MethodName} Finished", nameof(UseProjectsEndpoints));
 
         return true;
     }

@@ -6,9 +6,4 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\WebAgentShared.LibProjectsApi\WebAgentShared.LibProjectsApi.csproj" />
-      <ProjectReference Include="..\WebAgentShared.LibWebAgentData\WebAgentShared.LibWebAgentData.csproj" />
-    </ItemGroup>
-
 </Project>

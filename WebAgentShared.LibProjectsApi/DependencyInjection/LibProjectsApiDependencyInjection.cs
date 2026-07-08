@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Routing;
 using Serilog;
 using WebAgentShared.LibProjectsApi.Endpoints.V1;
 

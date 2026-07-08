@@ -39,5 +39,4 @@
     </Folder>
     <Project Path="WebAgentShared.LibProjectsApi/WebAgentShared.LibProjectsApi.csproj" />
     <Project Path="WebAgentShared.LibWebAgentData/WebAgentShared.LibWebAgentData.csproj" />
-    <Project Path="WebAgentShared/WebAgentShared.csproj" />
 </Solution>

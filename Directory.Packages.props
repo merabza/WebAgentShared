@@ -9,8 +9,8 @@
     <PackageVersion Include="ParametersManagement.LibDatabaseParameters" Version="1.0.9686.34062" />
     <PackageVersion Include="ParametersManagement.LibFileParameters" Version="1.0.9686.34062" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.27.0.140913" />
-    <PackageVersion Include="SystemTools.MediatRMessagingAbstractions" Version="1.0.9686.33588" />
-    <PackageVersion Include="SystemTools.TestApiContracts" Version="1.0.9686.33588" />
+    <PackageVersion Include="SystemTools.MediatRMessagingAbstractions" Version="1.0.9686.36050" />
+    <PackageVersion Include="SystemTools.TestApiContracts" Version="1.0.9686.36108" />
     <PackageVersion Include="ToolsManagement.Installer" Version="1.0.9686.35962" />
     <PackageVersion Include="WebAgentContracts.WebAgentProjectsApiContracts" Version="1.0.9686.34669" />
     <PackageVersion Include="WebSystemTools.ApiKeyIdentity" Version="1.0.9686.34761" />

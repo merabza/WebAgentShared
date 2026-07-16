@@ -8,15 +8,15 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" />
-    <PackageReference Include="SystemTools.MediatRMessagingAbstractions" />
-    <PackageReference Include="SystemTools.TestApiContracts" />
-    <PackageReference Include="ToolsManagement.Installer" />
-    <PackageReference Include="WebAgentContracts.WebAgentProjectsApiContracts" />
-    <PackageReference Include="WebSystemTools.ApiKeyIdentity" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\WebAgentShared.LibWebAgentData\WebAgentShared.LibWebAgentData.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.MediatRMessagingAbstractions\SystemTools.MediatRMessagingAbstractions.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.TestApiContracts\SystemTools.TestApiContracts.csproj" />
+    <ProjectReference Include="..\..\ToolsManagement\ToolsManagement.Installer\ToolsManagement.Installer.csproj" />
+    <ProjectReference Include="..\..\WebAgentContracts\WebAgentContracts.WebAgentProjectsApiContracts\WebAgentContracts.WebAgentProjectsApiContracts.csproj" />
+    <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.ApiKeyIdentity\WebSystemTools.ApiKeyIdentity.csproj" />
   </ItemGroup>
 
 </Project>

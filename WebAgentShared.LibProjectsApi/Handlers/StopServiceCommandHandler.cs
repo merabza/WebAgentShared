@@ -31,7 +31,7 @@ public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceReque
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<Unit, Error[]>> Handle(StopServiceRequestCommand request,
+    public async Task<OneOf<Unit, ErrorOmd[]>> Handle(StopServiceRequestCommand request,
         CancellationToken cancellationToken)
     {
         if (request.ProjectName is null)
@@ -54,7 +54,7 @@ public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceReque
             return new Unit();
         }
 
-        Error err = ProjectsErrors.CannotBeStoppedService(request.ProjectName);
+        ErrorOmd err = ProjectsErrors.CannotBeStoppedService(request.ProjectName);
 
         _logger.LogError("{Name}", err.Name);
         return await Task.FromResult(new[] { err });

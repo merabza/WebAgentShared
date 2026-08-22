@@ -34,7 +34,7 @@ public sealed class ProjectUpdateCommandHandler : ICommandHandler<ProjectUpdateR
         _application = application;
     }
 
-    public async Task<OneOf<string, Error[]>> Handle(ProjectUpdateRequestCommand request,
+    public async Task<OneOf<string, ErrorOmd[]>> Handle(ProjectUpdateRequestCommand request,
         CancellationToken cancellationToken)
     {
         var installerSettings = InstallerSettings.Create(_config);
@@ -83,7 +83,7 @@ public sealed class ProjectUpdateCommandHandler : ICommandHandler<ProjectUpdateR
             return new[] { ProjectsErrors.AgentClientDoesNotCreated };
         }
 
-        OneOf<string, Error[]> installProgramResult = await agentClient.InstallProgram(request.ProjectName,
+        OneOf<string, ErrorOmd[]> installProgramResult = await agentClient.InstallProgram(request.ProjectName,
             request.EnvironmentName, programArchiveDateMask, programArchiveExtension, parametersFileDateMask,
             parametersFileExtension, cancellationToken);
 
@@ -99,7 +99,7 @@ public sealed class ProjectUpdateCommandHandler : ICommandHandler<ProjectUpdateR
             return assemblyVersion;
         }
 
-        Error err = ProjectsErrors.CannotBeUpdatedProject(request.ProjectName);
+        ErrorOmd err = ProjectsErrors.CannotBeUpdatedProject(request.ProjectName);
 
         _logger.LogError("Project update error: {Name}", err.Name);
         return new[] { err };

@@ -30,7 +30,7 @@ public sealed class StartServiceCommandHandler : ICommandHandler<StartServiceReq
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<Unit, Error[]>> Handle(StartServiceRequestCommand request,
+    public async Task<OneOf<Unit, ErrorOmd[]>> Handle(StartServiceRequestCommand request,
         CancellationToken cancellationToken)
     {
         if (request.ProjectName is null)
@@ -53,7 +53,7 @@ public sealed class StartServiceCommandHandler : ICommandHandler<StartServiceReq
             return new Unit();
         }
 
-        Error err = ProjectsErrors.CannotBeStartedService(request.ProjectName);
+        ErrorOmd err = ProjectsErrors.CannotBeStartedService(request.ProjectName);
 
         _logger.LogError("Service start failed: {Name}", err.Name);
         return await Task.FromResult(new[] { err });

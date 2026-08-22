@@ -25,7 +25,7 @@ public sealed class GetAppSettingsVersionQueryHandler : IQueryHandler<GetAppSett
         _httpClientFactory = httpClientFactory;
     }
 
-    public async Task<OneOf<string, Error[]>> Handle(GetAppSettingsVersionRequestQuery request,
+    public async Task<OneOf<string, ErrorOmd[]>> Handle(GetAppSettingsVersionRequestQuery request,
         CancellationToken cancellationToken)
     {
         var webAgentClient = new TestApiClient(_logger, _httpClientFactory,

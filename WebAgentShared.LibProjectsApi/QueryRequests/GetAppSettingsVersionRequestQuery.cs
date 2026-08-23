@@ -2,7 +2,7 @@
 
 namespace WebAgentShared.LibProjectsApi.QueryRequests;
 
-public sealed class GetAppSettingsVersionRequestQuery : IQuery<string>
+public sealed class GetAppSettingsVersionRequestQuery : IQueryOmd<string>
 {
     public int ServerSidePort { get; set; }
     public string? ApiVersionId { get; set; }

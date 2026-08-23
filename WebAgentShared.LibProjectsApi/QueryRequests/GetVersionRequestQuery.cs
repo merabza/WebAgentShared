@@ -2,7 +2,7 @@
 
 namespace WebAgentShared.LibProjectsApi.QueryRequests;
 
-public sealed class GetVersionRequestQuery : IQuery<string?>
+public sealed class GetVersionRequestQuery : IQueryOmd<string?>
 {
     public int ServerSidePort { get; set; }
     public string? ApiVersionId { get; set; }

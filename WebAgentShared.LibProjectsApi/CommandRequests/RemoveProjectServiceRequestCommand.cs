@@ -2,7 +2,7 @@
 
 namespace WebAgentShared.LibProjectsApi.CommandRequests;
 
-public sealed class RemoveProjectServiceRequestCommand : ICommand
+public sealed class RemoveProjectServiceRequestCommand : ICommandOmd
 {
     private RemoveProjectServiceRequestCommand(string projectName, string environmentName, bool isService,
         string? userName)

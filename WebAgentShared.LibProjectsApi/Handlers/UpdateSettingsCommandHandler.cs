@@ -19,7 +19,7 @@ using Unit = MediatR.Unit;
 namespace WebAgentShared.LibProjectsApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSettingsRequestCommand>
+public sealed class UpdateSettingsCommandHandler : ICommandHandlerOmd<UpdateSettingsRequestCommand>
 {
     private readonly IApplication _application;
     private readonly IConfiguration _config;

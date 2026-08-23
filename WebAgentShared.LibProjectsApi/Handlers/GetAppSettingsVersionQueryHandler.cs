@@ -13,7 +13,7 @@ using WebAgentShared.LibProjectsApi.QueryRequests;
 namespace WebAgentShared.LibProjectsApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class GetAppSettingsVersionQueryHandler : IQueryHandler<GetAppSettingsVersionRequestQuery, string>
+public sealed class GetAppSettingsVersionQueryHandler : IQueryHandlerOmd<GetAppSettingsVersionRequestQuery, string>
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<GetAppSettingsVersionQueryHandler> _logger;

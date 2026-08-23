@@ -2,7 +2,7 @@
 
 namespace WebAgentShared.LibProjectsApi.CommandRequests;
 
-public sealed class StopServiceRequestCommand : ICommand
+public sealed class StopServiceRequestCommand : ICommandOmd
 {
     private StopServiceRequestCommand(string? projectName, string environmentName, string? userName)
     {

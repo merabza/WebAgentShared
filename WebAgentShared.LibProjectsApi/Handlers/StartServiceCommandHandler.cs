@@ -16,7 +16,7 @@ using WebAgentShared.LibProjectsApi.CommandRequests;
 namespace WebAgentShared.LibProjectsApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class StartServiceCommandHandler : ICommandHandler<StartServiceRequestCommand>
+public sealed class StartServiceCommandHandler : ICommandHandlerOmd<StartServiceRequestCommand>
 {
     private readonly IConfiguration _config;
     private readonly ILogger<StartServiceCommandHandler> _logger;

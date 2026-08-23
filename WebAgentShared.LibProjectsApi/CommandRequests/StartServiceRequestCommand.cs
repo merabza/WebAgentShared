@@ -2,7 +2,7 @@
 
 namespace WebAgentShared.LibProjectsApi.CommandRequests;
 
-public sealed class StartServiceRequestCommand : ICommand
+public sealed class StartServiceRequestCommand : ICommandOmd
 {
     private StartServiceRequestCommand(string? projectName, string environmentName, string? userName)
     {

@@ -17,7 +17,7 @@ namespace WebAgentShared.LibProjectsApi.Handlers;
 
 // ReSharper disable once UnusedType.Global
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceRequestCommand>
+public sealed class StopServiceCommandHandler : ICommandHandlerOmd<StopServiceRequestCommand>
 {
     private readonly IConfiguration _config;
     private readonly ILogger<StopServiceCommandHandler> _logger;

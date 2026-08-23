@@ -18,7 +18,7 @@ using WebAgentShared.LibWebAgentData;
 namespace WebAgentShared.LibProjectsApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceRequestCommand, string>
+public sealed class UpdateServiceCommandHandler : ICommandHandlerOmd<UpdateServiceRequestCommand, string>
 {
     private readonly IApplication _application;
     private readonly IConfiguration _config;

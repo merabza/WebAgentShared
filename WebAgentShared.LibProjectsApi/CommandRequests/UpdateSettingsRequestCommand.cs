@@ -2,7 +2,7 @@
 
 namespace WebAgentShared.LibProjectsApi.CommandRequests;
 
-public sealed class UpdateSettingsRequestCommand : ICommand
+public sealed class UpdateSettingsRequestCommand : ICommandOmd
 {
     public string? ProjectName { get; set; }
     public string? EnvironmentName { get; set; }

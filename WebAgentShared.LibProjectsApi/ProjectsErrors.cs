@@ -53,7 +53,10 @@ public static class ProjectsErrors
 
     public static ErrorOmd CannotBeUpdatedProject(string projectName)
     {
-        return new ErrorOmd { Code = nameof(CannotBeUpdatedProject), Name = $"cannot be updated Project {projectName}" };
+        return new ErrorOmd
+        {
+            Code = nameof(CannotBeUpdatedProject), Name = $"cannot be updated Project {projectName}"
+        };
     }
 
     public static ErrorOmd CannotBeStoppedService(string projectName)

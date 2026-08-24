@@ -92,6 +92,9 @@ public sealed class GetVersionQueryHandler : IQueryHandlerOmd<GetVersionRequestQ
             return errors.ToArray();
         }
 
-        return new ErrorOmd[] { new() { Code = "GetVersionUnknownError", Name = "Unknown ErrorOmd returned GetVersion" } };
+        return new ErrorOmd[]
+        {
+            new() { Code = "GetVersionUnknownError", Name = "Unknown ErrorOmd returned GetVersion" }
+        };
     }
 }

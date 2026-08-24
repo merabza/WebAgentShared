@@ -70,9 +70,9 @@ public static class ProjectsEndpoints
     }
 
     // POST api/projects/update
-    private static async Task<Results<Ok<string>, BadRequest<ErrorOmd[]>>> Update([FromBody] ProjectUpdateRequest? request,
-        ICurrentUserByApiKey currentUserByApiKey, IMediator mediator, IMessagesDataManager messagesDataManager,
-        CancellationToken cancellationToken = default)
+    private static async Task<Results<Ok<string>, BadRequest<ErrorOmd[]>>> Update(
+        [FromBody] ProjectUpdateRequest? request, ICurrentUserByApiKey currentUserByApiKey, IMediator mediator,
+        IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
     {
         string userName = currentUserByApiKey.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(Update)} started", cancellationToken);

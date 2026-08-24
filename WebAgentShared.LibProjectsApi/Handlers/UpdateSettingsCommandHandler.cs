@@ -90,9 +90,9 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandlerOmd<UpdateSett
             return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
         }
 
-        Option<ErrorOmd[]> updateAppParametersFileResult = await agentClient.UpdateAppParametersFile(request.ProjectName,
-            request.EnvironmentName, request.AppSettingsFileName, parametersFileDateMask, parametersFileExtension,
-            cancellationToken);
+        Option<ErrorOmd[]> updateAppParametersFileResult = await agentClient.UpdateAppParametersFile(
+            request.ProjectName, request.EnvironmentName, request.AppSettingsFileName, parametersFileDateMask,
+            parametersFileExtension, cancellationToken);
         if (updateAppParametersFileResult.IsNone)
         {
             return new Unit();

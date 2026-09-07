@@ -1,12 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 using SystemTools.SystemToolsShared;
-using SystemTools.SystemToolsShared.Errors;
 using ToolsManagement.Installer.Models;
 using ToolsManagement.Installer.ProjectManagers;
 using WebAgentShared.LibProjectsApi.CommandRequests;
@@ -16,7 +14,7 @@ using WebAgentShared.LibProjectsApi.CommandRequests;
 namespace WebAgentShared.LibProjectsApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class RemoveProjectServiceCommandHandler : ICommandHandlerOmd<RemoveProjectServiceRequestCommand>
+public sealed class RemoveProjectServiceCommandHandler : ICommandHandler<RemoveProjectServiceRequestCommand>
 {
     private readonly IConfiguration _config;
     private readonly ILogger<RemoveProjectServiceCommandHandler> _logger;
@@ -30,8 +28,7 @@ public sealed class RemoveProjectServiceCommandHandler : ICommandHandlerOmd<Remo
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<Unit, ErrorOmd[]>> Handle(RemoveProjectServiceRequestCommand request,
-        CancellationToken cancellationToken)
+    public async Task<Result> Handle(RemoveProjectServiceRequestCommand request, CancellationToken cancellationToken)
     {
         var installerSettings = InstallerSettings.Create(_config);
 
@@ -40,18 +37,19 @@ public sealed class RemoveProjectServiceCommandHandler : ICommandHandlerOmd<Remo
 
         if (agentClient is null)
         {
-            return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
+            return ProjectsErrors.AgentClientDoesNotCreated;
         }
 
-        if (await agentClient.RemoveProjectAndService(request.ProjectName, request.EnvironmentName, request.IsService,
-                cancellationToken))
+        Result removeProjectAndServiceResult = await agentClient.RemoveProjectAndService(request.ProjectName,
+            request.EnvironmentName, request.IsService, cancellationToken);
+        if (removeProjectAndServiceResult.IsSuccess)
         {
-            return new Unit();
+            return Result.Success();
         }
 
-        ErrorOmd err = ProjectsErrors.ProjectServiceCannotBeRemoved(request.ProjectName);
+        Error err = ProjectsErrors.ProjectServiceCannotBeRemoved(request.ProjectName);
 
-        _logger.LogError("ErrorOmd removing project service: {Name}", err.Name);
-        return await Task.FromResult(new[] { err });
+        _logger.LogError("Error removing project service: {Description}", err.Description);
+        return new ValidationError([.. removeProjectAndServiceResult.Error.ToErrorArray(), err]);
     }
 }

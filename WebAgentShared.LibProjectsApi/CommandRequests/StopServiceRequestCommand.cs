@@ -1,8 +1,8 @@
-﻿using SystemTools.MediatRMessagingAbstractions;
+﻿using SystemTools.Application.Abstractions.Messaging;
 
 namespace WebAgentShared.LibProjectsApi.CommandRequests;
 
-public sealed class StopServiceRequestCommand : ICommandOmd
+public sealed class StopServiceRequestCommand : ICommand
 {
     private StopServiceRequestCommand(string? projectName, string environmentName, string? userName)
     {

@@ -2,12 +2,11 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using OneOf;
 using ParametersManagement.LibFileParameters.Models;
 using SystemTools.ApiContracts.Errors;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 using SystemTools.SystemToolsShared;
-using SystemTools.SystemToolsShared.Errors;
 using ToolsManagement.Installer.Models;
 using ToolsManagement.Installer.ProjectManagers;
 using WebAgentShared.LibProjectsApi.CommandRequests;
@@ -18,7 +17,7 @@ using WebAgentShared.LibWebAgentData;
 namespace WebAgentShared.LibProjectsApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class ProjectUpdateCommandHandler : ICommandHandlerOmd<ProjectUpdateRequestCommand, string>
+public sealed class ProjectUpdateCommandHandler : ICommandHandler<ProjectUpdateRequestCommand, string>
 {
     private readonly IApplication _application;
     private readonly IConfiguration _config;
@@ -34,7 +33,7 @@ public sealed class ProjectUpdateCommandHandler : ICommandHandlerOmd<ProjectUpda
         _application = application;
     }
 
-    public async Task<OneOf<string, ErrorOmd[]>> Handle(ProjectUpdateRequestCommand request,
+    public async Task<Result<string>> Handle(ProjectUpdateRequestCommand request,
         CancellationToken cancellationToken)
     {
         var installerSettings = InstallerSettings.Create(_config);
@@ -50,18 +49,18 @@ public sealed class ProjectUpdateCommandHandler : ICommandHandlerOmd<ProjectUpda
         if (request.ProjectName is null || request.EnvironmentName is null || programArchiveDateMask is null ||
             programArchiveExtension is null || parametersFileDateMask is null || parametersFileExtension is null)
         {
-            return new[] { ApiErrors.SomeRequestParametersAreNotValid };
+            return ApiErrors.SomeRequestParametersAreNotValid;
         }
 
         if (string.IsNullOrWhiteSpace(installerSettings.ProgramExchangeFileStorageName))
         {
-            return new[] { ProjectsErrors.ProgramExchangeFileStorageNameDoesNotSpecified };
+            return ProjectsErrors.ProgramExchangeFileStorageNameDoesNotSpecified;
         }
 
         var appSettings = AppSettings.Create(_config);
         if (appSettings is null)
         {
-            return await Task.FromResult(new[] { ProjectsErrors.AppSettingsIsNotCreated });
+            return ProjectsErrors.AppSettingsIsNotCreated;
         }
 
         var fileStorages = new FileStorages(appSettings.FileStorages);
@@ -70,7 +69,7 @@ public sealed class ProjectUpdateCommandHandler : ICommandHandlerOmd<ProjectUpda
             fileStorages.GetFileStorageDataByKey(installerSettings.ProgramExchangeFileStorageName);
         if (fileStorageForUpload is null)
         {
-            return new[] { ProjectsErrors.FileStorageDoesNotExists(installerSettings.ProgramExchangeFileStorageName) };
+            return ProjectsErrors.FileStorageDoesNotExists(installerSettings.ProgramExchangeFileStorageName);
         }
 
         IIProjectsManagerWithFileStorage? agentClient =
@@ -80,28 +79,21 @@ public sealed class ProjectUpdateCommandHandler : ICommandHandlerOmd<ProjectUpda
 
         if (agentClient is null)
         {
-            return new[] { ProjectsErrors.AgentClientDoesNotCreated };
+            return ProjectsErrors.AgentClientDoesNotCreated;
         }
 
-        OneOf<string, ErrorOmd[]> installProgramResult = await agentClient.InstallProgram(request.ProjectName,
+        Result<string> installProgramResult = await agentClient.InstallProgram(request.ProjectName,
             request.EnvironmentName, programArchiveDateMask, programArchiveExtension, parametersFileDateMask,
             parametersFileExtension, cancellationToken);
 
-        if (installProgramResult.IsT1)
+        if (installProgramResult.IsSuccess)
         {
-            return installProgramResult.AsT1;
+            return installProgramResult.Value;
         }
 
-        string? assemblyVersion = installProgramResult.AsT0;
+        Error err = ProjectsErrors.CannotBeUpdatedProject(request.ProjectName);
 
-        if (assemblyVersion != null)
-        {
-            return assemblyVersion;
-        }
-
-        ErrorOmd err = ProjectsErrors.CannotBeUpdatedProject(request.ProjectName);
-
-        _logger.LogError("Project update error: {Name}", err.Name);
-        return new[] { err };
+        _logger.LogError("Project update error: {Description}", err.Description);
+        return new ValidationError([.. installProgramResult.Error.ToErrorArray(), err]);
     }
 }

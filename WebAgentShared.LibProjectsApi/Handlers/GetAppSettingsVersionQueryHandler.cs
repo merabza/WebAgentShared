@@ -2,9 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 using SystemTools.TestApiContracts;
 using WebAgentShared.LibProjectsApi.QueryRequests;
 
@@ -13,7 +12,7 @@ using WebAgentShared.LibProjectsApi.QueryRequests;
 namespace WebAgentShared.LibProjectsApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class GetAppSettingsVersionQueryHandler : IQueryHandlerOmd<GetAppSettingsVersionRequestQuery, string>
+public sealed class GetAppSettingsVersionQueryHandler : IQueryHandler<GetAppSettingsVersionRequestQuery, string>
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<GetAppSettingsVersionQueryHandler> _logger;
@@ -25,7 +24,7 @@ public sealed class GetAppSettingsVersionQueryHandler : IQueryHandlerOmd<GetAppS
         _httpClientFactory = httpClientFactory;
     }
 
-    public async Task<OneOf<string, ErrorOmd[]>> Handle(GetAppSettingsVersionRequestQuery request,
+    public async Task<Result<string>> Handle(GetAppSettingsVersionRequestQuery request,
         CancellationToken cancellationToken)
     {
         var webAgentClient = new TestApiClient(_logger, _httpClientFactory,

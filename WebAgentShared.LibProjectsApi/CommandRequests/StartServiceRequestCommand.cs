@@ -1,8 +1,8 @@
-﻿using SystemTools.MediatRMessagingAbstractions;
+﻿using SystemTools.Application.Abstractions.Messaging;
 
 namespace WebAgentShared.LibProjectsApi.CommandRequests;
 
-public sealed class StartServiceRequestCommand : ICommandOmd
+public sealed class StartServiceRequestCommand : ICommand
 {
     private StartServiceRequestCommand(string? projectName, string environmentName, string? userName)
     {

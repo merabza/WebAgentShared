@@ -1,79 +1,62 @@
-﻿using SystemTools.SystemToolsShared.Errors;
+﻿using SystemTools.SharedKernel;
 
 namespace WebAgentShared.LibProjectsApi;
 
 public static class ProjectsErrors
 {
-    public static readonly ErrorOmd AppSettingsIsNotCreated = new()
-    {
-        Code = nameof(AppSettingsIsNotCreated), Name = "appSettings is not created"
-    };
+    public static Error AppSettingsIsNotCreated =>
+        Error.Problem(nameof(AppSettingsIsNotCreated), "appSettings is not created");
 
-    public static readonly ErrorOmd SameParametersAreEmpty = new()
-    {
-        Code = nameof(SameParametersAreEmpty), Name = "Same Parameters are Empty"
-    };
+    public static Error SameParametersAreEmpty =>
+        Error.Problem(nameof(SameParametersAreEmpty), "Same Parameters are Empty");
 
-    public static readonly ErrorOmd ProgramExchangeFileStorageNameDoesNotSpecified = new()
-    {
-        Code = nameof(ProgramExchangeFileStorageNameDoesNotSpecified),
-        Name = "ProgramExchangeFileStorageName does not specified"
-    };
+    public static Error ProgramExchangeFileStorageNameDoesNotSpecified =>
+        Error.Problem(nameof(ProgramExchangeFileStorageNameDoesNotSpecified),
+            "ProgramExchangeFileStorageName does not specified");
 
-    public static readonly ErrorOmd AgentClientDoesNotCreated = new()
-    {
-        Code = nameof(AgentClientDoesNotCreated), Name = "AgentClient does not created"
-    };
+    public static Error AgentClientDoesNotCreated =>
+        Error.Problem(nameof(AgentClientDoesNotCreated), "AgentClient does not created");
 
-    public static ErrorOmd ParametersIsEmpty(string parameterName)
+    public static Error GetVersionUnknownError =>
+        Error.Problem(nameof(GetVersionUnknownError), "Unknown Error returned GetVersion");
+
+    public static Error ParametersIsEmpty(string parameterName)
     {
-        return new ErrorOmd { Code = nameof(ParametersIsEmpty), Name = $"Parameter {parameterName} is Empty" };
+        return Error.Problem(nameof(ParametersIsEmpty), $"Parameter {parameterName} is Empty");
     }
 
     //public static readonly ErrorOmd ServiceNameIsEmpty = new()
     //    { Code = nameof(ServiceNameIsEmpty), Name = "Service Name is Empty" };
 
-    public static ErrorOmd FileStorageDoesNotExists(string fileStorageName)
+    public static Error FileStorageDoesNotExists(string fileStorageName)
     {
-        return new ErrorOmd
-        {
-            Code = nameof(FileStorageDoesNotExists),
-            Name = $"FileStorage with name {fileStorageName} does not exists"
-        };
+        return Error.Problem(nameof(FileStorageDoesNotExists),
+            $"FileStorage with name {fileStorageName} does not exists");
     }
 
-    public static ErrorOmd SettingsCannotBeUpdated(string projectName)
+    public static Error SettingsCannotBeUpdated(string projectName)
     {
-        return new ErrorOmd
-        {
-            Code = nameof(SettingsCannotBeUpdated),
-            Name = $"Settings cannot be updated for Project {projectName} => service can not stopped"
-        };
+        return Error.Problem(nameof(SettingsCannotBeUpdated),
+            $"Settings cannot be updated for Project {projectName} => service can not stopped");
     }
 
-    public static ErrorOmd CannotBeUpdatedProject(string projectName)
+    public static Error CannotBeUpdatedProject(string projectName)
     {
-        return new ErrorOmd
-        {
-            Code = nameof(CannotBeUpdatedProject), Name = $"cannot be updated Project {projectName}"
-        };
+        return Error.Problem(nameof(CannotBeUpdatedProject), $"cannot be updated Project {projectName}");
     }
 
-    public static ErrorOmd CannotBeStoppedService(string projectName)
+    public static Error CannotBeStoppedService(string projectName)
     {
-        return new ErrorOmd { Code = nameof(CannotBeStoppedService), Name = $"{projectName} service can not stopped" };
+        return Error.Problem(nameof(CannotBeStoppedService), $"{projectName} service can not stopped");
     }
 
-    public static ErrorOmd CannotBeStartedService(string projectName)
+    public static Error CannotBeStartedService(string projectName)
     {
-        return new ErrorOmd { Code = nameof(CannotBeStartedService), Name = $"{projectName} service can not started" };
+        return Error.Problem(nameof(CannotBeStartedService), $"{projectName} service can not started");
     }
 
-    public static ErrorOmd ProjectServiceCannotBeRemoved(string projectName)
+    public static Error ProjectServiceCannotBeRemoved(string projectName)
     {
-        return new ErrorOmd
-        {
-            Code = nameof(ProjectServiceCannotBeRemoved), Name = $"Project {projectName} can not be removed"
-        };
+        return Error.Problem(nameof(ProjectServiceCannotBeRemoved), $"Project {projectName} can not be removed");
     }
 }

@@ -1,12 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 using SystemTools.SystemToolsShared;
-using SystemTools.SystemToolsShared.Errors;
 using ToolsManagement.Installer.Models;
 using ToolsManagement.Installer.ProjectManagers;
 using WebAgentShared.LibProjectsApi.CommandRequests;
@@ -16,7 +14,7 @@ using WebAgentShared.LibProjectsApi.CommandRequests;
 namespace WebAgentShared.LibProjectsApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class StartServiceCommandHandler : ICommandHandlerOmd<StartServiceRequestCommand>
+public sealed class StartServiceCommandHandler : ICommandHandler<StartServiceRequestCommand>
 {
     private readonly IConfiguration _config;
     private readonly ILogger<StartServiceCommandHandler> _logger;
@@ -30,12 +28,11 @@ public sealed class StartServiceCommandHandler : ICommandHandlerOmd<StartService
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<Unit, ErrorOmd[]>> Handle(StartServiceRequestCommand request,
-        CancellationToken cancellationToken)
+    public async Task<Result> Handle(StartServiceRequestCommand request, CancellationToken cancellationToken)
     {
         if (request.ProjectName is null)
         {
-            return await Task.FromResult(new[] { ProjectsErrors.SameParametersAreEmpty });
+            return ProjectsErrors.SameParametersAreEmpty;
         }
 
         var installerSettings = InstallerSettings.Create(_config);
@@ -45,17 +42,19 @@ public sealed class StartServiceCommandHandler : ICommandHandlerOmd<StartService
 
         if (agentClient is null)
         {
-            return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
+            return ProjectsErrors.AgentClientDoesNotCreated;
         }
 
-        if (await agentClient.StartService(request.ProjectName, request.EnvironmentName, cancellationToken))
+        Result startServiceResult =
+            await agentClient.StartService(request.ProjectName, request.EnvironmentName, cancellationToken);
+        if (startServiceResult.IsSuccess)
         {
-            return new Unit();
+            return Result.Success();
         }
 
-        ErrorOmd err = ProjectsErrors.CannotBeStartedService(request.ProjectName);
+        Error err = ProjectsErrors.CannotBeStartedService(request.ProjectName);
 
-        _logger.LogError("Service start failed: {Name}", err.Name);
-        return await Task.FromResult(new[] { err });
+        _logger.LogError("Service start failed: {Description}", err.Description);
+        return new ValidationError([.. startServiceResult.Error.ToErrorArray(), err]);
     }
 }

@@ -1,25 +1,22 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using LanguageExt;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using OneOf;
 using ParametersManagement.LibFileParameters.Models;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 using SystemTools.SystemToolsShared;
-using SystemTools.SystemToolsShared.Errors;
 using ToolsManagement.Installer.Models;
 using ToolsManagement.Installer.ProjectManagers;
 using WebAgentShared.LibProjectsApi.CommandRequests;
 using WebAgentShared.LibWebAgentData;
-using Unit = MediatR.Unit;
 
 // ReSharper disable ConvertToPrimaryConstructor
 
 namespace WebAgentShared.LibProjectsApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class UpdateSettingsCommandHandler : ICommandHandlerOmd<UpdateSettingsRequestCommand>
+public sealed class UpdateSettingsCommandHandler : ICommandHandler<UpdateSettingsRequestCommand>
 {
     private readonly IApplication _application;
     private readonly IConfiguration _config;
@@ -35,8 +32,7 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandlerOmd<UpdateSett
         _application = application;
     }
 
-    public async Task<OneOf<Unit, ErrorOmd[]>> Handle(UpdateSettingsRequestCommand request,
-        CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdateSettingsRequestCommand request, CancellationToken cancellationToken)
     {
         // ReSharper disable once BothContextCallUsage.Global
         await _messagesDataManager.SendMessage(request.UserName, "Creating installer settings", cancellationToken);
@@ -50,12 +46,12 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandlerOmd<UpdateSett
         if (request.ProjectName is null || request.EnvironmentName is null || request.AppSettingsFileName is null ||
             parametersFileDateMask is null || parametersFileExtension is null)
         {
-            return await Task.FromResult(new[] { ProjectsErrors.SameParametersAreEmpty });
+            return ProjectsErrors.SameParametersAreEmpty;
         }
 
         if (string.IsNullOrWhiteSpace(installerSettings.ProgramExchangeFileStorageName))
         {
-            return await Task.FromResult(new[] { ProjectsErrors.ProgramExchangeFileStorageNameDoesNotSpecified });
+            return ProjectsErrors.ProgramExchangeFileStorageNameDoesNotSpecified;
         }
 
         // ReSharper disable once BothContextCallUsage.Global
@@ -64,7 +60,7 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandlerOmd<UpdateSett
         var appSettings = AppSettings.Create(_config);
         if (appSettings is null)
         {
-            return await Task.FromResult(new[] { ProjectsErrors.AppSettingsIsNotCreated });
+            return ProjectsErrors.AppSettingsIsNotCreated;
         }
 
         var fileStorages = new FileStorages(appSettings.FileStorages);
@@ -74,10 +70,7 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandlerOmd<UpdateSett
 
         if (fileStorageForUpload is null)
         {
-            return await Task.FromResult(new[]
-            {
-                ProjectsErrors.FileStorageDoesNotExists(installerSettings.ProgramExchangeFileStorageName)
-            });
+            return ProjectsErrors.FileStorageDoesNotExists(installerSettings.ProgramExchangeFileStorageName);
         }
 
         IIProjectsManagerWithFileStorage? agentClient =
@@ -87,21 +80,21 @@ public sealed class UpdateSettingsCommandHandler : ICommandHandlerOmd<UpdateSett
 
         if (agentClient is null)
         {
-            return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
+            return ProjectsErrors.AgentClientDoesNotCreated;
         }
 
-        Option<ErrorOmd[]> updateAppParametersFileResult = await agentClient.UpdateAppParametersFile(
-            request.ProjectName, request.EnvironmentName, request.AppSettingsFileName, parametersFileDateMask,
-            parametersFileExtension, cancellationToken);
-        if (updateAppParametersFileResult.IsNone)
+        Result updateAppParametersFileResult = await agentClient.UpdateAppParametersFile(request.ProjectName,
+            request.EnvironmentName, request.AppSettingsFileName, parametersFileDateMask, parametersFileExtension,
+            cancellationToken);
+        if (updateAppParametersFileResult.IsSuccess)
         {
-            return new Unit();
+            return Result.Success();
         }
 
-        ErrorOmd err = ProjectsErrors.SettingsCannotBeUpdated(request.ProjectName);
+        Error err = ProjectsErrors.SettingsCannotBeUpdated(request.ProjectName);
 
         // ReSharper disable once BothContextCallUsage.Global
-        _logger.LogError("Settings update error: {Name}", err.Name);
-        return await Task.FromResult(new[] { err });
+        _logger.LogError("Settings update error: {Description}", err.Description);
+        return new ValidationError([.. updateAppParametersFileResult.Error.ToErrorArray(), err]);
     }
 }

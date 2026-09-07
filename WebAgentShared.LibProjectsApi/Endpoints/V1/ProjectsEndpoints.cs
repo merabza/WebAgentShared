@@ -2,17 +2,16 @@
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using OneOf;
 using Serilog;
 using SystemTools.ApiContracts.Errors;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 using SystemTools.SystemToolsShared;
-using SystemTools.SystemToolsShared.Errors;
 using WebAgentContracts.WebAgentProjectsApiContracts.V1.Requests;
 using WebAgentContracts.WebAgentProjectsApiContracts.V1.Routes;
 using WebAgentShared.LibProjectsApi.CommandRequests;
@@ -48,9 +47,10 @@ public static class ProjectsEndpoints
     }
 
     // POST api/projects/updatesettings
-    private static async Task<Results<Ok, BadRequest<ErrorOmd[]>>> UpdateSettings(
-        [FromBody] UpdateSettingsRequest? request, ICurrentUserByApiKey currentUserByApiKey, IMediator mediator,
-        IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
+    private static async Task<Results<Ok, BadRequest<Error[]>>> UpdateSettings(
+        [FromBody] UpdateSettingsRequest? request, ICurrentUserByApiKey currentUserByApiKey,
+        ICommandHandler<UpdateSettingsRequestCommand> handler, IMessagesDataManager messagesDataManager,
+        CancellationToken cancellationToken = default)
     {
         string userName = currentUserByApiKey.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(UpdateSettings)} started", cancellationToken);
@@ -58,20 +58,20 @@ public static class ProjectsEndpoints
 
         if (request is null)
         {
-            return TypedResults.BadRequest(ErrorOmd.Create(ApiErrors.RequestIsEmpty));
+            return TypedResults.BadRequest(ApiErrors.RequestIsEmpty.ToErrorArray());
         }
 
         UpdateSettingsRequestCommand command = request.AdaptTo(userName);
-        OneOf<Unit, ErrorOmd[]> result = await mediator.Send(command, cancellationToken);
+        Result result = await handler.Handle(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(UpdateSettings)} finished", cancellationToken);
-        return result.Match<Results<Ok, BadRequest<ErrorOmd[]>>>(_ => TypedResults.Ok(),
-            errors => TypedResults.BadRequest(errors));
+        return result.Match<Results<Ok, BadRequest<Error[]>>>(() => TypedResults.Ok(),
+            failure => TypedResults.BadRequest(failure.Error.ToErrorArray()));
     }
 
     // POST api/projects/update
-    private static async Task<Results<Ok<string>, BadRequest<ErrorOmd[]>>> Update(
-        [FromBody] ProjectUpdateRequest? request, ICurrentUserByApiKey currentUserByApiKey, IMediator mediator,
+    private static async Task<Results<Ok<string>, BadRequest<Error[]>>> Update([FromBody] ProjectUpdateRequest? request,
+        ICurrentUserByApiKey currentUserByApiKey, ICommandHandler<ProjectUpdateRequestCommand, string> handler,
         IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
     {
         string userName = currentUserByApiKey.Name;
@@ -80,21 +80,22 @@ public static class ProjectsEndpoints
 
         if (request is null)
         {
-            return TypedResults.BadRequest(ErrorOmd.Create(ApiErrors.RequestIsEmpty));
+            return TypedResults.BadRequest(ApiErrors.RequestIsEmpty.ToErrorArray());
         }
 
         ProjectUpdateRequestCommand command = request.AdaptTo(userName);
-        OneOf<string, ErrorOmd[]> result = await mediator.Send(command, cancellationToken);
+        Result<string> result = await handler.Handle(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(Update)} finished", cancellationToken);
-        return result.Match<Results<Ok<string>, BadRequest<ErrorOmd[]>>>(res => TypedResults.Ok(res),
-            errors => TypedResults.BadRequest(errors));
+        return result.Match<string, Results<Ok<string>, BadRequest<Error[]>>>(res => TypedResults.Ok(res),
+            failure => TypedResults.BadRequest(failure.Error.ToErrorArray()));
     }
 
     // POST api/projects/updateservice
-    private static async Task<Results<Ok<string>, BadRequest<ErrorOmd[]>>> UpdateService(
-        [FromBody] UpdateServiceRequest? request, ICurrentUserByApiKey currentUserByApiKey, IMediator mediator,
-        IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
+    private static async Task<Results<Ok<string>, BadRequest<Error[]>>> UpdateService(
+        [FromBody] UpdateServiceRequest? request, ICurrentUserByApiKey currentUserByApiKey,
+        ICommandHandler<UpdateServiceRequestCommand, string> handler, IMessagesDataManager messagesDataManager,
+        CancellationToken cancellationToken = default)
     {
         string userName = currentUserByApiKey.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(UpdateService)} started", cancellationToken);
@@ -102,72 +103,76 @@ public static class ProjectsEndpoints
 
         if (request is null)
         {
-            return TypedResults.BadRequest(ErrorOmd.Create(ApiErrors.RequestIsEmpty));
+            return TypedResults.BadRequest(ApiErrors.RequestIsEmpty.ToErrorArray());
         }
 
         UpdateServiceRequestCommand command = request.AdaptTo(userName);
-        OneOf<string, ErrorOmd[]> result = await mediator.Send(command, cancellationToken);
+        Result<string> result = await handler.Handle(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(UpdateService)} finished", cancellationToken);
-        return result.Match<Results<Ok<string>, BadRequest<ErrorOmd[]>>>(res => TypedResults.Ok(res),
-            errors => TypedResults.BadRequest(errors));
+        return result.Match<string, Results<Ok<string>, BadRequest<Error[]>>>(res => TypedResults.Ok(res),
+            failure => TypedResults.BadRequest(failure.Error.ToErrorArray()));
     }
 
     // POST api/projects/stop/{projectName}/{environmentName}
-    private static async Task<Results<Ok, BadRequest<ErrorOmd[]>>> StopService([FromRoute] string projectName,
-        [FromRoute] string environmentName, ICurrentUserByApiKey currentUserByApiKey, IMediator mediator,
-        IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
+    private static async Task<Results<Ok, BadRequest<Error[]>>> StopService([FromRoute] string projectName,
+        [FromRoute] string environmentName, ICurrentUserByApiKey currentUserByApiKey,
+        ICommandHandler<StopServiceRequestCommand> handler, IMessagesDataManager messagesDataManager,
+        CancellationToken cancellationToken = default)
     {
         string userName = currentUserByApiKey.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(StopService)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(StopServiceCommandHandler)} from {nameof(StopService)}");
 
         var command = StopServiceRequestCommand.Create(projectName, environmentName, userName);
-        OneOf<Unit, ErrorOmd[]> result = await mediator.Send(command, cancellationToken);
+        Result result = await handler.Handle(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(StopService)} finished", cancellationToken);
-        return result.Match<Results<Ok, BadRequest<ErrorOmd[]>>>(_ => TypedResults.Ok(),
-            errors => TypedResults.BadRequest(errors));
+        return result.Match<Results<Ok, BadRequest<Error[]>>>(() => TypedResults.Ok(),
+            failure => TypedResults.BadRequest(failure.Error.ToErrorArray()));
     }
 
     // POST api/projects/start/{projectName}/{environmentName}
-    private static async Task<Results<Ok, BadRequest<ErrorOmd[]>>> StartService([FromRoute] string projectName,
-        [FromRoute] string environmentName, ICurrentUserByApiKey currentUserByApiKey, IMediator mediator,
-        IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
+    private static async Task<Results<Ok, BadRequest<Error[]>>> StartService([FromRoute] string projectName,
+        [FromRoute] string environmentName, ICurrentUserByApiKey currentUserByApiKey,
+        ICommandHandler<StartServiceRequestCommand> handler, IMessagesDataManager messagesDataManager,
+        CancellationToken cancellationToken = default)
     {
         string userName = currentUserByApiKey.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(StartService)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(StartServiceCommandHandler)} from {nameof(StartService)}");
 
         var command = StartServiceRequestCommand.Create(projectName, environmentName, userName);
-        OneOf<Unit, ErrorOmd[]> result = await mediator.Send(command, cancellationToken);
+        Result result = await handler.Handle(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(StartService)} finished", cancellationToken);
-        return result.Match<Results<Ok, BadRequest<ErrorOmd[]>>>(_ => TypedResults.Ok(),
-            errors => TypedResults.BadRequest(errors));
+        return result.Match<Results<Ok, BadRequest<Error[]>>>(() => TypedResults.Ok(),
+            failure => TypedResults.BadRequest(failure.Error.ToErrorArray()));
     }
 
     // POST api/projects/removeprojectservice/{projectName}/{environmentName}
-    private static async Task<Results<Ok, BadRequest<ErrorOmd[]>>> RemoveProjectService([FromRoute] string projectName,
+    private static async Task<Results<Ok, BadRequest<Error[]>>> RemoveProjectService([FromRoute] string projectName,
         [FromRoute] string environmentName, [FromRoute] bool isService, ICurrentUserByApiKey currentUserByApiKey,
-        IMediator mediator, IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
+        ICommandHandler<RemoveProjectServiceRequestCommand> handler, IMessagesDataManager messagesDataManager,
+        CancellationToken cancellationToken = default)
     {
         string userName = currentUserByApiKey.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} started", cancellationToken);
         Debug.WriteLine($"Call {nameof(RemoveProjectServiceCommandHandler)} from {nameof(RemoveProjectService)}");
 
         var command = RemoveProjectServiceRequestCommand.Create(projectName, environmentName, isService, userName);
-        OneOf<Unit, ErrorOmd[]> result = await mediator.Send(command, cancellationToken);
+        Result result = await handler.Handle(command, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(RemoveProjectService)} finished", cancellationToken);
-        return result.Match<Results<Ok, BadRequest<ErrorOmd[]>>>(_ => TypedResults.Ok(),
-            errors => TypedResults.BadRequest(errors));
+        return result.Match<Results<Ok, BadRequest<Error[]>>>(() => TypedResults.Ok(),
+            failure => TypedResults.BadRequest(failure.Error.ToErrorArray()));
     }
 
     // GET api/projects/getappsettingsversion/{serverSidePort}/{apiVersionId}
-    private static async Task<IResult> GetAppSettingsVersion([FromRoute] int serverSidePort,
-        [FromRoute] string apiVersionId, ICurrentUserByApiKey currentUserByApiKey, IMediator mediator,
-        IMessagesDataManager messagesDataManager, CancellationToken cancellationToken = default)
+    private static async Task<Results<ContentHttpResult, BadRequest<Error[]>>> GetAppSettingsVersion(
+        [FromRoute] int serverSidePort, [FromRoute] string apiVersionId, ICurrentUserByApiKey currentUserByApiKey,
+        IQueryHandler<GetAppSettingsVersionRequestQuery, string> handler, IMessagesDataManager messagesDataManager,
+        CancellationToken cancellationToken = default)
     {
         string userName = currentUserByApiKey.Name;
         await messagesDataManager.SendMessage(userName, $"{nameof(GetAppSettingsVersion)} started", cancellationToken);
@@ -175,20 +180,23 @@ public static class ProjectsEndpoints
 
         if (string.IsNullOrWhiteSpace(apiVersionId) || serverSidePort == 0)
         {
-            return TypedResults.BadRequest(ErrorOmd.Create(ProjectsErrors.SameParametersAreEmpty));
+            return TypedResults.BadRequest(ProjectsErrors.SameParametersAreEmpty.ToErrorArray());
         }
 
-        var command = GetAppSettingsVersionRequestQuery.Create(serverSidePort, apiVersionId, userName);
-        OneOf<string, ErrorOmd[]> result = await mediator.Send(command, cancellationToken);
+        var query = GetAppSettingsVersionRequestQuery.Create(serverSidePort, apiVersionId, userName);
+        Result<string> result = await handler.Handle(query, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(GetAppSettingsVersion)} finished", cancellationToken);
 
-        return result.Match(ret => Results.Text(ret, "text/plain", Encoding.UTF8), Results.BadRequest);
+        return result.Match<string, Results<ContentHttpResult, BadRequest<Error[]>>>(
+            ret => TypedResults.Text(ret, "text/plain", Encoding.UTF8),
+            failure => TypedResults.BadRequest(failure.Error.ToErrorArray()));
     }
 
     // POST api/projects/getversion/{serverSidePort}/{apiVersionId}
-    private static async Task<IResult> GetVersion([FromRoute] int serverSidePort, [FromRoute] string apiVersionId,
-        ICurrentUserByApiKey currentUserByApiKey, IMediator mediator, IMessagesDataManager messagesDataManager,
+    private static async Task<Results<ContentHttpResult, BadRequest<Error[]>>> GetVersion([FromRoute] int serverSidePort,
+        [FromRoute] string apiVersionId, ICurrentUserByApiKey currentUserByApiKey,
+        IQueryHandler<GetVersionRequestQuery, string> handler, IMessagesDataManager messagesDataManager,
         CancellationToken cancellationToken = default)
     {
         string userName = currentUserByApiKey.Name;
@@ -197,14 +205,16 @@ public static class ProjectsEndpoints
 
         if (string.IsNullOrWhiteSpace(apiVersionId) || serverSidePort == 0)
         {
-            return TypedResults.BadRequest(ErrorOmd.Create(ProjectsErrors.SameParametersAreEmpty));
+            return TypedResults.BadRequest(ProjectsErrors.SameParametersAreEmpty.ToErrorArray());
         }
 
-        var command = GetVersionRequestQuery.Create(serverSidePort, apiVersionId, userName);
-        OneOf<string?, ErrorOmd[]> result = await mediator.Send(command, cancellationToken);
+        var query = GetVersionRequestQuery.Create(serverSidePort, apiVersionId, userName);
+        Result<string> result = await handler.Handle(query, cancellationToken);
 
         await messagesDataManager.SendMessage(userName, $"{nameof(GetVersion)} finished", cancellationToken);
 
-        return result.Match(ret => Results.Text(ret, "text/plain", Encoding.UTF8), Results.BadRequest);
+        return result.Match<string, Results<ContentHttpResult, BadRequest<Error[]>>>(
+            ret => TypedResults.Text(ret, "text/plain", Encoding.UTF8),
+            failure => TypedResults.BadRequest(failure.Error.ToErrorArray()));
     }
 }

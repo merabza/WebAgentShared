@@ -4,10 +4,9 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 using SystemTools.SystemToolsShared;
-using SystemTools.SystemToolsShared.Errors;
 using SystemTools.TestApiContracts;
 using WebAgentShared.LibProjectsApi.QueryRequests;
 
@@ -16,7 +15,7 @@ using WebAgentShared.LibProjectsApi.QueryRequests;
 namespace WebAgentShared.LibProjectsApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class GetVersionQueryHandler : IQueryHandlerOmd<GetVersionRequestQuery, string?>
+public sealed class GetVersionQueryHandler : IQueryHandler<GetVersionRequestQuery, string>
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<GetVersionQueryHandler> _logger;
@@ -30,10 +29,9 @@ public sealed class GetVersionQueryHandler : IQueryHandlerOmd<GetVersionRequestQ
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<string?, ErrorOmd[]>> Handle(GetVersionRequestQuery request,
-        CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(GetVersionRequestQuery request, CancellationToken cancellationToken)
     {
-        var errors = new List<ErrorOmd>();
+        var errors = new List<Error>();
         const int maxTryCount = 3;
         int tryCount = 0;
         while (tryCount < maxTryCount)
@@ -59,14 +57,17 @@ public sealed class GetVersionQueryHandler : IQueryHandlerOmd<GetVersionRequestQ
 
                 var webAgentClient = new TestApiClient(_logger, _httpClientFactory,
                     $"http://localhost:{request.ServerSidePort}/api/{request.ApiVersionId}/", false);
-                OneOf<string, ErrorOmd[]> getVersionResult = await webAgentClient.GetVersion(cancellationToken);
-                if (getVersionResult.IsT0 && !string.IsNullOrWhiteSpace(getVersionResult.AsT0))
+                Result<string> getVersionResult = await webAgentClient.GetVersion(cancellationToken);
+                if (getVersionResult.IsSuccess && !string.IsNullOrWhiteSpace(getVersionResult.Value))
                     //აქ თუ მოვედით, ყველაფერი კარგად არის
                 {
-                    return getVersionResult.AsT0;
+                    return getVersionResult.Value;
                 }
 
-                errors.AddRange(getVersionResult.AsT1);
+                if (getVersionResult.IsFailure)
+                {
+                    errors.AddRange(getVersionResult.Error.ToErrorArray());
+                }
 
                 await _messagesDataManager.SendMessage(request.UserName, $"could not get version on try {tryCount}",
                     cancellationToken);
@@ -77,11 +78,11 @@ public sealed class GetVersionQueryHandler : IQueryHandlerOmd<GetVersionRequestQ
             }
             catch (Exception ex)
             {
-                await _messagesDataManager.SendMessage(request.UserName, $"ErrorOmd when get version on try {tryCount}",
+                await _messagesDataManager.SendMessage(request.UserName, $"Error when get version on try {tryCount}",
                     cancellationToken);
                 if (_logger.IsEnabled(LogLevel.Error))
                 {
-                    _logger.LogError(ex, "ErrorOmd when get version on try {TryCount}", tryCount);
+                    _logger.LogError(ex, "Error when get version on try {TryCount}", tryCount);
                 }
             }
         }
@@ -89,12 +90,9 @@ public sealed class GetVersionQueryHandler : IQueryHandlerOmd<GetVersionRequestQ
         //---
         if (errors.Count > 0)
         {
-            return errors.ToArray();
+            return errors.Count == 1 ? errors[0] : new ValidationError([.. errors]);
         }
 
-        return new ErrorOmd[]
-        {
-            new() { Code = "GetVersionUnknownError", Name = "Unknown ErrorOmd returned GetVersion" }
-        };
+        return ProjectsErrors.GetVersionUnknownError;
     }
 }

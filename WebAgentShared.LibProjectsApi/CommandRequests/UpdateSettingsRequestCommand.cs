@@ -1,8 +1,8 @@
-﻿using SystemTools.MediatRMessagingAbstractions;
+﻿using SystemTools.Application.Abstractions.Messaging;
 
 namespace WebAgentShared.LibProjectsApi.CommandRequests;
 
-public sealed class UpdateSettingsRequestCommand : ICommandOmd
+public sealed class UpdateSettingsRequestCommand : ICommand
 {
     public string? ProjectName { get; set; }
     public string? EnvironmentName { get; set; }

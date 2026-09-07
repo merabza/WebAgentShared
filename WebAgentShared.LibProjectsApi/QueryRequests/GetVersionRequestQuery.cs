@@ -1,8 +1,8 @@
-﻿using SystemTools.MediatRMessagingAbstractions;
+﻿using SystemTools.Application.Abstractions.Messaging;
 
 namespace WebAgentShared.LibProjectsApi.QueryRequests;
 
-public sealed class GetVersionRequestQuery : IQueryOmd<string?>
+public sealed class GetVersionRequestQuery : IQuery<string>
 {
     public int ServerSidePort { get; set; }
     public string? ApiVersionId { get; set; }

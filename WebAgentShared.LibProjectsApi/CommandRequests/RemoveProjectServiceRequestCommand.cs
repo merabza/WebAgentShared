@@ -1,8 +1,8 @@
-﻿using SystemTools.MediatRMessagingAbstractions;
+﻿using SystemTools.Application.Abstractions.Messaging;
 
 namespace WebAgentShared.LibProjectsApi.CommandRequests;
 
-public sealed class RemoveProjectServiceRequestCommand : ICommandOmd
+public sealed class RemoveProjectServiceRequestCommand : ICommand
 {
     private RemoveProjectServiceRequestCommand(string projectName, string environmentName, bool isService,
         string? userName)

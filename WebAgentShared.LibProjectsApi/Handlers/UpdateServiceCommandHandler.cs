@@ -3,11 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using OneOf;
 using ParametersManagement.LibFileParameters.Models;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 using SystemTools.SystemToolsShared;
-using SystemTools.SystemToolsShared.Errors;
 using ToolsManagement.Installer.Models;
 using ToolsManagement.Installer.ProjectManagers;
 using WebAgentShared.LibProjectsApi.CommandRequests;
@@ -18,7 +17,7 @@ using WebAgentShared.LibWebAgentData;
 namespace WebAgentShared.LibProjectsApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class UpdateServiceCommandHandler : ICommandHandlerOmd<UpdateServiceRequestCommand, string>
+public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceRequestCommand, string>
 {
     private readonly IApplication _application;
     private readonly IConfiguration _config;
@@ -34,7 +33,7 @@ public sealed class UpdateServiceCommandHandler : ICommandHandlerOmd<UpdateServi
         _application = application;
     }
 
-    public async Task<OneOf<string, ErrorOmd[]>> Handle(UpdateServiceRequestCommand request,
+    public async Task<Result<string>> Handle(UpdateServiceRequestCommand request,
         CancellationToken cancellationToken)
     {
         var installerSettings = InstallerSettings.Create(_config);
@@ -47,7 +46,7 @@ public sealed class UpdateServiceCommandHandler : ICommandHandlerOmd<UpdateServi
 
         string? parametersFileExtension = request.ParametersFileExtension ?? installerSettings.ParametersFileExtension;
 
-        var errors = new List<ErrorOmd>();
+        var errors = new List<Error>();
 
         if (request.ProjectName is null)
         {
@@ -107,7 +106,7 @@ public sealed class UpdateServiceCommandHandler : ICommandHandlerOmd<UpdateServi
 
         if (string.IsNullOrWhiteSpace(installerSettings.ProgramExchangeFileStorageName) || fileStorages == null)
         {
-            return await Task.FromResult(errors.ToArray());
+            return new ValidationError([.. errors]);
         }
 
         FileStorageData? fileStorageForUpload =
@@ -115,7 +114,7 @@ public sealed class UpdateServiceCommandHandler : ICommandHandlerOmd<UpdateServi
         if (fileStorageForUpload is null)
         {
             errors.Add(ProjectsErrors.FileStorageDoesNotExists(installerSettings.ProgramExchangeFileStorageName));
-            return await Task.FromResult(errors.ToArray());
+            return new ValidationError([.. errors]);
         }
 
         IIProjectsManagerWithFileStorage? agentClient =
@@ -126,35 +125,28 @@ public sealed class UpdateServiceCommandHandler : ICommandHandlerOmd<UpdateServi
         if (agentClient is null)
         {
             errors.Add(ProjectsErrors.AgentClientDoesNotCreated);
-            return await Task.FromResult(errors.ToArray());
+            return new ValidationError([.. errors]);
         }
 
         if (errors.Count > 0 || request.ProjectName is null || request.EnvironmentName is null ||
             request.ServiceUserName is null || request.AppSettingsFileName is null || programArchiveDateMask is null ||
             programArchiveExtension is null || parametersFileDateMask is null || parametersFileExtension is null)
         {
-            return await Task.FromResult(errors.ToArray());
+            return new ValidationError([.. errors]);
         }
 
-        OneOf<string, ErrorOmd[]> installServiceResult = await agentClient.InstallService(request.ProjectName,
+        Result<string> installServiceResult = await agentClient.InstallService(request.ProjectName,
             request.EnvironmentName, request.ServiceUserName, request.AppSettingsFileName, programArchiveDateMask,
             programArchiveExtension, parametersFileDateMask, parametersFileExtension,
             request.ServiceDescriptionSignature, request.ProjectDescription, cancellationToken);
-        if (installServiceResult.IsT1)
+        if (installServiceResult.IsSuccess)
         {
-            return installServiceResult.AsT1;
+            return installServiceResult.Value;
         }
 
-        string? assemblyVersion = installServiceResult.AsT0;
+        Error err = ProjectsErrors.CannotBeUpdatedProject(request.ProjectName);
 
-        if (assemblyVersion != null)
-        {
-            return assemblyVersion;
-        }
-
-        ErrorOmd err = ProjectsErrors.CannotBeUpdatedProject(request.ProjectName);
-
-        _logger.LogError("ErrorOmd: {Name}", err.Name);
-        return await Task.FromResult(new[] { err });
+        _logger.LogError("Error: {Description}", err.Description);
+        return new ValidationError([.. installServiceResult.Error.ToErrorArray(), err]);
     }
 }

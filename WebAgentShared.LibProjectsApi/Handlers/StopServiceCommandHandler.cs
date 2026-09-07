@@ -1,12 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 using SystemTools.SystemToolsShared;
-using SystemTools.SystemToolsShared.Errors;
 using ToolsManagement.Installer.Models;
 using ToolsManagement.Installer.ProjectManagers;
 using WebAgentShared.LibProjectsApi.CommandRequests;
@@ -17,7 +15,7 @@ namespace WebAgentShared.LibProjectsApi.Handlers;
 
 // ReSharper disable once UnusedType.Global
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class StopServiceCommandHandler : ICommandHandlerOmd<StopServiceRequestCommand>
+public sealed class StopServiceCommandHandler : ICommandHandler<StopServiceRequestCommand>
 {
     private readonly IConfiguration _config;
     private readonly ILogger<StopServiceCommandHandler> _logger;
@@ -31,12 +29,11 @@ public sealed class StopServiceCommandHandler : ICommandHandlerOmd<StopServiceRe
         _messagesDataManager = messagesDataManager;
     }
 
-    public async Task<OneOf<Unit, ErrorOmd[]>> Handle(StopServiceRequestCommand request,
-        CancellationToken cancellationToken)
+    public async Task<Result> Handle(StopServiceRequestCommand request, CancellationToken cancellationToken)
     {
         if (request.ProjectName is null)
         {
-            return await Task.FromResult(new[] { ProjectsErrors.SameParametersAreEmpty });
+            return ProjectsErrors.SameParametersAreEmpty;
         }
 
         var installerSettings = InstallerSettings.Create(_config);
@@ -46,17 +43,19 @@ public sealed class StopServiceCommandHandler : ICommandHandlerOmd<StopServiceRe
 
         if (agentClient is null)
         {
-            return await Task.FromResult(new[] { ProjectsErrors.AgentClientDoesNotCreated });
+            return ProjectsErrors.AgentClientDoesNotCreated;
         }
 
-        if (await agentClient.StopService(request.ProjectName, request.EnvironmentName, cancellationToken))
+        Result stopServiceResult =
+            await agentClient.StopService(request.ProjectName, request.EnvironmentName, cancellationToken);
+        if (stopServiceResult.IsSuccess)
         {
-            return new Unit();
+            return Result.Success();
         }
 
-        ErrorOmd err = ProjectsErrors.CannotBeStoppedService(request.ProjectName);
+        Error err = ProjectsErrors.CannotBeStoppedService(request.ProjectName);
 
-        _logger.LogError("{Name}", err.Name);
-        return await Task.FromResult(new[] { err });
+        _logger.LogError("{Description}", err.Description);
+        return new ValidationError([.. stopServiceResult.Error.ToErrorArray(), err]);
     }
 }

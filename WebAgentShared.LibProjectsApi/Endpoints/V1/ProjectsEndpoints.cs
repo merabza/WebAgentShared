@@ -194,8 +194,8 @@ public static class ProjectsEndpoints
     }
 
     // POST api/projects/getversion/{serverSidePort}/{apiVersionId}
-    private static async Task<Results<ContentHttpResult, BadRequest<Error[]>>> GetVersion([FromRoute] int serverSidePort,
-        [FromRoute] string apiVersionId, ICurrentUserByApiKey currentUserByApiKey,
+    private static async Task<Results<ContentHttpResult, BadRequest<Error[]>>> GetVersion(
+        [FromRoute] int serverSidePort, [FromRoute] string apiVersionId, ICurrentUserByApiKey currentUserByApiKey,
         IQueryHandler<GetVersionRequestQuery, string> handler, IMessagesDataManager messagesDataManager,
         CancellationToken cancellationToken = default)
     {

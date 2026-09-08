@@ -14,11 +14,11 @@ public static class DbApiErrors
 
     public static Error ApiKeyIsInvalid => Error.Problem(nameof(ApiKeyIsInvalid), "API Key is invalid");
 
-    public static Error InvalidServerName => Error.Problem(nameof(InvalidServerName),
-        "Source database settings with name {serverName} does not specified");
+    public static Error InvalidServerName =>
+        Error.Problem(nameof(InvalidServerName), "Source database settings with name {serverName} does not specified");
 
-    public static Error BaseBackupsLocalPatchIsEmpty => Error.Problem(nameof(BaseBackupsLocalPatchIsEmpty),
-        "BaseBackupsLocalPatch does not specified in settings");
+    public static Error BaseBackupsLocalPatchIsEmpty =>
+        Error.Problem(nameof(BaseBackupsLocalPatchIsEmpty), "BaseBackupsLocalPatch does not specified in settings");
 
     public static Error InvalidDatabaseBackupParameters =>
         Error.Problem(nameof(InvalidDatabaseBackupParameters), "Invalid DatabaseBackupParameters");
@@ -52,8 +52,7 @@ public static class DbApiErrors
     public static Error BackupDoesNotCreated => Error.Problem(nameof(BackupDoesNotCreated), "Backup not Created");
 
     public static Error CanNotReceiveBackupFromExchangeStorage =>
-        Error.Problem(nameof(CanNotReceiveBackupFromExchangeStorage),
-            "can not receive backup from exchange storage");
+        Error.Problem(nameof(CanNotReceiveBackupFromExchangeStorage), "can not receive backup from exchange storage");
 
     public static Error CannotCheckAndRepairDatabase(string databaseName)
     {

@@ -33,8 +33,7 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceR
         _application = application;
     }
 
-    public async Task<Result<string>> Handle(UpdateServiceRequestCommand request,
-        CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(UpdateServiceRequestCommand request, CancellationToken cancellationToken)
     {
         var installerSettings = InstallerSettings.Create(_config);
 

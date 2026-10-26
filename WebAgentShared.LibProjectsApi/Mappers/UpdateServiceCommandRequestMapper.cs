@@ -19,6 +19,7 @@ public static class UpdateServiceCommandRequestMapper
             ParametersFileExtension = updateServiceRequest.ParametersFileExtension,
             ServiceDescriptionSignature = updateServiceRequest.ServiceDescriptionSignature,
             ProjectDescription = updateServiceRequest.ProjectDescription,
+            PortsToOpen = updateServiceRequest.PortsToOpen,
             UserName = userName
         };
     }

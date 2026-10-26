@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Net;
+using FluentValidation;
 using WebAgentShared.LibProjectsApi.CommandRequests;
 
 namespace WebAgentShared.LibProjectsApi.Validators;
@@ -16,5 +17,6 @@ public sealed class UpdateServiceCommandValidator : AbstractValidator<UpdateServ
         RuleFor(x => x.ProgramArchiveExtension).FileExtension();
         RuleFor(x => x.ParametersFileDateMask).DateMask();
         RuleFor(x => x.ParametersFileExtension).FileExtension();
+        RuleForEach(x => x.PortsToOpen).InclusiveBetween(IPEndPoint.MinPort + 1, IPEndPoint.MaxPort);
     }
 }

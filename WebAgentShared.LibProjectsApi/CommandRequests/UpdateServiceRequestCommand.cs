@@ -1,4 +1,5 @@
-﻿using SystemTools.Application.Abstractions.Messaging;
+﻿using System.Collections.Generic;
+using SystemTools.Application.Abstractions.Messaging;
 
 namespace WebAgentShared.LibProjectsApi.CommandRequests;
 
@@ -15,4 +16,7 @@ public sealed class UpdateServiceRequestCommand : ICommand<string>
     public string? UserName { get; set; }
     public string? ServiceDescriptionSignature { get; set; }
     public string? ProjectDescription { get; set; }
+
+    //firewall-ში გასახსნელი პორტები; null ან ცარიელი სია ნიშნავს, რომ არაფერი იხსნება
+    public List<int>? PortsToOpen { get; set; }
 }

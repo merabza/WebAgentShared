@@ -137,7 +137,8 @@ public sealed class UpdateServiceCommandHandler : ICommandHandler<UpdateServiceR
         Result<string> installServiceResult = await agentClient.InstallService(request.ProjectName,
             request.EnvironmentName, request.ServiceUserName, request.AppSettingsFileName, programArchiveDateMask,
             programArchiveExtension, parametersFileDateMask, parametersFileExtension,
-            request.ServiceDescriptionSignature, request.ProjectDescription, cancellationToken);
+            request.ServiceDescriptionSignature, request.ProjectDescription, request.PortsToOpen ?? [],
+            cancellationToken);
         if (installServiceResult.IsSuccess)
         {
             return installServiceResult.Value;
